@@ -1,4 +1,4 @@
-# sendx
+# SendX
 # Introduction
 The SendX API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
 The SendX Rest API doesn’t support bulk updates. You can work on only one object per request. <br>
@@ -15,9 +15,9 @@ Python 3.7+
 If the python package is hosted on a repository, you can install directly using:
 
 ```sh
-pip install sendx
+pip install git+https://github.com/sendx/sendx-python-sdk.git
 ```
-
+(you may need to run `pip` with root permission: `sudo pip install git+https://github.com/sendx/sendx-python-sdk.git`)
 
 Then import the package:
 ```python
@@ -52,13 +52,8 @@ from pprint import pprint
 
 configuration = sendx_python_sdk.Configuration()
 
-
-
 # Configure API key authorization: apiKeyAuth
 configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
-
-
-
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
@@ -147,6 +142,6 @@ Authentication schemes defined for the API:
 
 ## Author
 
-SendX Dev Team
+support@sendx.io
 
 

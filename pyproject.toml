@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "sendx_python_sdk"
-version = "1.0.1"
+version = "1.0.0"
 description = "SendX REST API"
-authors = ["OpenAPI Generator Community <team@openapitools.org>"]
+authors = ["SendX Dev Team <support@sendx.io>"]
 license = "NoLicense"
 readme = "README.md"
-repository = "https://github.com/sendx/sendx_go_sdk"
+repository = "https://github.com/sendx/sendx-python-sdk"
 keywords = ["OpenAPI", "OpenAPI-Generator", "SendX REST API"]
 include = ["sendx_python_sdk/py.typed"]
 
