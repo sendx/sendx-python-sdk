@@ -21,7 +21,7 @@ from setuptools import setup, find_packages  # noqa: H301
 # prerequisite: setuptools
 # http://pypi.python.org/pypi/setuptools
 NAME = "sendx"
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 PYTHON_REQUIRES = ">=3.7"
 REQUIRES = [
     "urllib3 >= 1.25.3, < 2.1.0",
@@ -34,16 +34,17 @@ setup(
     name=NAME,
     version=VERSION,
     description="SendX REST API",
-    author="OpenAPI Generator community",
-    author_email="team@openapitools.org",
-    url="",
-    keywords=["OpenAPI", "OpenAPI-Generator", "SendX REST API"],
+    author="SendX Dev Team",
+    author_email="support@sendx.io",
+    url="https://sendx.io",
+    keywords=["Sendx", "Rest API", "email", "marketing", "SendX REST API"],
     install_requires=REQUIRES,
     packages=find_packages(exclude=["test", "tests"]),
     include_package_data=True,
     long_description_content_type='text/markdown',
     long_description="""\
-    # Introduction The SendX API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs. The SendX Rest API doesn’t support bulk updates. You can work on only one object per request. &lt;br&gt; 
+    # Introduction 
+    The SendX API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs. The SendX Rest API doesn’t support bulk updates. You can work on only one object per request. &lt;br&gt; 
     """,  # noqa: E501
     package_data={"sendx_python_sdk": ["py.typed"]},
 )
