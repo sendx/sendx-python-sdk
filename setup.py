@@ -14,6 +14,7 @@
 
 
 from setuptools import setup, find_packages  # noqa: H301
+import os
 
 # To install the library, run the following
 #
@@ -22,7 +23,7 @@ from setuptools import setup, find_packages  # noqa: H301
 # prerequisite: setuptools
 # http://pypi.python.org/pypi/setuptools
 NAME = "SendX"
-VERSION = "1.0.0"
+VERSION = "1.0.2"
 PYTHON_REQUIRES = ">=3.7"
 REQUIRES = [
     "urllib3 >= 1.25.3, < 2.1.0",
@@ -30,6 +31,11 @@ REQUIRES = [
     "pydantic >= 2",
     "typing-extensions >= 4.7.1",
 ]
+
+this_directory = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 
 setup(
     name=NAME,
@@ -43,9 +49,6 @@ setup(
     packages=find_packages(exclude=["test", "tests"]),
     include_package_data=True,
     long_description_content_type='text/markdown',
-    long_description="""\
-        # Introduction 
-        The SendX API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs. The SendX Rest API doesn’t support bulk updates. You can work on only one object per request. &lt;br&gt; 
-    """,  # noqa: E501
+    long_description=long_description,  # Use README.md content
     package_data={"sendx_python_sdk": ["py.typed"]},
 )

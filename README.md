@@ -1,5 +1,8 @@
-# SendX
-# Introduction
+# SendX Python SDK
+## Introduction
+
+SendX is an email marketing product. It helps you convert website visitors to customers, send them promotional emails, engage with them using drip sequences and craft custom journeys using powerful but simple automations.
+
 The SendX API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
 The SendX Rest API doesn’t support bulk updates. You can work on only one object per request. <br>
 
@@ -15,8 +18,9 @@ Python 3.7+
 If the python package is hosted on a repository, you can install directly using:
 
 ```sh
-pip install git+https://github.com/sendx/sendx-python-sdk.git
+pip install sendx
 ```
+
 (you may need to run `pip` with root permission: `sudo pip install git+https://github.com/sendx/sendx-python-sdk.git`)
 
 Then import the package:
@@ -46,6 +50,8 @@ Please follow the [installation procedure](#installation--usage) and then run th
 ```python
 
 import sendx_python_sdk
+from sendx_python_sdk.models.contact_request import ContactRequest
+from sendx_python_sdk.models.response import Response
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -58,16 +64,23 @@ configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = sendx_python_sdk.CampaignApi(api_client)
-    campaign_request = sendx_python_sdk.CampaignRequest() # CampaignRequest | The campaign content
+    api_instance = sendx_python_sdk.ContactApi(api_client)
+    contact_request = sendx_python_sdk.ContactRequest() # ContactRequest | 
+    contact_request.email = "johndoe@sendx.io"
+    contact_request.first_name = "John"
+    contact_request.last_name = "Doe"
+    contact_request.company = "SendX"
+    contact_request.tags = ["12nb32nk43k2", "34njnk42bkj3"]
+    contact_request.custom_fields = {"1434nfk324kn4d": "VIP", "34njnk42bkj3": "Gold"}
+    contact_request.last_tracked_ip = "34.212.42.122"
 
     try:
-        # Create Campaign
-        api_response = api_instance.create_campaign(campaign_request)
-        print("The response of CampaignApi->create_campaign:\n")
+        # Create a contact
+        api_response = api_instance.create_contact(contact_request)
+        print("The response of ContactApi->create_contact:\n")
         pprint(api_response)
-    except ApiException as e:
-        print("Exception when calling CampaignApi->create_campaign: %s\n" % e)
+    except Exception as e:
+        print("Exception when calling ContactApi->create_contact: %s\n" % e)
 
 ```
 
