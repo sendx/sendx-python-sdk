@@ -1,4 +1,4 @@
-# SendX Python SDK
+# [SendX Python SDK](https://pypi.org/project/SendX/)
 ## Introduction
 
 SendX is an email marketing product. It helps you convert website visitors to customers, send them promotional emails, engage with them using drip sequences and craft custom journeys using powerful but simple automations.
