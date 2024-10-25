@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sendx_python_sdk"
-version = "1.0.2"
+version = "1.0.3"
 description = "SendX REST API"
 authors = ["SendX Dev Team <support@sendx.io>"]
 license = "NoLicense"

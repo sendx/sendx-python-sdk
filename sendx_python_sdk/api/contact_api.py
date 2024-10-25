@@ -329,7 +329,7 @@ class ContactApi:
     @validate_call
     def delete_contact(
         self,
-        contact_id: Annotated[StrictStr, Field(description="The Contact ID to delete")],
+        identifier: Annotated[StrictStr, Field(description="The Contact ID/ Email to delete")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -347,8 +347,8 @@ class ContactApi:
 
         Deletes Contact
 
-        :param contact_id: The Contact ID to delete (required)
-        :type contact_id: str
+        :param identifier: The Contact ID/ Email to delete (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -372,7 +372,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._delete_contact_serialize(
-            contact_id=contact_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -400,7 +400,7 @@ class ContactApi:
     @validate_call
     def delete_contact_with_http_info(
         self,
-        contact_id: Annotated[StrictStr, Field(description="The Contact ID to delete")],
+        identifier: Annotated[StrictStr, Field(description="The Contact ID/ Email to delete")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -418,8 +418,8 @@ class ContactApi:
 
         Deletes Contact
 
-        :param contact_id: The Contact ID to delete (required)
-        :type contact_id: str
+        :param identifier: The Contact ID/ Email to delete (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -443,7 +443,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._delete_contact_serialize(
-            contact_id=contact_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -471,7 +471,7 @@ class ContactApi:
     @validate_call
     def delete_contact_without_preload_content(
         self,
-        contact_id: Annotated[StrictStr, Field(description="The Contact ID to delete")],
+        identifier: Annotated[StrictStr, Field(description="The Contact ID/ Email to delete")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -489,8 +489,8 @@ class ContactApi:
 
         Deletes Contact
 
-        :param contact_id: The Contact ID to delete (required)
-        :type contact_id: str
+        :param identifier: The Contact ID/ Email to delete (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -514,7 +514,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._delete_contact_serialize(
-            contact_id=contact_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -537,7 +537,7 @@ class ContactApi:
 
     def _delete_contact_serialize(
         self,
-        contact_id,
+        identifier,
         _request_auth,
         _content_type,
         _headers,
@@ -557,8 +557,8 @@ class ContactApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if contact_id is not None:
-            _path_params['contactId'] = contact_id
+        if identifier is not None:
+            _path_params['identifier'] = identifier
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -581,7 +581,7 @@ class ContactApi:
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/contact/{contactId}',
+            resource_path='/contact/{identifier}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -921,7 +921,7 @@ class ContactApi:
     @validate_call
     def get_contact_by_id(
         self,
-        contact_id: Annotated[StrictStr, Field(description="The ID of the contact to retrieve.")],
+        identifier: Annotated[StrictStr, Field(description="The ID or Email of the contact to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -935,12 +935,12 @@ class ContactApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> Contact:
-        """Get Contact by ID
+        """Get Contact by Identifier
 
-        Retrieve a specific contact by its contactId.
+        Retrieve a specific contact by its identifier.
 
-        :param contact_id: The ID of the contact to retrieve. (required)
-        :type contact_id: str
+        :param identifier: The ID or Email of the contact to retrieve. (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -964,7 +964,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._get_contact_by_id_serialize(
-            contact_id=contact_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -992,7 +992,7 @@ class ContactApi:
     @validate_call
     def get_contact_by_id_with_http_info(
         self,
-        contact_id: Annotated[StrictStr, Field(description="The ID of the contact to retrieve.")],
+        identifier: Annotated[StrictStr, Field(description="The ID or Email of the contact to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1006,12 +1006,12 @@ class ContactApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[Contact]:
-        """Get Contact by ID
+        """Get Contact by Identifier
 
-        Retrieve a specific contact by its contactId.
+        Retrieve a specific contact by its identifier.
 
-        :param contact_id: The ID of the contact to retrieve. (required)
-        :type contact_id: str
+        :param identifier: The ID or Email of the contact to retrieve. (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1035,7 +1035,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._get_contact_by_id_serialize(
-            contact_id=contact_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1063,7 +1063,7 @@ class ContactApi:
     @validate_call
     def get_contact_by_id_without_preload_content(
         self,
-        contact_id: Annotated[StrictStr, Field(description="The ID of the contact to retrieve.")],
+        identifier: Annotated[StrictStr, Field(description="The ID or Email of the contact to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1077,12 +1077,12 @@ class ContactApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get Contact by ID
+        """Get Contact by Identifier
 
-        Retrieve a specific contact by its contactId.
+        Retrieve a specific contact by its identifier.
 
-        :param contact_id: The ID of the contact to retrieve. (required)
-        :type contact_id: str
+        :param identifier: The ID or Email of the contact to retrieve. (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1106,7 +1106,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._get_contact_by_id_serialize(
-            contact_id=contact_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1129,7 +1129,7 @@ class ContactApi:
 
     def _get_contact_by_id_serialize(
         self,
-        contact_id,
+        identifier,
         _request_auth,
         _content_type,
         _headers,
@@ -1149,8 +1149,8 @@ class ContactApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if contact_id is not None:
-            _path_params['contactId'] = contact_id
+        if identifier is not None:
+            _path_params['identifier'] = identifier
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -1173,7 +1173,7 @@ class ContactApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/contact/{contactId}',
+            resource_path='/contact/{identifier}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1192,7 +1192,7 @@ class ContactApi:
     @validate_call
     def unsubscribe_contact(
         self,
-        contact_id: Annotated[StrictStr, Field(description="The Contact ID to unsubscribe")],
+        identifier: Annotated[StrictStr, Field(description="The Contact ID or email to unsubscribe")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1210,8 +1210,8 @@ class ContactApi:
 
         Unsubscribe a globally existing contact
 
-        :param contact_id: The Contact ID to unsubscribe (required)
-        :type contact_id: str
+        :param identifier: The Contact ID or email to unsubscribe (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1235,7 +1235,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._unsubscribe_contact_serialize(
-            contact_id=contact_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1263,7 +1263,7 @@ class ContactApi:
     @validate_call
     def unsubscribe_contact_with_http_info(
         self,
-        contact_id: Annotated[StrictStr, Field(description="The Contact ID to unsubscribe")],
+        identifier: Annotated[StrictStr, Field(description="The Contact ID or email to unsubscribe")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1281,8 +1281,8 @@ class ContactApi:
 
         Unsubscribe a globally existing contact
 
-        :param contact_id: The Contact ID to unsubscribe (required)
-        :type contact_id: str
+        :param identifier: The Contact ID or email to unsubscribe (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1306,7 +1306,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._unsubscribe_contact_serialize(
-            contact_id=contact_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1334,7 +1334,7 @@ class ContactApi:
     @validate_call
     def unsubscribe_contact_without_preload_content(
         self,
-        contact_id: Annotated[StrictStr, Field(description="The Contact ID to unsubscribe")],
+        identifier: Annotated[StrictStr, Field(description="The Contact ID or email to unsubscribe")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1352,8 +1352,8 @@ class ContactApi:
 
         Unsubscribe a globally existing contact
 
-        :param contact_id: The Contact ID to unsubscribe (required)
-        :type contact_id: str
+        :param identifier: The Contact ID or email to unsubscribe (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1377,7 +1377,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._unsubscribe_contact_serialize(
-            contact_id=contact_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1400,7 +1400,7 @@ class ContactApi:
 
     def _unsubscribe_contact_serialize(
         self,
-        contact_id,
+        identifier,
         _request_auth,
         _content_type,
         _headers,
@@ -1420,8 +1420,8 @@ class ContactApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if contact_id is not None:
-            _path_params['contactId'] = contact_id
+        if identifier is not None:
+            _path_params['identifier'] = identifier
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -1444,7 +1444,7 @@ class ContactApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/contact/unsubscribe/{contactId}',
+            resource_path='/contact/unsubscribe/{identifier}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1463,7 +1463,7 @@ class ContactApi:
     @validate_call
     def update_contact(
         self,
-        contact_id: Annotated[StrictStr, Field(description="The ID of the Contact to update")],
+        identifier: Annotated[StrictStr, Field(description="The ID or email of the Contact to update")],
         contact_request: ContactRequest,
         _request_timeout: Union[
             None,
@@ -1482,8 +1482,8 @@ class ContactApi:
 
         Update Contact with given data
 
-        :param contact_id: The ID of the Contact to update (required)
-        :type contact_id: str
+        :param identifier: The ID or email of the Contact to update (required)
+        :type identifier: str
         :param contact_request: (required)
         :type contact_request: ContactRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -1509,7 +1509,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._update_contact_serialize(
-            contact_id=contact_id,
+            identifier=identifier,
             contact_request=contact_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1538,7 +1538,7 @@ class ContactApi:
     @validate_call
     def update_contact_with_http_info(
         self,
-        contact_id: Annotated[StrictStr, Field(description="The ID of the Contact to update")],
+        identifier: Annotated[StrictStr, Field(description="The ID or email of the Contact to update")],
         contact_request: ContactRequest,
         _request_timeout: Union[
             None,
@@ -1557,8 +1557,8 @@ class ContactApi:
 
         Update Contact with given data
 
-        :param contact_id: The ID of the Contact to update (required)
-        :type contact_id: str
+        :param identifier: The ID or email of the Contact to update (required)
+        :type identifier: str
         :param contact_request: (required)
         :type contact_request: ContactRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -1584,7 +1584,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._update_contact_serialize(
-            contact_id=contact_id,
+            identifier=identifier,
             contact_request=contact_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1613,7 +1613,7 @@ class ContactApi:
     @validate_call
     def update_contact_without_preload_content(
         self,
-        contact_id: Annotated[StrictStr, Field(description="The ID of the Contact to update")],
+        identifier: Annotated[StrictStr, Field(description="The ID or email of the Contact to update")],
         contact_request: ContactRequest,
         _request_timeout: Union[
             None,
@@ -1632,8 +1632,8 @@ class ContactApi:
 
         Update Contact with given data
 
-        :param contact_id: The ID of the Contact to update (required)
-        :type contact_id: str
+        :param identifier: The ID or email of the Contact to update (required)
+        :type identifier: str
         :param contact_request: (required)
         :type contact_request: ContactRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -1659,7 +1659,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._update_contact_serialize(
-            contact_id=contact_id,
+            identifier=identifier,
             contact_request=contact_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1683,7 +1683,7 @@ class ContactApi:
 
     def _update_contact_serialize(
         self,
-        contact_id,
+        identifier,
         contact_request,
         _request_auth,
         _content_type,
@@ -1704,8 +1704,8 @@ class ContactApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if contact_id is not None:
-            _path_params['contactId'] = contact_id
+        if identifier is not None:
+            _path_params['identifier'] = identifier
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -1743,7 +1743,7 @@ class ContactApi:
 
         return self.api_client.param_serialize(
             method='PUT',
-            resource_path='/contact/{contactId}',
+            resource_path='/contact/{identifier}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
