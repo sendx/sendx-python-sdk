@@ -96,11 +96,15 @@ Class | Method | HTTP request | Description
 *CampaignApi* | [**get_all_campaigns**](docs/CampaignApi.md#get_all_campaigns) | **GET** /campaign | Get All Campaigns
 *CampaignApi* | [**get_campaign_by_id**](docs/CampaignApi.md#get_campaign_by_id) | **GET** /campaign/{campaignId} | Get Campaign By Id
 *ContactApi* | [**create_contact**](docs/ContactApi.md#create_contact) | **POST** /contact | Create a contact
-*ContactApi* | [**delete_contact**](docs/ContactApi.md#delete_contact) | **DELETE** /contact/{contactId} | Delete Contact
+*ContactApi* | [**delete_contact**](docs/ContactApi.md#delete_contact) | **DELETE** /contact/{identifier} | Delete Contact
 *ContactApi* | [**get_all_contacts**](docs/ContactApi.md#get_all_contacts) | **GET** /contact | Get All Contacts
-*ContactApi* | [**get_contact_by_id**](docs/ContactApi.md#get_contact_by_id) | **GET** /contact/{contactId} | Get Contact by ID
-*ContactApi* | [**unsubscribe_contact**](docs/ContactApi.md#unsubscribe_contact) | **PUT** /contact/unsubscribe/{contactId} | Unsubscribe Contact
-*ContactApi* | [**update_contact**](docs/ContactApi.md#update_contact) | **PUT** /contact/{contactId} | Update Contact
+*ContactApi* | [**get_contact_by_id**](docs/ContactApi.md#get_contact_by_id) | **GET** /contact/{identifier} | Get Contact by Identifier
+*ContactApi* | [**unsubscribe_contact**](docs/ContactApi.md#unsubscribe_contact) | **POST** /contact/unsubscribe/{identifier} | Unsubscribe Contact
+*ContactApi* | [**update_contact**](docs/ContactApi.md#update_contact) | **PUT** /contact/{identifier} | Update Contact
+*EventApi* | [**create_revenue_event**](docs/EventApi.md#create_revenue_event) | **POST** /events/revenue | Record a revenue event for a specific contact
+*EventApi* | [**push_custom_event**](docs/EventApi.md#push_custom_event) | **POST** /events/custom | Push a custom event associated with a contact
+*GettingStartedApi* | [**identify_contact**](docs/GettingStartedApi.md#identify_contact) | **POST** /contact/identify | Identify contact
+*GettingStartedApi* | [**tracking_contact**](docs/GettingStartedApi.md#tracking_contact) | **POST** /contact/track | Add Tracking info
 *ListApi* | [**create_list**](docs/ListApi.md#create_list) | **POST** /list | Create List
 *ListApi* | [**delete_list**](docs/ListApi.md#delete_list) | **DELETE** /list/{listId} | Delete List
 *ListApi* | [**get_all_lists**](docs/ListApi.md#get_all_lists) | **GET** /list | Get All Lists
@@ -124,20 +128,27 @@ Class | Method | HTTP request | Description
  - [Contact](docs/Contact.md)
  - [ContactRequest](docs/ContactRequest.md)
  - [CreateResponse](docs/CreateResponse.md)
+ - [CustomEventRequest](docs/CustomEventRequest.md)
  - [DashboardStats](docs/DashboardStats.md)
  - [DeleteCampaign200Response](docs/DeleteCampaign200Response.md)
  - [DeleteRequest](docs/DeleteRequest.md)
  - [DeleteResponse](docs/DeleteResponse.md)
+ - [EventResponse](docs/EventResponse.md)
+ - [IdentifyRequest](docs/IdentifyRequest.md)
+ - [IdentifyResponse](docs/IdentifyResponse.md)
  - [LastSentCampaignStat](docs/LastSentCampaignStat.md)
  - [ListModel](docs/ListModel.md)
  - [ListRequest](docs/ListRequest.md)
  - [ReportData](docs/ReportData.md)
  - [Response](docs/Response.md)
+ - [RevenueEventRequest](docs/RevenueEventRequest.md)
  - [Sender](docs/Sender.md)
  - [SenderRequest](docs/SenderRequest.md)
  - [SenderResponse](docs/SenderResponse.md)
  - [Tag](docs/Tag.md)
  - [TagRequest](docs/TagRequest.md)
+ - [TrackRequest](docs/TrackRequest.md)
+ - [TrackResponse](docs/TrackResponse.md)
 
 
 <a id="documentation-for-authorization"></a>

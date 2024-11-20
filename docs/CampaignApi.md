@@ -29,15 +29,22 @@ from sendx_python_sdk.models.create_response import CreateResponse
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
+# Defining the host is optional and defaults to https://api.sendx.io/api/v1/rest
+# See configuration.py for a list of all supported configuration parameters.
+configuration = sendx_python_sdk.Configuration(
+    host = "https://api.sendx.io/api/v1/rest"
+)
 
-configuration = sendx_python_sdk.Configuration()
-
-
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Configure API key authorization: apiKeyAuth
 configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
 
-
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
@@ -106,15 +113,22 @@ from sendx_python_sdk.models.delete_campaign200_response import DeleteCampaign20
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
+# Defining the host is optional and defaults to https://api.sendx.io/api/v1/rest
+# See configuration.py for a list of all supported configuration parameters.
+configuration = sendx_python_sdk.Configuration(
+    host = "https://api.sendx.io/api/v1/rest"
+)
 
-configuration = sendx_python_sdk.Configuration()
-
-
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Configure API key authorization: apiKeyAuth
 configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
 
-
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
@@ -183,15 +197,22 @@ from sendx_python_sdk.models.campaign_request import CampaignRequest
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
+# Defining the host is optional and defaults to https://api.sendx.io/api/v1/rest
+# See configuration.py for a list of all supported configuration parameters.
+configuration = sendx_python_sdk.Configuration(
+    host = "https://api.sendx.io/api/v1/rest"
+)
 
-configuration = sendx_python_sdk.Configuration()
-
-
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Configure API key authorization: apiKeyAuth
 configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
 
-
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
@@ -262,15 +283,22 @@ from sendx_python_sdk.models.campaign import Campaign
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
+# Defining the host is optional and defaults to https://api.sendx.io/api/v1/rest
+# See configuration.py for a list of all supported configuration parameters.
+configuration = sendx_python_sdk.Configuration(
+    host = "https://api.sendx.io/api/v1/rest"
+)
 
-configuration = sendx_python_sdk.Configuration()
-
-
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Configure API key authorization: apiKeyAuth
 configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
 
-
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
@@ -340,15 +368,22 @@ from sendx_python_sdk.models.campaign import Campaign
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
+# Defining the host is optional and defaults to https://api.sendx.io/api/v1/rest
+# See configuration.py for a list of all supported configuration parameters.
+configuration = sendx_python_sdk.Configuration(
+    host = "https://api.sendx.io/api/v1/rest"
+)
 
-configuration = sendx_python_sdk.Configuration()
-
-
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Configure API key authorization: apiKeyAuth
 configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
 
-
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:

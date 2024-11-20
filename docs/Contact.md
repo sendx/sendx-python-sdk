@@ -21,6 +21,8 @@ Name | Type | Description | Notes
 **ltv** | **int** | Lifetime value (LTV) of the contact in currency units. | [optional] 
 **contact_source** | **int** | The source from which the contact was added. Possible values:  | [optional] 
 **last_tracked_ip** | **str** | The last known IP address tracked for the contact. | [optional] 
+**lists** | **List[str]** | A list of &#x60;lists&#x60; ids the contact is subscribed to. | [optional] 
+**tags** | **List[str]** | &#x60;Tag&#x60; ids associated with the contact for segmentation or categorization. | [optional] 
 
 ## Example
 

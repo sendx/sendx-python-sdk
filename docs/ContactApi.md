@@ -5,11 +5,11 @@ All URIs are relative to *https://api.sendx.io/api/v1/rest*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**create_contact**](ContactApi.md#create_contact) | **POST** /contact | Create a contact
-[**delete_contact**](ContactApi.md#delete_contact) | **DELETE** /contact/{contactId} | Delete Contact
+[**delete_contact**](ContactApi.md#delete_contact) | **DELETE** /contact/{identifier} | Delete Contact
 [**get_all_contacts**](ContactApi.md#get_all_contacts) | **GET** /contact | Get All Contacts
-[**get_contact_by_id**](ContactApi.md#get_contact_by_id) | **GET** /contact/{contactId} | Get Contact by ID
-[**unsubscribe_contact**](ContactApi.md#unsubscribe_contact) | **PUT** /contact/unsubscribe/{contactId} | Unsubscribe Contact
-[**update_contact**](ContactApi.md#update_contact) | **PUT** /contact/{contactId} | Update Contact
+[**get_contact_by_id**](ContactApi.md#get_contact_by_id) | **GET** /contact/{identifier} | Get Contact by Identifier
+[**unsubscribe_contact**](ContactApi.md#unsubscribe_contact) | **POST** /contact/unsubscribe/{identifier} | Unsubscribe Contact
+[**update_contact**](ContactApi.md#update_contact) | **PUT** /contact/{identifier} | Update Contact
 
 
 # **create_contact**
@@ -30,15 +30,22 @@ from sendx_python_sdk.models.response import Response
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
+# Defining the host is optional and defaults to https://api.sendx.io/api/v1/rest
+# See configuration.py for a list of all supported configuration parameters.
+configuration = sendx_python_sdk.Configuration(
+    host = "https://api.sendx.io/api/v1/rest"
+)
 
-configuration = sendx_python_sdk.Configuration()
-
-
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Configure API key authorization: apiKeyAuth
 configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
 
-
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
@@ -90,7 +97,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_contact**
-> Response delete_contact(contact_id)
+> Response delete_contact(identifier)
 
 Delete Contact
 
@@ -106,25 +113,32 @@ from sendx_python_sdk.models.response import Response
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
+# Defining the host is optional and defaults to https://api.sendx.io/api/v1/rest
+# See configuration.py for a list of all supported configuration parameters.
+configuration = sendx_python_sdk.Configuration(
+    host = "https://api.sendx.io/api/v1/rest"
+)
 
-configuration = sendx_python_sdk.Configuration()
-
-
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Configure API key authorization: apiKeyAuth
 configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
 
-
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ContactApi(api_client)
-    contact_id = 'contact_id_example' # str | The Contact ID to delete
+    identifier = 'identifier_example' # str | The Contact ID/ Email to delete
 
     try:
         # Delete Contact
-        api_response = api_instance.delete_contact(contact_id)
+        api_response = api_instance.delete_contact(identifier)
         print("The response of ContactApi->delete_contact:\n")
         pprint(api_response)
     except Exception as e:
@@ -138,7 +152,7 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **contact_id** | **str**| The Contact ID to delete | 
+ **identifier** | **str**| The Contact ID/ Email to delete | 
 
 ### Return type
 
@@ -182,15 +196,22 @@ from sendx_python_sdk.models.contact import Contact
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
+# Defining the host is optional and defaults to https://api.sendx.io/api/v1/rest
+# See configuration.py for a list of all supported configuration parameters.
+configuration = sendx_python_sdk.Configuration(
+    host = "https://api.sendx.io/api/v1/rest"
+)
 
-configuration = sendx_python_sdk.Configuration()
-
-
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Configure API key authorization: apiKeyAuth
 configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
 
-
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
@@ -247,11 +268,11 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_contact_by_id**
-> Contact get_contact_by_id(contact_id)
+> Contact get_contact_by_id(identifier)
 
-Get Contact by ID
+Get Contact by Identifier
 
-Retrieve a specific contact by its contactId.
+Retrieve a specific contact by its identifier.
 
 ### Example
 
@@ -263,25 +284,32 @@ from sendx_python_sdk.models.contact import Contact
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
+# Defining the host is optional and defaults to https://api.sendx.io/api/v1/rest
+# See configuration.py for a list of all supported configuration parameters.
+configuration = sendx_python_sdk.Configuration(
+    host = "https://api.sendx.io/api/v1/rest"
+)
 
-configuration = sendx_python_sdk.Configuration()
-
-
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Configure API key authorization: apiKeyAuth
 configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
 
-
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ContactApi(api_client)
-    contact_id = 'sendxid123' # str | The ID of the contact to retrieve.
+    identifier = 'john@doe.com' # str | The ID or Email of the contact to retrieve.
 
     try:
-        # Get Contact by ID
-        api_response = api_instance.get_contact_by_id(contact_id)
+        # Get Contact by Identifier
+        api_response = api_instance.get_contact_by_id(identifier)
         print("The response of ContactApi->get_contact_by_id:\n")
         pprint(api_response)
     except Exception as e:
@@ -295,7 +323,7 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **contact_id** | **str**| The ID of the contact to retrieve. | 
+ **identifier** | **str**| The ID or Email of the contact to retrieve. | 
 
 ### Return type
 
@@ -323,7 +351,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **unsubscribe_contact**
-> Response unsubscribe_contact(contact_id)
+> Response unsubscribe_contact(identifier)
 
 Unsubscribe Contact
 
@@ -339,25 +367,32 @@ from sendx_python_sdk.models.response import Response
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
+# Defining the host is optional and defaults to https://api.sendx.io/api/v1/rest
+# See configuration.py for a list of all supported configuration parameters.
+configuration = sendx_python_sdk.Configuration(
+    host = "https://api.sendx.io/api/v1/rest"
+)
 
-configuration = sendx_python_sdk.Configuration()
-
-
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Configure API key authorization: apiKeyAuth
 configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
 
-
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ContactApi(api_client)
-    contact_id = 'sendx123' # str | The Contact ID to unsubscribe
+    identifier = 'sendx123' # str | The Contact ID or email to unsubscribe
 
     try:
         # Unsubscribe Contact
-        api_response = api_instance.unsubscribe_contact(contact_id)
+        api_response = api_instance.unsubscribe_contact(identifier)
         print("The response of ContactApi->unsubscribe_contact:\n")
         pprint(api_response)
     except Exception as e:
@@ -371,7 +406,7 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **contact_id** | **str**| The Contact ID to unsubscribe | 
+ **identifier** | **str**| The Contact ID or email to unsubscribe | 
 
 ### Return type
 
@@ -399,7 +434,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_contact**
-> Contact update_contact(contact_id, contact_request)
+> Contact update_contact(identifier, contact_request)
 
 Update Contact
 
@@ -416,26 +451,33 @@ from sendx_python_sdk.models.contact_request import ContactRequest
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
+# Defining the host is optional and defaults to https://api.sendx.io/api/v1/rest
+# See configuration.py for a list of all supported configuration parameters.
+configuration = sendx_python_sdk.Configuration(
+    host = "https://api.sendx.io/api/v1/rest"
+)
 
-configuration = sendx_python_sdk.Configuration()
-
-
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Configure API key authorization: apiKeyAuth
 configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
 
-
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ContactApi(api_client)
-    contact_id = 'sendxid123' # str | The ID of the Contact to update
+    identifier = 'sendxid123' # str | The ID or email of the Contact to update
     contact_request = sendx_python_sdk.ContactRequest() # ContactRequest | 
 
     try:
         # Update Contact
-        api_response = api_instance.update_contact(contact_id, contact_request)
+        api_response = api_instance.update_contact(identifier, contact_request)
         print("The response of ContactApi->update_contact:\n")
         pprint(api_response)
     except Exception as e:
@@ -449,7 +491,7 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **contact_id** | **str**| The ID of the Contact to update | 
+ **identifier** | **str**| The ID or email of the Contact to update | 
  **contact_request** | [**ContactRequest**](ContactRequest.md)|  | 
 
 ### Return type
