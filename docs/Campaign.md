@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 **track_reply** | **bool** | Indicates if replies to the campaign should be tracked | [optional] 
 **status** | **int** | Campaign status: 0 (Draft), 1 (Scheduled), 2 (Sending), 3 (Sent), 4 (Quarantined) | [optional] 
 **schedule_type** | **int** | Schedule type: 0 (Schedule later), 1 (Send Now), 2 (Trigger via automation), 3 (Recurring) | [optional] 
-**schedule_condition** | **str** | Condition for scheduling the campaign | [optional] 
+**schedule_condition** | **str** | Condition for scheduling the campaign, date at which the campaign should be sent | [optional] 
 **time_condition** | **str** | Time-related condition for the campaign | [optional] 
 **timezone** | **str** | Timezone for the scheduled send | [optional] 
 **preferred_time_condition** | **str** | Preferred time condition for the campaign | [optional] 

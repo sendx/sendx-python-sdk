@@ -18,20 +18,30 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class RevenueEventRequest(BaseModel):
+class CustomField(BaseModel):
     """
-    RevenueEventRequest
+    CustomField
     """ # noqa: E501
-    identifier: StrictStr = Field(description="Unique email identifier for the contact.")
-    amount: Union[StrictFloat, StrictInt] = Field(description="Recognized revenue amount associated with the event.")
-    source: StrictStr = Field(description="Source of the revenue (e.g., 'website', 'mobile app', 'partner referral').")
-    time: StrictInt = Field(description="Unix timestamp indicating when the revenue event occurred.")
-    __properties: ClassVar[List[str]] = ["identifier", "amount", "source", "time"]
+    id: Optional[StrictStr] = Field(default=None, description="Encrypted ID of the custom field.")
+    name: Optional[StrictStr] = Field(default=None, description="Name of the custom field.")
+    type: Optional[StrictInt] = Field(default=None, description="Type of the custom field.")
+    description: Optional[StrictStr] = Field(default=None, description="Description of the custom field.")
+    __properties: ClassVar[List[str]] = ["id", "name", "type", "description"]
+
+    @field_validator('type')
+    def type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set([null, null, null, null]):
+            raise ValueError("must be one of enum values (null, null, null, null)")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +61,7 @@ class RevenueEventRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of RevenueEventRequest from a JSON string"""
+        """Create an instance of CustomField from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,7 +86,7 @@ class RevenueEventRequest(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of RevenueEventRequest from a dict"""
+        """Create an instance of CustomField from a dict"""
         if obj is None:
             return None
 
@@ -84,10 +94,10 @@ class RevenueEventRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "identifier": obj.get("identifier"),
-            "amount": obj.get("amount"),
-            "source": obj.get("source"),
-            "time": obj.get("time")
+            "id": obj.get("id"),
+            "name": obj.get("name"),
+            "type": obj.get("type"),
+            "description": obj.get("description")
         })
         return _obj
 

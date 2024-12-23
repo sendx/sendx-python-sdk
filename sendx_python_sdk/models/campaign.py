@@ -32,7 +32,7 @@ class Campaign(BaseModel):
     track_reply: Optional[StrictBool] = Field(default=None, description="Indicates if replies to the campaign should be tracked", alias="trackReply")
     status: Optional[StrictInt] = Field(default=None, description="Campaign status: 0 (Draft), 1 (Scheduled), 2 (Sending), 3 (Sent), 4 (Quarantined)")
     schedule_type: Optional[StrictInt] = Field(default=None, description="Schedule type: 0 (Schedule later), 1 (Send Now), 2 (Trigger via automation), 3 (Recurring)", alias="scheduleType")
-    schedule_condition: Optional[StrictStr] = Field(default=None, description="Condition for scheduling the campaign", alias="scheduleCondition")
+    schedule_condition: Optional[StrictStr] = Field(default=None, description="Condition for scheduling the campaign, date at which the campaign should be sent", alias="scheduleCondition")
     time_condition: Optional[StrictStr] = Field(default=None, description="Time-related condition for the campaign", alias="timeCondition")
     timezone: Optional[StrictStr] = Field(default=None, description="Timezone for the scheduled send")
     preferred_time_condition: Optional[StrictStr] = Field(default=None, description="Preferred time condition for the campaign", alias="preferredTimeCondition")

@@ -15,17 +15,19 @@
 """  # noqa: E501
 
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 # import apis into sdk package
 from sendx_python_sdk.api.campaign_api import CampaignApi
 from sendx_python_sdk.api.contact_api import ContactApi
+from sendx_python_sdk.api.custom_field_api import CustomFieldApi
 from sendx_python_sdk.api.event_api import EventApi
 from sendx_python_sdk.api.getting_started_api import GettingStartedApi
 from sendx_python_sdk.api.list_api import ListApi
 from sendx_python_sdk.api.reports_api import ReportsApi
 from sendx_python_sdk.api.sender_api import SenderApi
 from sendx_python_sdk.api.tags_api import TagsApi
+from sendx_python_sdk.api.webhook_api import WebhookApi
 
 # import ApiClient
 from sendx_python_sdk.api_response import ApiResponse
@@ -46,10 +48,13 @@ from sendx_python_sdk.models.contact import Contact
 from sendx_python_sdk.models.contact_request import ContactRequest
 from sendx_python_sdk.models.create_response import CreateResponse
 from sendx_python_sdk.models.custom_event_request import CustomEventRequest
+from sendx_python_sdk.models.custom_field import CustomField
+from sendx_python_sdk.models.customfield_customfield_id_delete200_response import CustomfieldCustomfieldIdDelete200Response
 from sendx_python_sdk.models.dashboard_stats import DashboardStats
 from sendx_python_sdk.models.delete_campaign200_response import DeleteCampaign200Response
 from sendx_python_sdk.models.delete_request import DeleteRequest
 from sendx_python_sdk.models.delete_response import DeleteResponse
+from sendx_python_sdk.models.e_custom_field import ECustomField
 from sendx_python_sdk.models.event_response import EventResponse
 from sendx_python_sdk.models.identify_request import IdentifyRequest
 from sendx_python_sdk.models.identify_response import IdentifyResponse
@@ -66,3 +71,6 @@ from sendx_python_sdk.models.tag import Tag
 from sendx_python_sdk.models.tag_request import TagRequest
 from sendx_python_sdk.models.track_request import TrackRequest
 from sendx_python_sdk.models.track_response import TrackResponse
+from sendx_python_sdk.models.webhook import Webhook
+from sendx_python_sdk.models.webhook_object import WebhookObject
+from sendx_python_sdk.models.webhook_request import WebhookRequest

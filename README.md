@@ -79,8 +79,8 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
         api_response = api_instance.create_contact(contact_request)
         print("The response of ContactApi->create_contact:\n")
         pprint(api_response)
-    except Exception as e:
-        print("Exception when calling ContactApi->create_contact: %s\n" % e)
+    except ApiException as e:
+        print("Exception when calling CampaignApi->create_campaign: %s\n" % e)
 
 ```
 
@@ -101,6 +101,11 @@ Class | Method | HTTP request | Description
 *ContactApi* | [**get_contact_by_id**](docs/ContactApi.md#get_contact_by_id) | **GET** /contact/{identifier} | Get Contact by Identifier
 *ContactApi* | [**unsubscribe_contact**](docs/ContactApi.md#unsubscribe_contact) | **POST** /contact/unsubscribe/{identifier} | Unsubscribe Contact
 *ContactApi* | [**update_contact**](docs/ContactApi.md#update_contact) | **PUT** /contact/{identifier} | Update Contact
+*CustomFieldApi* | [**customfield_customfield_id_delete**](docs/CustomFieldApi.md#customfield_customfield_id_delete) | **DELETE** /customfield/{customfieldId} | Delete Custom Field
+*CustomFieldApi* | [**customfield_customfield_id_get**](docs/CustomFieldApi.md#customfield_customfield_id_get) | **GET** /customfield/{customfieldId} | Get Custom Field
+*CustomFieldApi* | [**customfield_customfield_id_put**](docs/CustomFieldApi.md#customfield_customfield_id_put) | **PUT** /customfield/{customfieldId} | Update Custom Field
+*CustomFieldApi* | [**customfield_get**](docs/CustomFieldApi.md#customfield_get) | **GET** /customfield | Get All Custom Fields
+*CustomFieldApi* | [**customfield_post**](docs/CustomFieldApi.md#customfield_post) | **POST** /customfield | Create Custom Field
 *EventApi* | [**create_revenue_event**](docs/EventApi.md#create_revenue_event) | **POST** /events/revenue | Record a revenue event for a specific contact
 *EventApi* | [**push_custom_event**](docs/EventApi.md#push_custom_event) | **POST** /events/custom | Push a custom event associated with a contact
 *GettingStartedApi* | [**identify_contact**](docs/GettingStartedApi.md#identify_contact) | **POST** /contact/identify | Identify contact
@@ -118,6 +123,11 @@ Class | Method | HTTP request | Description
 *TagsApi* | [**get_all_tags**](docs/TagsApi.md#get_all_tags) | **GET** /tag | Get All Tags
 *TagsApi* | [**get_tag_by_id**](docs/TagsApi.md#get_tag_by_id) | **GET** /tag/{tagId} | Get a Tag by ID
 *TagsApi* | [**update_tag**](docs/TagsApi.md#update_tag) | **PUT** /tag/{tagId} | Update a Tag
+*WebhookApi* | [**create_team_webhook**](docs/WebhookApi.md#create_team_webhook) | **POST** /webhook | Create TeamWebhook
+*WebhookApi* | [**delete_team_webhook**](docs/WebhookApi.md#delete_team_webhook) | **DELETE** /webhook/{webhookId} | Delete Team Webhook
+*WebhookApi* | [**get_all_team_webhook**](docs/WebhookApi.md#get_all_team_webhook) | **GET** /webhook | Get All team Webhook
+*WebhookApi* | [**get_team_webhook**](docs/WebhookApi.md#get_team_webhook) | **GET** /webhook/{webhookId} | Get TeamWebhook
+*WebhookApi* | [**update_team_webhook**](docs/WebhookApi.md#update_team_webhook) | **PUT** /webhook/{webhookId} | Update Team Webhook
 
 
 ## Documentation For Models
@@ -129,10 +139,13 @@ Class | Method | HTTP request | Description
  - [ContactRequest](docs/ContactRequest.md)
  - [CreateResponse](docs/CreateResponse.md)
  - [CustomEventRequest](docs/CustomEventRequest.md)
+ - [CustomField](docs/CustomField.md)
+ - [CustomfieldCustomfieldIdDelete200Response](docs/CustomfieldCustomfieldIdDelete200Response.md)
  - [DashboardStats](docs/DashboardStats.md)
  - [DeleteCampaign200Response](docs/DeleteCampaign200Response.md)
  - [DeleteRequest](docs/DeleteRequest.md)
  - [DeleteResponse](docs/DeleteResponse.md)
+ - [ECustomField](docs/ECustomField.md)
  - [EventResponse](docs/EventResponse.md)
  - [IdentifyRequest](docs/IdentifyRequest.md)
  - [IdentifyResponse](docs/IdentifyResponse.md)
@@ -149,6 +162,9 @@ Class | Method | HTTP request | Description
  - [TagRequest](docs/TagRequest.md)
  - [TrackRequest](docs/TrackRequest.md)
  - [TrackResponse](docs/TrackResponse.md)
+ - [Webhook](docs/Webhook.md)
+ - [WebhookObject](docs/WebhookObject.md)
+ - [WebhookRequest](docs/WebhookRequest.md)
 
 
 <a id="documentation-for-authorization"></a>

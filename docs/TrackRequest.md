@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**email** | **str** | Email address of the contact to track. | [optional] 
+**email** | [**Email**](Email.md) | Email address of the contact to track. | [optional] 
 **add_tags** | **List[str]** |  | [optional] 
 **remove_tags** | **List[str]** |  | [optional] 
 

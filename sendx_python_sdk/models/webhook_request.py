@@ -18,20 +18,24 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class RevenueEventRequest(BaseModel):
+class WebhookRequest(BaseModel):
     """
-    RevenueEventRequest
+    WebhookRequest
     """ # noqa: E501
-    identifier: StrictStr = Field(description="Unique email identifier for the contact.")
-    amount: Union[StrictFloat, StrictInt] = Field(description="Recognized revenue amount associated with the event.")
-    source: StrictStr = Field(description="Source of the revenue (e.g., 'website', 'mobile app', 'partner referral').")
-    time: StrictInt = Field(description="Unix timestamp indicating when the revenue event occurred.")
-    __properties: ClassVar[List[str]] = ["identifier", "amount", "source", "time"]
+    enabled: Optional[StrictBool] = Field(default=None, description="Indicates whether the webhook is enabled.")
+    url: Optional[StrictStr] = Field(default=None, description="The URL where webhook events will be sent.")
+    unsubscribed: Optional[StrictBool] = Field(default=None, description="Indicates if the webhook unsubscribes users.")
+    dropped: Optional[StrictBool] = Field(default=None, description="Indicates if the webhook processes dropped events.")
+    bounced: Optional[StrictBool] = Field(default=None, description="Indicates if the webhook processes bounced events.")
+    marked_spam: Optional[StrictBool] = Field(default=None, description="Indicates if the webhook processes marked-as-spam events.", alias="markedSpam")
+    clicked: Optional[StrictBool] = Field(default=None, description="Indicates if the webhook processes click events.")
+    opened: Optional[StrictBool] = Field(default=None, description="Indicates if the webhook processes open events.")
+    __properties: ClassVar[List[str]] = ["enabled", "url", "unsubscribed", "dropped", "bounced", "markedSpam", "clicked", "opened"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +55,7 @@ class RevenueEventRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of RevenueEventRequest from a JSON string"""
+        """Create an instance of WebhookRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,7 +80,7 @@ class RevenueEventRequest(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of RevenueEventRequest from a dict"""
+        """Create an instance of WebhookRequest from a dict"""
         if obj is None:
             return None
 
@@ -84,10 +88,14 @@ class RevenueEventRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "identifier": obj.get("identifier"),
-            "amount": obj.get("amount"),
-            "source": obj.get("source"),
-            "time": obj.get("time")
+            "enabled": obj.get("enabled"),
+            "url": obj.get("url"),
+            "unsubscribed": obj.get("unsubscribed"),
+            "dropped": obj.get("dropped"),
+            "bounced": obj.get("bounced"),
+            "markedSpam": obj.get("markedSpam"),
+            "clicked": obj.get("clicked"),
+            "opened": obj.get("opened")
         })
         return _obj
 
