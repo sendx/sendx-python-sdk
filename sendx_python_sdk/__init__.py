@@ -72,5 +72,4 @@ from sendx_python_sdk.models.tag_request import TagRequest
 from sendx_python_sdk.models.track_request import TrackRequest
 from sendx_python_sdk.models.track_response import TrackResponse
 from sendx_python_sdk.models.webhook import Webhook
-from sendx_python_sdk.models.webhook_object import WebhookObject
 from sendx_python_sdk.models.webhook_request import WebhookRequest

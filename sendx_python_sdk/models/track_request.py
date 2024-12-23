@@ -27,7 +27,7 @@ class TrackRequest(BaseModel):
     """
     TrackRequest
     """ # noqa: E501
-    email: Optional[Email] = Field(default=None, description="Email address of the contact to track.")
+    email: Optional[StrictStr] = Field(default=None, description="Email address of the contact to track.")
     add_tags: Optional[List[StrictStr]] = Field(default=None, alias="addTags")
     remove_tags: Optional[List[StrictStr]] = Field(default=None, alias="removeTags")
     __properties: ClassVar[List[str]] = ["email", "addTags", "removeTags"]
@@ -71,9 +71,6 @@ class TrackRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of email
-        if self.email:
-            _dict['email'] = self.email.to_dict()
         return _dict
 
     @classmethod
@@ -86,7 +83,7 @@ class TrackRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "email": Email.from_dict(obj["email"]) if obj.get("email") is not None else None,
+            "email": obj.get("email"),
             "addTags": obj.get("addTags"),
             "removeTags": obj.get("removeTags")
         })

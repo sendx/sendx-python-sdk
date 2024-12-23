@@ -44,7 +44,6 @@ docs/TrackRequest.md
 docs/TrackResponse.md
 docs/Webhook.md
 docs/WebhookApi.md
-docs/WebhookObject.md
 docs/WebhookRequest.md
 git_push.sh
 pyproject.toml
@@ -97,7 +96,6 @@ sendx_python_sdk/models/tag_request.py
 sendx_python_sdk/models/track_request.py
 sendx_python_sdk/models/track_response.py
 sendx_python_sdk/models/webhook.py
-sendx_python_sdk/models/webhook_object.py
 sendx_python_sdk/models/webhook_request.py
 sendx_python_sdk/py.typed
 sendx_python_sdk/rest.py

@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -32,16 +32,6 @@ class CustomField(BaseModel):
     type: Optional[StrictInt] = Field(default=None, description="Type of the custom field.")
     description: Optional[StrictStr] = Field(default=None, description="Description of the custom field.")
     __properties: ClassVar[List[str]] = ["id", "name", "type", "description"]
-
-    @field_validator('type')
-    def type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set([null, null, null, null]):
-            raise ValueError("must be one of enum values (null, null, null, null)")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
