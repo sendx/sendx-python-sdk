@@ -3,10 +3,10 @@
 """
     SendX REST API
 
-    # Introduction SendX is an email marketing product. It helps you convert website visitors to customers, send them promotional emails, engage with them using drip sequences and craft custom journeys using powerful but simple automations. The SendX API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs. The SendX Rest API doesn’t support bulk updates. You can work on only one object per request. <br> 
+    # SendX REST API Documentation  ## 🚀 Introduction  The SendX API is organized around REST principles. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  **Key Features:** - 🔒 **Security**: Team-based authentication with optional member-level access - 🎯 **Resource-Oriented**: RESTful design with clear resource boundaries - 📊 **Rich Data Models**: Three-layer model system (Input/Output/Internal) - 🔗 **Relationships**: Automatic prefix handling for resource relationships - 📈 **Scalable**: Built for high-volume email marketing operations  ## 🏗️ Architecture Overview  SendX uses a three-layer model architecture:  1. **Input Models** (`RestE*`): For API requests 2. **Output Models** (`RestR*`): For API responses with prefixed IDs 3. **Internal Models**: Core business logic (not exposed in API)  ## 🔐 Security & Authentication  SendX uses API key authentication:  ### Team API Key ```http X-Team-ApiKey: YOUR_TEAM_API_KEY ``` - **Required for all requests** - Team-level access to resources - Available in SendX Settings → Team API Key  ## 🆔 Encrypted ID System  SendX uses encrypted IDs for security and better developer experience:  - **Internal IDs**: Sequential integers (not exposed) - **Encrypted IDs**: 22-character alphanumeric strings - **Prefixed IDs**: Resource-type prefixes in API responses (`contact_<22-char-id>`)  ### ID Format  **All resource IDs follow this pattern:** ``` <resource_prefix>_<22_character_alphanumeric_string> ```  **Example:** ```json {   \"id\": \"contact_BnKjkbBBS500CoBCP0oChQ\",   \"lists\": [\"list_OcuxJHdiAvujmwQVJfd3ss\", \"list_0tOFLp5RgV7s3LNiHrjGYs\"],   \"tags\": [\"tag_UhsDkjL772Qbj5lWtT62VK\", \"tag_fL7t9lsnZ9swvx2HrtQ9wM\"] } ```  ## 📚 Resource Prefixes  | Resource | Prefix | Example | |----------|--------|---------| | Contact | `contact_` | `contact_BnKjkbBBS500CoBCP0oChQ` | | Campaign | `campaign_` | `campaign_LUE9BTxmksSmqHWbh96zsn` | | List | `list_` | `list_OcuxJHdiAvujmwQVJfd3ss` | | Tag | `tag_` | `tag_UhsDkjL772Qbj5lWtT62VK` | | Sender | `sender_` | `sender_4vK3WFhMgvOwUNyaL4QxCD` | | Template | `template_` | `template_f3lJvTEhSjKGVb5Lwc5SWS` | | Custom Field | `field_` | `field_MnuqBAG2NPLm7PZMWbjQxt` | | Webhook | `webhook_` | `webhook_9l154iiXlZoPo7vngmamee` | | Post | `post_` | `post_XyZ123aBc456DeF789GhI` | | Post Category | `post_category_` | `post_category_YzS1wOU20yw87UUHKxMzwn` | | Post Tag | `post_tag_` | `post_tag_123XyZ456AbC` | | Member | `member_` | `member_JkL012MnO345PqR678` |  ## 🎯 Best Practices  ### Error Handling - **Always check status codes**: 2xx = success, 4xx = client error, 5xx = server error - **Read error messages**: Descriptive messages help debug issues - **Handle rate limits**: Respect API rate limits for optimal performance  ### Data Validation - **Email format**: Must be valid email addresses - **Required fields**: Check documentation for mandatory fields - **Field lengths**: Respect maximum length constraints  ### Performance - **Pagination**: Use offset/limit for large datasets - **Batch operations**: Process multiple items when supported - **Caching**: Cache responses when appropriate  ## 🛠️ SDKs & Integration  Official SDKs available for: - [Golang](https://github.com/sendx/sendx-go-sdk) - [Python](https://github.com/sendx/sendx-python-sdk) - [Ruby](https://github.com/sendx/sendx-ruby-sdk) - [Java](https://github.com/sendx/sendx-java-sdk) - [PHP](https://github.com/sendx/sendx-php-sdk) - [JavaScript](https://github.com/sendx/sendx-javascript-sdk)  ## 📞 Support  Need help? Contact us: - 💬 **Website Chat**: Available on sendx.io - 📧 **Email**: hello@sendx.io - 📚 **Documentation**: Full guides at help.sendx.io  ---  **API Endpoint:** `https://api.sendx.io/api/v1/rest`  [<img src=\"https://run.pstmn.io/button.svg\" alt=\"Run In Postman\" style=\"width: 128px; height: 32px;\">](https://god.gw.postman.com/run-collection/33476323-44b198b0-5219-4619-a01f-cfc24d573885?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D33476323-44b198b0-5219-4619-a01f-cfc24d573885%26entityType%3Dcollection%26workspaceId%3D6b1e4f65-96a9-4136-9512-6266c852517e) 
 
     The version of the OpenAPI document: 1.0.0
-    Contact: support@sendx.io
+    Contact: hello@sendx.io
     Generated by OpenAPI Generator (https://openapi-generator.tech)
 
     Do not edit the class manually.
@@ -17,9 +17,10 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from sendx_python_sdk.models.custom_event_request import CustomEventRequest
-from sendx_python_sdk.models.event_response import EventResponse
-from sendx_python_sdk.models.revenue_event_request import RevenueEventRequest
+from pydantic import Field, StrictFloat, StrictInt, StrictStr
+from typing import Union
+from typing_extensions import Annotated
+from sendx_python_sdk.models.events_revenue_postback_get200_response import EventsRevenuePostbackGet200Response
 
 from sendx_python_sdk.api_client import ApiClient, RequestSerialized
 from sendx_python_sdk.api_response import ApiResponse
@@ -40,9 +41,12 @@ class EventApi:
 
 
     @validate_call
-    def create_revenue_event(
+    def events_custom_postback_get(
         self,
-        revenue_event_request: RevenueEventRequest,
+        team_id: Annotated[StrictStr, Field(description="The unique identifier for the team.")],
+        id: Annotated[StrictStr, Field(description="The unique sendx identifier for the contact/customer.")],
+        event: Annotated[StrictStr, Field(description="The custom event name.")],
+        any_key: Annotated[StrictStr, Field(description="Arbitrary custom data as key-value pairs. Add custom parameters directly to the query string.  For example, `amount=24.43` or `currency=USD`. ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -55,13 +59,19 @@ class EventApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> EventResponse:
-        """Record a revenue event for a specific contact
+    ) -> EventsRevenuePostbackGet200Response:
+        """Custom Event Postback URL
 
-        Records a revenue event, which can be attributed to campaigns, drips, workflows, or other sources of user interaction.
+        Register a custom event for a specific team and event.
 
-        :param revenue_event_request: (required)
-        :type revenue_event_request: RevenueEventRequest
+        :param team_id: The unique identifier for the team. (required)
+        :type team_id: str
+        :param id: The unique sendx identifier for the contact/customer. (required)
+        :type id: str
+        :param event: The custom event name. (required)
+        :type event: str
+        :param any_key: Arbitrary custom data as key-value pairs. Add custom parameters directly to the query string.  For example, `amount=24.43` or `currency=USD`.  (required)
+        :type any_key: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -84,8 +94,11 @@ class EventApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._create_revenue_event_serialize(
-            revenue_event_request=revenue_event_request,
+        _param = self._events_custom_postback_get_serialize(
+            team_id=team_id,
+            id=id,
+            event=event,
+            any_key=any_key,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -93,9 +106,7 @@ class EventApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "EventResponse",
-            '400': None,
-            '500': None,
+            '200': "EventsRevenuePostbackGet200Response",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -109,9 +120,12 @@ class EventApi:
 
 
     @validate_call
-    def create_revenue_event_with_http_info(
+    def events_custom_postback_get_with_http_info(
         self,
-        revenue_event_request: RevenueEventRequest,
+        team_id: Annotated[StrictStr, Field(description="The unique identifier for the team.")],
+        id: Annotated[StrictStr, Field(description="The unique sendx identifier for the contact/customer.")],
+        event: Annotated[StrictStr, Field(description="The custom event name.")],
+        any_key: Annotated[StrictStr, Field(description="Arbitrary custom data as key-value pairs. Add custom parameters directly to the query string.  For example, `amount=24.43` or `currency=USD`. ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -124,13 +138,19 @@ class EventApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[EventResponse]:
-        """Record a revenue event for a specific contact
+    ) -> ApiResponse[EventsRevenuePostbackGet200Response]:
+        """Custom Event Postback URL
 
-        Records a revenue event, which can be attributed to campaigns, drips, workflows, or other sources of user interaction.
+        Register a custom event for a specific team and event.
 
-        :param revenue_event_request: (required)
-        :type revenue_event_request: RevenueEventRequest
+        :param team_id: The unique identifier for the team. (required)
+        :type team_id: str
+        :param id: The unique sendx identifier for the contact/customer. (required)
+        :type id: str
+        :param event: The custom event name. (required)
+        :type event: str
+        :param any_key: Arbitrary custom data as key-value pairs. Add custom parameters directly to the query string.  For example, `amount=24.43` or `currency=USD`.  (required)
+        :type any_key: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -153,8 +173,11 @@ class EventApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._create_revenue_event_serialize(
-            revenue_event_request=revenue_event_request,
+        _param = self._events_custom_postback_get_serialize(
+            team_id=team_id,
+            id=id,
+            event=event,
+            any_key=any_key,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -162,9 +185,7 @@ class EventApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "EventResponse",
-            '400': None,
-            '500': None,
+            '200': "EventsRevenuePostbackGet200Response",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -178,9 +199,12 @@ class EventApi:
 
 
     @validate_call
-    def create_revenue_event_without_preload_content(
+    def events_custom_postback_get_without_preload_content(
         self,
-        revenue_event_request: RevenueEventRequest,
+        team_id: Annotated[StrictStr, Field(description="The unique identifier for the team.")],
+        id: Annotated[StrictStr, Field(description="The unique sendx identifier for the contact/customer.")],
+        event: Annotated[StrictStr, Field(description="The custom event name.")],
+        any_key: Annotated[StrictStr, Field(description="Arbitrary custom data as key-value pairs. Add custom parameters directly to the query string.  For example, `amount=24.43` or `currency=USD`. ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -194,12 +218,18 @@ class EventApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Record a revenue event for a specific contact
+        """Custom Event Postback URL
 
-        Records a revenue event, which can be attributed to campaigns, drips, workflows, or other sources of user interaction.
+        Register a custom event for a specific team and event.
 
-        :param revenue_event_request: (required)
-        :type revenue_event_request: RevenueEventRequest
+        :param team_id: The unique identifier for the team. (required)
+        :type team_id: str
+        :param id: The unique sendx identifier for the contact/customer. (required)
+        :type id: str
+        :param event: The custom event name. (required)
+        :type event: str
+        :param any_key: Arbitrary custom data as key-value pairs. Add custom parameters directly to the query string.  For example, `amount=24.43` or `currency=USD`.  (required)
+        :type any_key: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -222,8 +252,11 @@ class EventApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._create_revenue_event_serialize(
-            revenue_event_request=revenue_event_request,
+        _param = self._events_custom_postback_get_serialize(
+            team_id=team_id,
+            id=id,
+            event=event,
+            any_key=any_key,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -231,9 +264,7 @@ class EventApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "EventResponse",
-            '400': None,
-            '500': None,
+            '200': "EventsRevenuePostbackGet200Response",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -242,9 +273,12 @@ class EventApi:
         return response_data.response
 
 
-    def _create_revenue_event_serialize(
+    def _events_custom_postback_get_serialize(
         self,
-        revenue_event_request,
+        team_id,
+        id,
+        event,
+        any_key,
         _request_auth,
         _content_type,
         _headers,
@@ -260,16 +294,32 @@ class EventApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         # process the query parameters
+        if team_id is not None:
+            
+            _query_params.append(('team_id', team_id))
+            
+        if id is not None:
+            
+            _query_params.append(('id', id))
+            
+        if event is not None:
+            
+            _query_params.append(('event', event))
+            
+        if any_key is not None:
+            
+            _query_params.append(('any-key', any_key))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if revenue_event_request is not None:
-            _body_params = revenue_event_request
 
 
         # set the HTTP header `Accept`
@@ -280,28 +330,15 @@ class EventApi:
                 ]
             )
 
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/events/revenue',
+            method='GET',
+            resource_path='/events/custom/postback',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -318,9 +355,12 @@ class EventApi:
 
 
     @validate_call
-    def push_custom_event(
+    def events_revenue_postback_get(
         self,
-        custom_event_request: CustomEventRequest,
+        team_id: Annotated[StrictStr, Field(description="The unique identifier for the team.")],
+        id: Annotated[StrictStr, Field(description="The unique sendx identifier for the contact/customer.")],
+        amount: Annotated[Union[StrictFloat, StrictInt], Field(description="The revenue amount to be posted back.")],
+        campaign_id: Annotated[StrictStr, Field(description="The unique identifier for the campaign.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -333,13 +373,19 @@ class EventApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> EventResponse:
-        """Push a custom event associated with a contact
+    ) -> EventsRevenuePostbackGet200Response:
+        """Revenue Event Postback URL
 
-        Pushes a custom event with properties and values for a specified contact.
+        Trigger a revenue postback for a specific team and event.
 
-        :param custom_event_request: (required)
-        :type custom_event_request: CustomEventRequest
+        :param team_id: The unique identifier for the team. (required)
+        :type team_id: str
+        :param id: The unique sendx identifier for the contact/customer. (required)
+        :type id: str
+        :param amount: The revenue amount to be posted back. (required)
+        :type amount: float
+        :param campaign_id: The unique identifier for the campaign. (required)
+        :type campaign_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -362,8 +408,11 @@ class EventApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._push_custom_event_serialize(
-            custom_event_request=custom_event_request,
+        _param = self._events_revenue_postback_get_serialize(
+            team_id=team_id,
+            id=id,
+            amount=amount,
+            campaign_id=campaign_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -371,9 +420,9 @@ class EventApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "EventResponse",
-            '400': None,
-            '500': None,
+            '200': "EventsRevenuePostbackGet200Response",
+            '400': "EventsRevenuePostbackGet400Response",
+            '500': "EventsRevenuePostbackGet500Response",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -387,9 +436,12 @@ class EventApi:
 
 
     @validate_call
-    def push_custom_event_with_http_info(
+    def events_revenue_postback_get_with_http_info(
         self,
-        custom_event_request: CustomEventRequest,
+        team_id: Annotated[StrictStr, Field(description="The unique identifier for the team.")],
+        id: Annotated[StrictStr, Field(description="The unique sendx identifier for the contact/customer.")],
+        amount: Annotated[Union[StrictFloat, StrictInt], Field(description="The revenue amount to be posted back.")],
+        campaign_id: Annotated[StrictStr, Field(description="The unique identifier for the campaign.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -402,13 +454,19 @@ class EventApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[EventResponse]:
-        """Push a custom event associated with a contact
+    ) -> ApiResponse[EventsRevenuePostbackGet200Response]:
+        """Revenue Event Postback URL
 
-        Pushes a custom event with properties and values for a specified contact.
+        Trigger a revenue postback for a specific team and event.
 
-        :param custom_event_request: (required)
-        :type custom_event_request: CustomEventRequest
+        :param team_id: The unique identifier for the team. (required)
+        :type team_id: str
+        :param id: The unique sendx identifier for the contact/customer. (required)
+        :type id: str
+        :param amount: The revenue amount to be posted back. (required)
+        :type amount: float
+        :param campaign_id: The unique identifier for the campaign. (required)
+        :type campaign_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -431,8 +489,11 @@ class EventApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._push_custom_event_serialize(
-            custom_event_request=custom_event_request,
+        _param = self._events_revenue_postback_get_serialize(
+            team_id=team_id,
+            id=id,
+            amount=amount,
+            campaign_id=campaign_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -440,9 +501,9 @@ class EventApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "EventResponse",
-            '400': None,
-            '500': None,
+            '200': "EventsRevenuePostbackGet200Response",
+            '400': "EventsRevenuePostbackGet400Response",
+            '500': "EventsRevenuePostbackGet500Response",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -456,9 +517,12 @@ class EventApi:
 
 
     @validate_call
-    def push_custom_event_without_preload_content(
+    def events_revenue_postback_get_without_preload_content(
         self,
-        custom_event_request: CustomEventRequest,
+        team_id: Annotated[StrictStr, Field(description="The unique identifier for the team.")],
+        id: Annotated[StrictStr, Field(description="The unique sendx identifier for the contact/customer.")],
+        amount: Annotated[Union[StrictFloat, StrictInt], Field(description="The revenue amount to be posted back.")],
+        campaign_id: Annotated[StrictStr, Field(description="The unique identifier for the campaign.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -472,12 +536,18 @@ class EventApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Push a custom event associated with a contact
+        """Revenue Event Postback URL
 
-        Pushes a custom event with properties and values for a specified contact.
+        Trigger a revenue postback for a specific team and event.
 
-        :param custom_event_request: (required)
-        :type custom_event_request: CustomEventRequest
+        :param team_id: The unique identifier for the team. (required)
+        :type team_id: str
+        :param id: The unique sendx identifier for the contact/customer. (required)
+        :type id: str
+        :param amount: The revenue amount to be posted back. (required)
+        :type amount: float
+        :param campaign_id: The unique identifier for the campaign. (required)
+        :type campaign_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -500,8 +570,11 @@ class EventApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._push_custom_event_serialize(
-            custom_event_request=custom_event_request,
+        _param = self._events_revenue_postback_get_serialize(
+            team_id=team_id,
+            id=id,
+            amount=amount,
+            campaign_id=campaign_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -509,9 +582,9 @@ class EventApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "EventResponse",
-            '400': None,
-            '500': None,
+            '200': "EventsRevenuePostbackGet200Response",
+            '400': "EventsRevenuePostbackGet400Response",
+            '500': "EventsRevenuePostbackGet500Response",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -520,9 +593,12 @@ class EventApi:
         return response_data.response
 
 
-    def _push_custom_event_serialize(
+    def _events_revenue_postback_get_serialize(
         self,
-        custom_event_request,
+        team_id,
+        id,
+        amount,
+        campaign_id,
         _request_auth,
         _content_type,
         _headers,
@@ -538,16 +614,32 @@ class EventApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         # process the query parameters
+        if team_id is not None:
+            
+            _query_params.append(('team_id', team_id))
+            
+        if id is not None:
+            
+            _query_params.append(('id', id))
+            
+        if amount is not None:
+            
+            _query_params.append(('amount', amount))
+            
+        if campaign_id is not None:
+            
+            _query_params.append(('campaign_id', campaign_id))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if custom_event_request is not None:
-            _body_params = custom_event_request
 
 
         # set the HTTP header `Accept`
@@ -558,28 +650,15 @@ class EventApi:
                 ]
             )
 
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/events/custom',
+            method='GET',
+            resource_path='/events/revenue/postback',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

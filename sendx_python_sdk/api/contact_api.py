@@ -3,10 +3,10 @@
 """
     SendX REST API
 
-    # Introduction SendX is an email marketing product. It helps you convert website visitors to customers, send them promotional emails, engage with them using drip sequences and craft custom journeys using powerful but simple automations. The SendX API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs. The SendX Rest API doesn’t support bulk updates. You can work on only one object per request. <br> 
+    # SendX REST API Documentation  ## 🚀 Introduction  The SendX API is organized around REST principles. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  **Key Features:** - 🔒 **Security**: Team-based authentication with optional member-level access - 🎯 **Resource-Oriented**: RESTful design with clear resource boundaries - 📊 **Rich Data Models**: Three-layer model system (Input/Output/Internal) - 🔗 **Relationships**: Automatic prefix handling for resource relationships - 📈 **Scalable**: Built for high-volume email marketing operations  ## 🏗️ Architecture Overview  SendX uses a three-layer model architecture:  1. **Input Models** (`RestE*`): For API requests 2. **Output Models** (`RestR*`): For API responses with prefixed IDs 3. **Internal Models**: Core business logic (not exposed in API)  ## 🔐 Security & Authentication  SendX uses API key authentication:  ### Team API Key ```http X-Team-ApiKey: YOUR_TEAM_API_KEY ``` - **Required for all requests** - Team-level access to resources - Available in SendX Settings → Team API Key  ## 🆔 Encrypted ID System  SendX uses encrypted IDs for security and better developer experience:  - **Internal IDs**: Sequential integers (not exposed) - **Encrypted IDs**: 22-character alphanumeric strings - **Prefixed IDs**: Resource-type prefixes in API responses (`contact_<22-char-id>`)  ### ID Format  **All resource IDs follow this pattern:** ``` <resource_prefix>_<22_character_alphanumeric_string> ```  **Example:** ```json {   \"id\": \"contact_BnKjkbBBS500CoBCP0oChQ\",   \"lists\": [\"list_OcuxJHdiAvujmwQVJfd3ss\", \"list_0tOFLp5RgV7s3LNiHrjGYs\"],   \"tags\": [\"tag_UhsDkjL772Qbj5lWtT62VK\", \"tag_fL7t9lsnZ9swvx2HrtQ9wM\"] } ```  ## 📚 Resource Prefixes  | Resource | Prefix | Example | |----------|--------|---------| | Contact | `contact_` | `contact_BnKjkbBBS500CoBCP0oChQ` | | Campaign | `campaign_` | `campaign_LUE9BTxmksSmqHWbh96zsn` | | List | `list_` | `list_OcuxJHdiAvujmwQVJfd3ss` | | Tag | `tag_` | `tag_UhsDkjL772Qbj5lWtT62VK` | | Sender | `sender_` | `sender_4vK3WFhMgvOwUNyaL4QxCD` | | Template | `template_` | `template_f3lJvTEhSjKGVb5Lwc5SWS` | | Custom Field | `field_` | `field_MnuqBAG2NPLm7PZMWbjQxt` | | Webhook | `webhook_` | `webhook_9l154iiXlZoPo7vngmamee` | | Post | `post_` | `post_XyZ123aBc456DeF789GhI` | | Post Category | `post_category_` | `post_category_YzS1wOU20yw87UUHKxMzwn` | | Post Tag | `post_tag_` | `post_tag_123XyZ456AbC` | | Member | `member_` | `member_JkL012MnO345PqR678` |  ## 🎯 Best Practices  ### Error Handling - **Always check status codes**: 2xx = success, 4xx = client error, 5xx = server error - **Read error messages**: Descriptive messages help debug issues - **Handle rate limits**: Respect API rate limits for optimal performance  ### Data Validation - **Email format**: Must be valid email addresses - **Required fields**: Check documentation for mandatory fields - **Field lengths**: Respect maximum length constraints  ### Performance - **Pagination**: Use offset/limit for large datasets - **Batch operations**: Process multiple items when supported - **Caching**: Cache responses when appropriate  ## 🛠️ SDKs & Integration  Official SDKs available for: - [Golang](https://github.com/sendx/sendx-go-sdk) - [Python](https://github.com/sendx/sendx-python-sdk) - [Ruby](https://github.com/sendx/sendx-ruby-sdk) - [Java](https://github.com/sendx/sendx-java-sdk) - [PHP](https://github.com/sendx/sendx-php-sdk) - [JavaScript](https://github.com/sendx/sendx-javascript-sdk)  ## 📞 Support  Need help? Contact us: - 💬 **Website Chat**: Available on sendx.io - 📧 **Email**: hello@sendx.io - 📚 **Documentation**: Full guides at help.sendx.io  ---  **API Endpoint:** `https://api.sendx.io/api/v1/rest`  [<img src=\"https://run.pstmn.io/button.svg\" alt=\"Run In Postman\" style=\"width: 128px; height: 32px;\">](https://god.gw.postman.com/run-collection/33476323-44b198b0-5219-4619-a01f-cfc24d573885?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D33476323-44b198b0-5219-4619-a01f-cfc24d573885%26entityType%3Dcollection%26workspaceId%3D6b1e4f65-96a9-4136-9512-6266c852517e) 
 
     The version of the OpenAPI document: 1.0.0
-    Contact: support@sendx.io
+    Contact: hello@sendx.io
     Generated by OpenAPI Generator (https://openapi-generator.tech)
 
     Do not edit the class manually.
@@ -17,12 +17,13 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictInt, StrictStr, field_validator
+from pydantic import Field, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
-from sendx_python_sdk.models.contact import Contact
-from sendx_python_sdk.models.contact_request import ContactRequest
-from sendx_python_sdk.models.response import Response
+from sendx_python_sdk.models.delete_response import DeleteResponse
+from sendx_python_sdk.models.message_response import MessageResponse
+from sendx_python_sdk.models.rest_e_contact import RestEContact
+from sendx_python_sdk.models.rest_r_contact import RestRContact
 
 from sendx_python_sdk.api_client import ApiClient, RequestSerialized
 from sendx_python_sdk.api_response import ApiResponse
@@ -45,7 +46,7 @@ class ContactApi:
     @validate_call
     def create_contact(
         self,
-        contact_request: ContactRequest,
+        rest_e_contact: RestEContact,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -58,13 +59,13 @@ class ContactApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Response:
-        """Create a contact
+    ) -> RestRContact:
+        """Create a new contact
 
-        Create Contact with given data
+        Creates a new contact in your SendX team with the provided information.  **🎯 Key Features:** - Email validation and duplicate detection - Automatic relationship building with lists and tags - Smart custom field handling  **📋 Business Rules:** - Email is mandatory and must be unique within the team - Last tracked IP is stored for analytics 
 
-        :param contact_request: (required)
-        :type contact_request: ContactRequest
+        :param rest_e_contact: (required)
+        :type rest_e_contact: RestEContact
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -88,7 +89,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._create_contact_serialize(
-            contact_request=contact_request,
+            rest_e_contact=rest_e_contact,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -96,11 +97,12 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRContact",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '409': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -116,7 +118,7 @@ class ContactApi:
     @validate_call
     def create_contact_with_http_info(
         self,
-        contact_request: ContactRequest,
+        rest_e_contact: RestEContact,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -129,13 +131,13 @@ class ContactApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Response]:
-        """Create a contact
+    ) -> ApiResponse[RestRContact]:
+        """Create a new contact
 
-        Create Contact with given data
+        Creates a new contact in your SendX team with the provided information.  **🎯 Key Features:** - Email validation and duplicate detection - Automatic relationship building with lists and tags - Smart custom field handling  **📋 Business Rules:** - Email is mandatory and must be unique within the team - Last tracked IP is stored for analytics 
 
-        :param contact_request: (required)
-        :type contact_request: ContactRequest
+        :param rest_e_contact: (required)
+        :type rest_e_contact: RestEContact
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -159,7 +161,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._create_contact_serialize(
-            contact_request=contact_request,
+            rest_e_contact=rest_e_contact,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -167,11 +169,12 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRContact",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '409': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -187,7 +190,7 @@ class ContactApi:
     @validate_call
     def create_contact_without_preload_content(
         self,
-        contact_request: ContactRequest,
+        rest_e_contact: RestEContact,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -201,12 +204,12 @@ class ContactApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Create a contact
+        """Create a new contact
 
-        Create Contact with given data
+        Creates a new contact in your SendX team with the provided information.  **🎯 Key Features:** - Email validation and duplicate detection - Automatic relationship building with lists and tags - Smart custom field handling  **📋 Business Rules:** - Email is mandatory and must be unique within the team - Last tracked IP is stored for analytics 
 
-        :param contact_request: (required)
-        :type contact_request: ContactRequest
+        :param rest_e_contact: (required)
+        :type rest_e_contact: RestEContact
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -230,7 +233,7 @@ class ContactApi:
         """ # noqa: E501
 
         _param = self._create_contact_serialize(
-            contact_request=contact_request,
+            rest_e_contact=rest_e_contact,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -238,11 +241,12 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRContact",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '409': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -253,7 +257,7 @@ class ContactApi:
 
     def _create_contact_serialize(
         self,
-        contact_request,
+        rest_e_contact,
         _request_auth,
         _content_type,
         _headers,
@@ -269,7 +273,9 @@ class ContactApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -277,8 +283,8 @@ class ContactApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if contact_request is not None:
-            _body_params = contact_request
+        if rest_e_contact is not None:
+            _body_params = rest_e_contact
 
 
         # set the HTTP header `Accept`
@@ -305,7 +311,7 @@ class ContactApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
@@ -329,7 +335,7 @@ class ContactApi:
     @validate_call
     def delete_contact(
         self,
-        identifier: Annotated[StrictStr, Field(description="The Contact ID/ Email to delete")],
+        identifier: Annotated[str, Field(strict=True, description="Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -342,12 +348,12 @@ class ContactApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Response:
-        """Delete Contact
+    ) -> DeleteResponse:
+        """Delete contact
 
-        Deletes Contact
+        Soft deletes a contact from your team.  **🎯 Key Features:** - Soft delete preserves data - Removes from all lists - Cancels pending campaigns - Maintains historical data 
 
-        :param identifier: The Contact ID/ Email to delete (required)
+        :param identifier: Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>`  (required)
         :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -380,11 +386,11 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "DeleteResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -400,7 +406,7 @@ class ContactApi:
     @validate_call
     def delete_contact_with_http_info(
         self,
-        identifier: Annotated[StrictStr, Field(description="The Contact ID/ Email to delete")],
+        identifier: Annotated[str, Field(strict=True, description="Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -413,12 +419,12 @@ class ContactApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Response]:
-        """Delete Contact
+    ) -> ApiResponse[DeleteResponse]:
+        """Delete contact
 
-        Deletes Contact
+        Soft deletes a contact from your team.  **🎯 Key Features:** - Soft delete preserves data - Removes from all lists - Cancels pending campaigns - Maintains historical data 
 
-        :param identifier: The Contact ID/ Email to delete (required)
+        :param identifier: Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>`  (required)
         :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -451,11 +457,11 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "DeleteResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -471,7 +477,7 @@ class ContactApi:
     @validate_call
     def delete_contact_without_preload_content(
         self,
-        identifier: Annotated[StrictStr, Field(description="The Contact ID/ Email to delete")],
+        identifier: Annotated[str, Field(strict=True, description="Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -485,11 +491,11 @@ class ContactApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Delete Contact
+        """Delete contact
 
-        Deletes Contact
+        Soft deletes a contact from your team.  **🎯 Key Features:** - Soft delete preserves data - Removes from all lists - Cancels pending campaigns - Maintains historical data 
 
-        :param identifier: The Contact ID/ Email to delete (required)
+        :param identifier: Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>`  (required)
         :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -522,11 +528,11 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "DeleteResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -553,7 +559,9 @@ class ContactApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -576,7 +584,7 @@ class ContactApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
@@ -600,10 +608,9 @@ class ContactApi:
     @validate_call
     def get_all_contacts(
         self,
-        offset: Annotated[Optional[StrictInt], Field(description="Offset for pagination")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit for pagination")] = None,
-        contact_type: Annotated[Optional[StrictStr], Field(description="Filter contacts by type")] = None,
-        search: Annotated[Optional[StrictStr], Field(description="Search term to filter contacts")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of records to skip for pagination.  **Examples:** - `0` - First page (default) - `50` - Second page (with limit=50) - `100` - Third page (with limit=50) ")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of records to return.  **Constraints:** - Minimum: 1 - Maximum: 100 - Default: 10 ")] = None,
+        search: Annotated[Optional[Annotated[str, Field(min_length=2, strict=True, max_length=255)]], Field(description="Search term to filter contacts by name or email.  **Search Behavior:** - Searches firstName, lastName, and email fields - Case-insensitive partial matching - Minimum 2 characters for search  **Examples:** - `john` - Finds \"John Doe\", \"johnson@example.com\" - `@company.com` - Finds all emails from company.com - `smith` - Finds \"John Smith\", \"smith@email.com\" ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -616,18 +623,16 @@ class ContactApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> List[Contact]:
-        """Get All Contacts
+    ) -> List[RestRContact]:
+        """Get all contacts
 
-        Find all contacts with optional filters
+        Retrieves a paginated list of all contacts in your team with optional filtering capabilities.  **🎯 Key Features:** - Pagination support with offset/limit - Search contacts by name or email - All relationships included (lists, tags, custom fields) - Prefixed IDs for easy integration  **📊 Pagination:** - Default limit: 10 contacts per page - Maximum limit: 100 contacts per page - Use offset for page navigation  **🔍 Search:** - Searches across firstName, lastName, and email fields - Case-insensitive partial matching - Combine with pagination for large datasets 
 
-        :param offset: Offset for pagination
+        :param offset: Number of records to skip for pagination.  **Examples:** - `0` - First page (default) - `50` - Second page (with limit=50) - `100` - Third page (with limit=50) 
         :type offset: int
-        :param limit: Limit for pagination
+        :param limit: Maximum number of records to return.  **Constraints:** - Minimum: 1 - Maximum: 100 - Default: 10 
         :type limit: int
-        :param contact_type: Filter contacts by type
-        :type contact_type: str
-        :param search: Search term to filter contacts
+        :param search: Search term to filter contacts by name or email.  **Search Behavior:** - Searches firstName, lastName, and email fields - Case-insensitive partial matching - Minimum 2 characters for search  **Examples:** - `john` - Finds \"John Doe\", \"johnson@example.com\" - `@company.com` - Finds all emails from company.com - `smith` - Finds \"John Smith\", \"smith@email.com\" 
         :type search: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -654,7 +659,6 @@ class ContactApi:
         _param = self._get_all_contacts_serialize(
             offset=offset,
             limit=limit,
-            contact_type=contact_type,
             search=search,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -663,10 +667,10 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[Contact]",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "List[RestRContact]",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -682,10 +686,9 @@ class ContactApi:
     @validate_call
     def get_all_contacts_with_http_info(
         self,
-        offset: Annotated[Optional[StrictInt], Field(description="Offset for pagination")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit for pagination")] = None,
-        contact_type: Annotated[Optional[StrictStr], Field(description="Filter contacts by type")] = None,
-        search: Annotated[Optional[StrictStr], Field(description="Search term to filter contacts")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of records to skip for pagination.  **Examples:** - `0` - First page (default) - `50` - Second page (with limit=50) - `100` - Third page (with limit=50) ")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of records to return.  **Constraints:** - Minimum: 1 - Maximum: 100 - Default: 10 ")] = None,
+        search: Annotated[Optional[Annotated[str, Field(min_length=2, strict=True, max_length=255)]], Field(description="Search term to filter contacts by name or email.  **Search Behavior:** - Searches firstName, lastName, and email fields - Case-insensitive partial matching - Minimum 2 characters for search  **Examples:** - `john` - Finds \"John Doe\", \"johnson@example.com\" - `@company.com` - Finds all emails from company.com - `smith` - Finds \"John Smith\", \"smith@email.com\" ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -698,18 +701,16 @@ class ContactApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[List[Contact]]:
-        """Get All Contacts
+    ) -> ApiResponse[List[RestRContact]]:
+        """Get all contacts
 
-        Find all contacts with optional filters
+        Retrieves a paginated list of all contacts in your team with optional filtering capabilities.  **🎯 Key Features:** - Pagination support with offset/limit - Search contacts by name or email - All relationships included (lists, tags, custom fields) - Prefixed IDs for easy integration  **📊 Pagination:** - Default limit: 10 contacts per page - Maximum limit: 100 contacts per page - Use offset for page navigation  **🔍 Search:** - Searches across firstName, lastName, and email fields - Case-insensitive partial matching - Combine with pagination for large datasets 
 
-        :param offset: Offset for pagination
+        :param offset: Number of records to skip for pagination.  **Examples:** - `0` - First page (default) - `50` - Second page (with limit=50) - `100` - Third page (with limit=50) 
         :type offset: int
-        :param limit: Limit for pagination
+        :param limit: Maximum number of records to return.  **Constraints:** - Minimum: 1 - Maximum: 100 - Default: 10 
         :type limit: int
-        :param contact_type: Filter contacts by type
-        :type contact_type: str
-        :param search: Search term to filter contacts
+        :param search: Search term to filter contacts by name or email.  **Search Behavior:** - Searches firstName, lastName, and email fields - Case-insensitive partial matching - Minimum 2 characters for search  **Examples:** - `john` - Finds \"John Doe\", \"johnson@example.com\" - `@company.com` - Finds all emails from company.com - `smith` - Finds \"John Smith\", \"smith@email.com\" 
         :type search: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -736,7 +737,6 @@ class ContactApi:
         _param = self._get_all_contacts_serialize(
             offset=offset,
             limit=limit,
-            contact_type=contact_type,
             search=search,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -745,10 +745,10 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[Contact]",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "List[RestRContact]",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -764,10 +764,9 @@ class ContactApi:
     @validate_call
     def get_all_contacts_without_preload_content(
         self,
-        offset: Annotated[Optional[StrictInt], Field(description="Offset for pagination")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit for pagination")] = None,
-        contact_type: Annotated[Optional[StrictStr], Field(description="Filter contacts by type")] = None,
-        search: Annotated[Optional[StrictStr], Field(description="Search term to filter contacts")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of records to skip for pagination.  **Examples:** - `0` - First page (default) - `50` - Second page (with limit=50) - `100` - Third page (with limit=50) ")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of records to return.  **Constraints:** - Minimum: 1 - Maximum: 100 - Default: 10 ")] = None,
+        search: Annotated[Optional[Annotated[str, Field(min_length=2, strict=True, max_length=255)]], Field(description="Search term to filter contacts by name or email.  **Search Behavior:** - Searches firstName, lastName, and email fields - Case-insensitive partial matching - Minimum 2 characters for search  **Examples:** - `john` - Finds \"John Doe\", \"johnson@example.com\" - `@company.com` - Finds all emails from company.com - `smith` - Finds \"John Smith\", \"smith@email.com\" ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -781,17 +780,15 @@ class ContactApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get All Contacts
+        """Get all contacts
 
-        Find all contacts with optional filters
+        Retrieves a paginated list of all contacts in your team with optional filtering capabilities.  **🎯 Key Features:** - Pagination support with offset/limit - Search contacts by name or email - All relationships included (lists, tags, custom fields) - Prefixed IDs for easy integration  **📊 Pagination:** - Default limit: 10 contacts per page - Maximum limit: 100 contacts per page - Use offset for page navigation  **🔍 Search:** - Searches across firstName, lastName, and email fields - Case-insensitive partial matching - Combine with pagination for large datasets 
 
-        :param offset: Offset for pagination
+        :param offset: Number of records to skip for pagination.  **Examples:** - `0` - First page (default) - `50` - Second page (with limit=50) - `100` - Third page (with limit=50) 
         :type offset: int
-        :param limit: Limit for pagination
+        :param limit: Maximum number of records to return.  **Constraints:** - Minimum: 1 - Maximum: 100 - Default: 10 
         :type limit: int
-        :param contact_type: Filter contacts by type
-        :type contact_type: str
-        :param search: Search term to filter contacts
+        :param search: Search term to filter contacts by name or email.  **Search Behavior:** - Searches firstName, lastName, and email fields - Case-insensitive partial matching - Minimum 2 characters for search  **Examples:** - `john` - Finds \"John Doe\", \"johnson@example.com\" - `@company.com` - Finds all emails from company.com - `smith` - Finds \"John Smith\", \"smith@email.com\" 
         :type search: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -818,7 +815,6 @@ class ContactApi:
         _param = self._get_all_contacts_serialize(
             offset=offset,
             limit=limit,
-            contact_type=contact_type,
             search=search,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -827,10 +823,10 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[Contact]",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "List[RestRContact]",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -843,7 +839,6 @@ class ContactApi:
         self,
         offset,
         limit,
-        contact_type,
         search,
         _request_auth,
         _content_type,
@@ -860,7 +855,9 @@ class ContactApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -872,10 +869,6 @@ class ContactApi:
         if limit is not None:
             
             _query_params.append(('limit', limit))
-            
-        if contact_type is not None:
-            
-            _query_params.append(('contactType', contact_type))
             
         if search is not None:
             
@@ -897,7 +890,7 @@ class ContactApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
@@ -919,9 +912,9 @@ class ContactApi:
 
 
     @validate_call
-    def get_contact_by_id(
+    def get_contact(
         self,
-        identifier: Annotated[StrictStr, Field(description="The ID or Email of the contact to retrieve.")],
+        identifier: Annotated[str, Field(strict=True, description="Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -934,12 +927,12 @@ class ContactApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Contact:
-        """Get Contact by Identifier
+    ) -> RestRContact:
+        """Get contact by ID
 
-        Retrieve a specific contact by its identifier.
+        Retrieves detailed information about a specific contact.  **🎯 Key Features:** - Returns complete contact profile - Includes all lists and tags - Shows custom field values - Provides engagement metrics 
 
-        :param identifier: The ID or Email of the contact to retrieve. (required)
+        :param identifier: Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>`  (required)
         :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -963,7 +956,7 @@ class ContactApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_contact_by_id_serialize(
+        _param = self._get_contact_serialize(
             identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -972,11 +965,11 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Contact",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "RestRContact",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -990,9 +983,9 @@ class ContactApi:
 
 
     @validate_call
-    def get_contact_by_id_with_http_info(
+    def get_contact_with_http_info(
         self,
-        identifier: Annotated[StrictStr, Field(description="The ID or Email of the contact to retrieve.")],
+        identifier: Annotated[str, Field(strict=True, description="Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1005,12 +998,12 @@ class ContactApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Contact]:
-        """Get Contact by Identifier
+    ) -> ApiResponse[RestRContact]:
+        """Get contact by ID
 
-        Retrieve a specific contact by its identifier.
+        Retrieves detailed information about a specific contact.  **🎯 Key Features:** - Returns complete contact profile - Includes all lists and tags - Shows custom field values - Provides engagement metrics 
 
-        :param identifier: The ID or Email of the contact to retrieve. (required)
+        :param identifier: Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>`  (required)
         :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1034,7 +1027,7 @@ class ContactApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_contact_by_id_serialize(
+        _param = self._get_contact_serialize(
             identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1043,11 +1036,11 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Contact",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "RestRContact",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1061,9 +1054,9 @@ class ContactApi:
 
 
     @validate_call
-    def get_contact_by_id_without_preload_content(
+    def get_contact_without_preload_content(
         self,
-        identifier: Annotated[StrictStr, Field(description="The ID or Email of the contact to retrieve.")],
+        identifier: Annotated[str, Field(strict=True, description="Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1077,11 +1070,11 @@ class ContactApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get Contact by Identifier
+        """Get contact by ID
 
-        Retrieve a specific contact by its identifier.
+        Retrieves detailed information about a specific contact.  **🎯 Key Features:** - Returns complete contact profile - Includes all lists and tags - Shows custom field values - Provides engagement metrics 
 
-        :param identifier: The ID or Email of the contact to retrieve. (required)
+        :param identifier: Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>`  (required)
         :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1105,7 +1098,7 @@ class ContactApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_contact_by_id_serialize(
+        _param = self._get_contact_serialize(
             identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1114,11 +1107,11 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Contact",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "RestRContact",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1127,7 +1120,7 @@ class ContactApi:
         return response_data.response
 
 
-    def _get_contact_by_id_serialize(
+    def _get_contact_serialize(
         self,
         identifier,
         _request_auth,
@@ -1145,7 +1138,9 @@ class ContactApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -1168,7 +1163,7 @@ class ContactApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
@@ -1192,7 +1187,7 @@ class ContactApi:
     @validate_call
     def unsubscribe_contact(
         self,
-        identifier: Annotated[StrictStr, Field(description="The Contact ID or email to unsubscribe")],
+        identifier: Annotated[str, Field(strict=True, description="Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1205,12 +1200,12 @@ class ContactApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Response:
-        """Unsubscribe Contact
+    ) -> MessageResponse:
+        """Unsubscribe contact
 
-        Unsubscribe a globally existing contact
+        Unsubscribes a contact from all marketing communications.  **🎯 Key Features:** - Marks contact as unsubscribed - Removes from all active campaigns - Maintains unsubscribe history - Complies with anti-spam regulations 
 
-        :param identifier: The Contact ID or email to unsubscribe (required)
+        :param identifier: Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>`  (required)
         :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1243,11 +1238,11 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "MessageResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1263,7 +1258,7 @@ class ContactApi:
     @validate_call
     def unsubscribe_contact_with_http_info(
         self,
-        identifier: Annotated[StrictStr, Field(description="The Contact ID or email to unsubscribe")],
+        identifier: Annotated[str, Field(strict=True, description="Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1276,12 +1271,12 @@ class ContactApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Response]:
-        """Unsubscribe Contact
+    ) -> ApiResponse[MessageResponse]:
+        """Unsubscribe contact
 
-        Unsubscribe a globally existing contact
+        Unsubscribes a contact from all marketing communications.  **🎯 Key Features:** - Marks contact as unsubscribed - Removes from all active campaigns - Maintains unsubscribe history - Complies with anti-spam regulations 
 
-        :param identifier: The Contact ID or email to unsubscribe (required)
+        :param identifier: Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>`  (required)
         :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1314,11 +1309,11 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "MessageResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1334,7 +1329,7 @@ class ContactApi:
     @validate_call
     def unsubscribe_contact_without_preload_content(
         self,
-        identifier: Annotated[StrictStr, Field(description="The Contact ID or email to unsubscribe")],
+        identifier: Annotated[str, Field(strict=True, description="Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1348,11 +1343,11 @@ class ContactApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Unsubscribe Contact
+        """Unsubscribe contact
 
-        Unsubscribe a globally existing contact
+        Unsubscribes a contact from all marketing communications.  **🎯 Key Features:** - Marks contact as unsubscribed - Removes from all active campaigns - Maintains unsubscribe history - Complies with anti-spam regulations 
 
-        :param identifier: The Contact ID or email to unsubscribe (required)
+        :param identifier: Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>`  (required)
         :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1385,11 +1380,11 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "MessageResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1416,7 +1411,9 @@ class ContactApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -1439,7 +1436,7 @@ class ContactApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
@@ -1463,8 +1460,8 @@ class ContactApi:
     @validate_call
     def update_contact(
         self,
-        identifier: Annotated[StrictStr, Field(description="The ID or email of the Contact to update")],
-        contact_request: ContactRequest,
+        identifier: Annotated[str, Field(strict=True, description="Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` ")],
+        rest_e_contact: RestEContact,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1477,15 +1474,15 @@ class ContactApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Contact:
-        """Update Contact
+    ) -> RestRContact:
+        """Update contact
 
-        Update Contact with given data
+        Updates an existing contact's information.  **🎯 Key Features:** - Partial updates supported - Add/remove lists and tags - Update custom fields - Change email address 
 
-        :param identifier: The ID or email of the Contact to update (required)
+        :param identifier: Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>`  (required)
         :type identifier: str
-        :param contact_request: (required)
-        :type contact_request: ContactRequest
+        :param rest_e_contact: (required)
+        :type rest_e_contact: RestEContact
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1510,7 +1507,7 @@ class ContactApi:
 
         _param = self._update_contact_serialize(
             identifier=identifier,
-            contact_request=contact_request,
+            rest_e_contact=rest_e_contact,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1518,11 +1515,13 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Contact",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "RestRContact",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '409': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1538,8 +1537,8 @@ class ContactApi:
     @validate_call
     def update_contact_with_http_info(
         self,
-        identifier: Annotated[StrictStr, Field(description="The ID or email of the Contact to update")],
-        contact_request: ContactRequest,
+        identifier: Annotated[str, Field(strict=True, description="Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` ")],
+        rest_e_contact: RestEContact,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1552,15 +1551,15 @@ class ContactApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Contact]:
-        """Update Contact
+    ) -> ApiResponse[RestRContact]:
+        """Update contact
 
-        Update Contact with given data
+        Updates an existing contact's information.  **🎯 Key Features:** - Partial updates supported - Add/remove lists and tags - Update custom fields - Change email address 
 
-        :param identifier: The ID or email of the Contact to update (required)
+        :param identifier: Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>`  (required)
         :type identifier: str
-        :param contact_request: (required)
-        :type contact_request: ContactRequest
+        :param rest_e_contact: (required)
+        :type rest_e_contact: RestEContact
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1585,7 +1584,7 @@ class ContactApi:
 
         _param = self._update_contact_serialize(
             identifier=identifier,
-            contact_request=contact_request,
+            rest_e_contact=rest_e_contact,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1593,11 +1592,13 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Contact",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "RestRContact",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '409': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1613,8 +1614,8 @@ class ContactApi:
     @validate_call
     def update_contact_without_preload_content(
         self,
-        identifier: Annotated[StrictStr, Field(description="The ID or email of the Contact to update")],
-        contact_request: ContactRequest,
+        identifier: Annotated[str, Field(strict=True, description="Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` ")],
+        rest_e_contact: RestEContact,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1628,14 +1629,14 @@ class ContactApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Update Contact
+        """Update contact
 
-        Update Contact with given data
+        Updates an existing contact's information.  **🎯 Key Features:** - Partial updates supported - Add/remove lists and tags - Update custom fields - Change email address 
 
-        :param identifier: The ID or email of the Contact to update (required)
+        :param identifier: Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>`  (required)
         :type identifier: str
-        :param contact_request: (required)
-        :type contact_request: ContactRequest
+        :param rest_e_contact: (required)
+        :type rest_e_contact: RestEContact
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1660,7 +1661,7 @@ class ContactApi:
 
         _param = self._update_contact_serialize(
             identifier=identifier,
-            contact_request=contact_request,
+            rest_e_contact=rest_e_contact,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1668,11 +1669,13 @@ class ContactApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Contact",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "RestRContact",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '409': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1684,7 +1687,7 @@ class ContactApi:
     def _update_contact_serialize(
         self,
         identifier,
-        contact_request,
+        rest_e_contact,
         _request_auth,
         _content_type,
         _headers,
@@ -1700,7 +1703,9 @@ class ContactApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -1710,8 +1715,8 @@ class ContactApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if contact_request is not None:
-            _body_params = contact_request
+        if rest_e_contact is not None:
+            _body_params = rest_e_contact
 
 
         # set the HTTP header `Accept`
@@ -1738,7 +1743,7 @@ class ContactApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(

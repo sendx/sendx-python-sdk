@@ -5,9 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**event_id** | **str** | Unique identifier for the created event. | [optional] 
-**status** | **str** | Status of the event creation (e.g., &#39;success&#39;). | [optional] 
-**message** | **str** | Additional message about the event creation. | [optional] 
+**status** | **str** |  | [optional] 
+**message** | **str** |  | [optional] 
 
 ## Example
 

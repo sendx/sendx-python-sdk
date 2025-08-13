@@ -5,13 +5,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**first_name** | **str** | First name of the contact. | [optional] 
-**last_name** | **str** | Last name of the contact. | [optional] 
-**email** | **str** | Email address of the contact. | 
-**new_email** | **str** | New email address of the contact. | [optional] 
-**company** | **str** | Company of the contact. | [optional] 
-**tags** | **List[str]** |  | [optional] 
+**email** | **str** |  | 
+**first_name** | **str** |  | [optional] 
+**last_name** | **str** |  | [optional] 
+**company** | **str** |  | [optional] 
 **custom_fields** | **Dict[str, str]** |  | [optional] 
+**tags** | **List[str]** |  | [optional] 
+**new_email** | **str** | New email when updating existing contact | [optional] 
 
 ## Example
 

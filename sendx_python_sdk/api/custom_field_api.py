@@ -3,10 +3,10 @@
 """
     SendX REST API
 
-    # Introduction SendX is an email marketing product. It helps you convert website visitors to customers, send them promotional emails, engage with them using drip sequences and craft custom journeys using powerful but simple automations. The SendX API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs. The SendX Rest API doesn’t support bulk updates. You can work on only one object per request. <br> 
+    # SendX REST API Documentation  ## 🚀 Introduction  The SendX API is organized around REST principles. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  **Key Features:** - 🔒 **Security**: Team-based authentication with optional member-level access - 🎯 **Resource-Oriented**: RESTful design with clear resource boundaries - 📊 **Rich Data Models**: Three-layer model system (Input/Output/Internal) - 🔗 **Relationships**: Automatic prefix handling for resource relationships - 📈 **Scalable**: Built for high-volume email marketing operations  ## 🏗️ Architecture Overview  SendX uses a three-layer model architecture:  1. **Input Models** (`RestE*`): For API requests 2. **Output Models** (`RestR*`): For API responses with prefixed IDs 3. **Internal Models**: Core business logic (not exposed in API)  ## 🔐 Security & Authentication  SendX uses API key authentication:  ### Team API Key ```http X-Team-ApiKey: YOUR_TEAM_API_KEY ``` - **Required for all requests** - Team-level access to resources - Available in SendX Settings → Team API Key  ## 🆔 Encrypted ID System  SendX uses encrypted IDs for security and better developer experience:  - **Internal IDs**: Sequential integers (not exposed) - **Encrypted IDs**: 22-character alphanumeric strings - **Prefixed IDs**: Resource-type prefixes in API responses (`contact_<22-char-id>`)  ### ID Format  **All resource IDs follow this pattern:** ``` <resource_prefix>_<22_character_alphanumeric_string> ```  **Example:** ```json {   \"id\": \"contact_BnKjkbBBS500CoBCP0oChQ\",   \"lists\": [\"list_OcuxJHdiAvujmwQVJfd3ss\", \"list_0tOFLp5RgV7s3LNiHrjGYs\"],   \"tags\": [\"tag_UhsDkjL772Qbj5lWtT62VK\", \"tag_fL7t9lsnZ9swvx2HrtQ9wM\"] } ```  ## 📚 Resource Prefixes  | Resource | Prefix | Example | |----------|--------|---------| | Contact | `contact_` | `contact_BnKjkbBBS500CoBCP0oChQ` | | Campaign | `campaign_` | `campaign_LUE9BTxmksSmqHWbh96zsn` | | List | `list_` | `list_OcuxJHdiAvujmwQVJfd3ss` | | Tag | `tag_` | `tag_UhsDkjL772Qbj5lWtT62VK` | | Sender | `sender_` | `sender_4vK3WFhMgvOwUNyaL4QxCD` | | Template | `template_` | `template_f3lJvTEhSjKGVb5Lwc5SWS` | | Custom Field | `field_` | `field_MnuqBAG2NPLm7PZMWbjQxt` | | Webhook | `webhook_` | `webhook_9l154iiXlZoPo7vngmamee` | | Post | `post_` | `post_XyZ123aBc456DeF789GhI` | | Post Category | `post_category_` | `post_category_YzS1wOU20yw87UUHKxMzwn` | | Post Tag | `post_tag_` | `post_tag_123XyZ456AbC` | | Member | `member_` | `member_JkL012MnO345PqR678` |  ## 🎯 Best Practices  ### Error Handling - **Always check status codes**: 2xx = success, 4xx = client error, 5xx = server error - **Read error messages**: Descriptive messages help debug issues - **Handle rate limits**: Respect API rate limits for optimal performance  ### Data Validation - **Email format**: Must be valid email addresses - **Required fields**: Check documentation for mandatory fields - **Field lengths**: Respect maximum length constraints  ### Performance - **Pagination**: Use offset/limit for large datasets - **Batch operations**: Process multiple items when supported - **Caching**: Cache responses when appropriate  ## 🛠️ SDKs & Integration  Official SDKs available for: - [Golang](https://github.com/sendx/sendx-go-sdk) - [Python](https://github.com/sendx/sendx-python-sdk) - [Ruby](https://github.com/sendx/sendx-ruby-sdk) - [Java](https://github.com/sendx/sendx-java-sdk) - [PHP](https://github.com/sendx/sendx-php-sdk) - [JavaScript](https://github.com/sendx/sendx-javascript-sdk)  ## 📞 Support  Need help? Contact us: - 💬 **Website Chat**: Available on sendx.io - 📧 **Email**: hello@sendx.io - 📚 **Documentation**: Full guides at help.sendx.io  ---  **API Endpoint:** `https://api.sendx.io/api/v1/rest`  [<img src=\"https://run.pstmn.io/button.svg\" alt=\"Run In Postman\" style=\"width: 128px; height: 32px;\">](https://god.gw.postman.com/run-collection/33476323-44b198b0-5219-4619-a01f-cfc24d573885?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D33476323-44b198b0-5219-4619-a01f-cfc24d573885%26entityType%3Dcollection%26workspaceId%3D6b1e4f65-96a9-4136-9512-6266c852517e) 
 
     The version of the OpenAPI document: 1.0.0
-    Contact: support@sendx.io
+    Contact: hello@sendx.io
     Generated by OpenAPI Generator (https://openapi-generator.tech)
 
     Do not edit the class manually.
@@ -17,12 +17,12 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictInt, StrictStr
+from pydantic import Field, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
-from sendx_python_sdk.models.custom_field import CustomField
-from sendx_python_sdk.models.customfield_customfield_id_delete200_response import CustomfieldCustomfieldIdDelete200Response
-from sendx_python_sdk.models.e_custom_field import ECustomField
+from sendx_python_sdk.models.delete_response import DeleteResponse
+from sendx_python_sdk.models.rest_e_custom_field import RestECustomField
+from sendx_python_sdk.models.rest_r_custom_field import RestRCustomField
 
 from sendx_python_sdk.api_client import ApiClient, RequestSerialized
 from sendx_python_sdk.api_response import ApiResponse
@@ -43,9 +43,9 @@ class CustomFieldApi:
 
 
     @validate_call
-    def customfield_customfield_id_delete(
+    def create_custom_field(
         self,
-        customfield_id: Annotated[StrictStr, Field(description="The CustomFieldId you want to delete.")],
+        rest_e_custom_field: RestECustomField,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -58,13 +58,13 @@ class CustomFieldApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CustomfieldCustomfieldIdDelete200Response:
-        """Delete Custom Field
+    ) -> RestRCustomField:
+        """Create custom field
 
-        Deletes a custom field.
+        Creates a new custom field for storing contact data. 
 
-        :param customfield_id: The CustomFieldId you want to delete. (required)
-        :type customfield_id: str
+        :param rest_e_custom_field: (required)
+        :type rest_e_custom_field: RestECustomField
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -87,8 +87,8 @@ class CustomFieldApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._customfield_customfield_id_delete_serialize(
-            customfield_id=customfield_id,
+        _param = self._create_custom_field_serialize(
+            rest_e_custom_field=rest_e_custom_field,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -96,11 +96,11 @@ class CustomFieldApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CustomfieldCustomfieldIdDelete200Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRCustomField",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -114,9 +114,9 @@ class CustomFieldApi:
 
 
     @validate_call
-    def customfield_customfield_id_delete_with_http_info(
+    def create_custom_field_with_http_info(
         self,
-        customfield_id: Annotated[StrictStr, Field(description="The CustomFieldId you want to delete.")],
+        rest_e_custom_field: RestECustomField,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -129,13 +129,13 @@ class CustomFieldApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CustomfieldCustomfieldIdDelete200Response]:
-        """Delete Custom Field
+    ) -> ApiResponse[RestRCustomField]:
+        """Create custom field
 
-        Deletes a custom field.
+        Creates a new custom field for storing contact data. 
 
-        :param customfield_id: The CustomFieldId you want to delete. (required)
-        :type customfield_id: str
+        :param rest_e_custom_field: (required)
+        :type rest_e_custom_field: RestECustomField
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -158,8 +158,8 @@ class CustomFieldApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._customfield_customfield_id_delete_serialize(
-            customfield_id=customfield_id,
+        _param = self._create_custom_field_serialize(
+            rest_e_custom_field=rest_e_custom_field,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -167,11 +167,11 @@ class CustomFieldApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CustomfieldCustomfieldIdDelete200Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRCustomField",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -185,9 +185,9 @@ class CustomFieldApi:
 
 
     @validate_call
-    def customfield_customfield_id_delete_without_preload_content(
+    def create_custom_field_without_preload_content(
         self,
-        customfield_id: Annotated[StrictStr, Field(description="The CustomFieldId you want to delete.")],
+        rest_e_custom_field: RestECustomField,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -201,12 +201,12 @@ class CustomFieldApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Delete Custom Field
+        """Create custom field
 
-        Deletes a custom field.
+        Creates a new custom field for storing contact data. 
 
-        :param customfield_id: The CustomFieldId you want to delete. (required)
-        :type customfield_id: str
+        :param rest_e_custom_field: (required)
+        :type rest_e_custom_field: RestECustomField
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -229,8 +229,8 @@ class CustomFieldApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._customfield_customfield_id_delete_serialize(
-            customfield_id=customfield_id,
+        _param = self._create_custom_field_serialize(
+            rest_e_custom_field=rest_e_custom_field,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -238,11 +238,11 @@ class CustomFieldApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CustomfieldCustomfieldIdDelete200Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRCustomField",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -251,9 +251,9 @@ class CustomFieldApi:
         return response_data.response
 
 
-    def _customfield_customfield_id_delete_serialize(
+    def _create_custom_field_serialize(
         self,
-        customfield_id,
+        rest_e_custom_field,
         _request_auth,
         _content_type,
         _headers,
@@ -269,573 +269,18 @@ class CustomFieldApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if customfield_id is not None:
-            _path_params['customfieldId'] = customfield_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
         # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'apiKeyAuth'
-        ]
-
-        return self.api_client.param_serialize(
-            method='DELETE',
-            resource_path='/customfield/{customfieldId}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def customfield_customfield_id_get(
-        self,
-        customfield_id: Annotated[StrictStr, Field(description="The CustomFieldId you want to get.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CustomField:
-        """Get Custom Field
-
-        Find Custom Field by customfieldId.
-
-        :param customfield_id: The CustomFieldId you want to get. (required)
-        :type customfield_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._customfield_customfield_id_get_serialize(
-            customfield_id=customfield_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CustomField",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def customfield_customfield_id_get_with_http_info(
-        self,
-        customfield_id: Annotated[StrictStr, Field(description="The CustomFieldId you want to get.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CustomField]:
-        """Get Custom Field
-
-        Find Custom Field by customfieldId.
-
-        :param customfield_id: The CustomFieldId you want to get. (required)
-        :type customfield_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._customfield_customfield_id_get_serialize(
-            customfield_id=customfield_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CustomField",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def customfield_customfield_id_get_without_preload_content(
-        self,
-        customfield_id: Annotated[StrictStr, Field(description="The CustomFieldId you want to get.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Get Custom Field
-
-        Find Custom Field by customfieldId.
-
-        :param customfield_id: The CustomFieldId you want to get. (required)
-        :type customfield_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._customfield_customfield_id_get_serialize(
-            customfield_id=customfield_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CustomField",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _customfield_customfield_id_get_serialize(
-        self,
-        customfield_id,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if customfield_id is not None:
-            _path_params['customfieldId'] = customfield_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'apiKeyAuth'
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/customfield/{customfieldId}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def customfield_customfield_id_put(
-        self,
-        customfield_id: Annotated[StrictStr, Field(description="The CustomFieldId you want to update.")],
-        e_custom_field: ECustomField,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CustomField:
-        """Update Custom Field
-
-        Update Custom Field with the given data.
-
-        :param customfield_id: The CustomFieldId you want to update. (required)
-        :type customfield_id: str
-        :param e_custom_field: (required)
-        :type e_custom_field: ECustomField
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._customfield_customfield_id_put_serialize(
-            customfield_id=customfield_id,
-            e_custom_field=e_custom_field,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CustomField",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def customfield_customfield_id_put_with_http_info(
-        self,
-        customfield_id: Annotated[StrictStr, Field(description="The CustomFieldId you want to update.")],
-        e_custom_field: ECustomField,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CustomField]:
-        """Update Custom Field
-
-        Update Custom Field with the given data.
-
-        :param customfield_id: The CustomFieldId you want to update. (required)
-        :type customfield_id: str
-        :param e_custom_field: (required)
-        :type e_custom_field: ECustomField
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._customfield_customfield_id_put_serialize(
-            customfield_id=customfield_id,
-            e_custom_field=e_custom_field,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CustomField",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def customfield_customfield_id_put_without_preload_content(
-        self,
-        customfield_id: Annotated[StrictStr, Field(description="The CustomFieldId you want to update.")],
-        e_custom_field: ECustomField,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Update Custom Field
-
-        Update Custom Field with the given data.
-
-        :param customfield_id: The CustomFieldId you want to update. (required)
-        :type customfield_id: str
-        :param e_custom_field: (required)
-        :type e_custom_field: ECustomField
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._customfield_customfield_id_put_serialize(
-            customfield_id=customfield_id,
-            e_custom_field=e_custom_field,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CustomField",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _customfield_customfield_id_put_serialize(
-        self,
-        customfield_id,
-        e_custom_field,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if customfield_id is not None:
-            _path_params['customfieldId'] = customfield_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if e_custom_field is not None:
-            _body_params = e_custom_field
+        if rest_e_custom_field is not None:
+            _body_params = rest_e_custom_field
 
 
         # set the HTTP header `Accept`
@@ -862,12 +307,12 @@ class CustomFieldApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
-            method='PUT',
-            resource_path='/customfield/{customfieldId}',
+            method='POST',
+            resource_path='/customfield',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -884,11 +329,9 @@ class CustomFieldApi:
 
 
     @validate_call
-    def customfield_get(
+    def delete_custom_field(
         self,
-        offset: Annotated[StrictInt, Field(description="Offset for pagination.")],
-        limit: Annotated[StrictInt, Field(description="Limit for pagination.")],
-        search: Annotated[Optional[StrictStr], Field(description="Search term for filtering results.")] = None,
+        identifier: Annotated[str, Field(strict=True, description="Custom field identifier to update")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -901,17 +344,13 @@ class CustomFieldApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> List[CustomField]:
-        """Get All Custom Fields
+    ) -> DeleteResponse:
+        """Delete custom field
 
-        Retrieve all custom fields.
+        Deletes a custom field (data is preserved).  **🎯 Key Features:** - Remove unused fields - Data remains on contacts - Clean up field list 
 
-        :param offset: Offset for pagination. (required)
-        :type offset: int
-        :param limit: Limit for pagination. (required)
-        :type limit: int
-        :param search: Search term for filtering results.
-        :type search: str
+        :param identifier: Custom field identifier to update (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -934,10 +373,8 @@ class CustomFieldApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._customfield_get_serialize(
-            offset=offset,
-            limit=limit,
-            search=search,
+        _param = self._delete_custom_field_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -945,10 +382,11 @@ class CustomFieldApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[CustomField]",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "DeleteResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -962,11 +400,9 @@ class CustomFieldApi:
 
 
     @validate_call
-    def customfield_get_with_http_info(
+    def delete_custom_field_with_http_info(
         self,
-        offset: Annotated[StrictInt, Field(description="Offset for pagination.")],
-        limit: Annotated[StrictInt, Field(description="Limit for pagination.")],
-        search: Annotated[Optional[StrictStr], Field(description="Search term for filtering results.")] = None,
+        identifier: Annotated[str, Field(strict=True, description="Custom field identifier to update")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -979,17 +415,13 @@ class CustomFieldApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[List[CustomField]]:
-        """Get All Custom Fields
+    ) -> ApiResponse[DeleteResponse]:
+        """Delete custom field
 
-        Retrieve all custom fields.
+        Deletes a custom field (data is preserved).  **🎯 Key Features:** - Remove unused fields - Data remains on contacts - Clean up field list 
 
-        :param offset: Offset for pagination. (required)
-        :type offset: int
-        :param limit: Limit for pagination. (required)
-        :type limit: int
-        :param search: Search term for filtering results.
-        :type search: str
+        :param identifier: Custom field identifier to update (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1012,10 +444,8 @@ class CustomFieldApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._customfield_get_serialize(
-            offset=offset,
-            limit=limit,
-            search=search,
+        _param = self._delete_custom_field_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1023,10 +453,11 @@ class CustomFieldApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[CustomField]",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "DeleteResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1040,11 +471,9 @@ class CustomFieldApi:
 
 
     @validate_call
-    def customfield_get_without_preload_content(
+    def delete_custom_field_without_preload_content(
         self,
-        offset: Annotated[StrictInt, Field(description="Offset for pagination.")],
-        limit: Annotated[StrictInt, Field(description="Limit for pagination.")],
-        search: Annotated[Optional[StrictStr], Field(description="Search term for filtering results.")] = None,
+        identifier: Annotated[str, Field(strict=True, description="Custom field identifier to update")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1058,15 +487,148 @@ class CustomFieldApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get All Custom Fields
+        """Delete custom field
 
-        Retrieve all custom fields.
+        Deletes a custom field (data is preserved).  **🎯 Key Features:** - Remove unused fields - Data remains on contacts - Clean up field list 
 
-        :param offset: Offset for pagination. (required)
+        :param identifier: Custom field identifier to update (required)
+        :type identifier: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._delete_custom_field_serialize(
+            identifier=identifier,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "DeleteResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _delete_custom_field_serialize(
+        self,
+        identifier,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if identifier is not None:
+            _path_params['identifier'] = identifier
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'TeamApiKey'
+        ]
+
+        return self.api_client.param_serialize(
+            method='DELETE',
+            resource_path='/customfield/{identifier}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def get_all_custom_fields(
+        self,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of fields to skip for pagination")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of fields to return")] = None,
+        search: Annotated[Optional[Annotated[str, Field(min_length=2, strict=True, max_length=100)]], Field(description="Search custom fields by name (case-insensitive partial matching).  **Examples:** - `points` - Finds \"Loyalty points\", \"Reward points\" ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> List[RestRCustomField]:
+        """Get all custom fields
+
+        Retrieves all custom fields defined for your team. 
+
+        :param offset: Number of fields to skip for pagination
         :type offset: int
-        :param limit: Limit for pagination. (required)
+        :param limit: Maximum number of fields to return
         :type limit: int
-        :param search: Search term for filtering results.
+        :param search: Search custom fields by name (case-insensitive partial matching).  **Examples:** - `points` - Finds \"Loyalty points\", \"Reward points\" 
         :type search: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1090,7 +652,7 @@ class CustomFieldApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._customfield_get_serialize(
+        _param = self._get_all_custom_fields_serialize(
             offset=offset,
             limit=limit,
             search=search,
@@ -1101,10 +663,163 @@ class CustomFieldApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[CustomField]",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "List[RestRCustomField]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def get_all_custom_fields_with_http_info(
+        self,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of fields to skip for pagination")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of fields to return")] = None,
+        search: Annotated[Optional[Annotated[str, Field(min_length=2, strict=True, max_length=100)]], Field(description="Search custom fields by name (case-insensitive partial matching).  **Examples:** - `points` - Finds \"Loyalty points\", \"Reward points\" ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[List[RestRCustomField]]:
+        """Get all custom fields
+
+        Retrieves all custom fields defined for your team. 
+
+        :param offset: Number of fields to skip for pagination
+        :type offset: int
+        :param limit: Maximum number of fields to return
+        :type limit: int
+        :param search: Search custom fields by name (case-insensitive partial matching).  **Examples:** - `points` - Finds \"Loyalty points\", \"Reward points\" 
+        :type search: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_all_custom_fields_serialize(
+            offset=offset,
+            limit=limit,
+            search=search,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "List[RestRCustomField]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def get_all_custom_fields_without_preload_content(
+        self,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of fields to skip for pagination")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of fields to return")] = None,
+        search: Annotated[Optional[Annotated[str, Field(min_length=2, strict=True, max_length=100)]], Field(description="Search custom fields by name (case-insensitive partial matching).  **Examples:** - `points` - Finds \"Loyalty points\", \"Reward points\" ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Get all custom fields
+
+        Retrieves all custom fields defined for your team. 
+
+        :param offset: Number of fields to skip for pagination
+        :type offset: int
+        :param limit: Maximum number of fields to return
+        :type limit: int
+        :param search: Search custom fields by name (case-insensitive partial matching).  **Examples:** - `points` - Finds \"Loyalty points\", \"Reward points\" 
+        :type search: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_all_custom_fields_serialize(
+            offset=offset,
+            limit=limit,
+            search=search,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "List[RestRCustomField]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1113,7 +828,7 @@ class CustomFieldApi:
         return response_data.response
 
 
-    def _customfield_get_serialize(
+    def _get_all_custom_fields_serialize(
         self,
         offset,
         limit,
@@ -1133,7 +848,9 @@ class CustomFieldApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -1166,7 +883,7 @@ class CustomFieldApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
@@ -1188,9 +905,9 @@ class CustomFieldApi:
 
 
     @validate_call
-    def customfield_post(
+    def get_custom_field(
         self,
-        e_custom_field: ECustomField,
+        identifier: Annotated[str, Field(strict=True, description="Custom field identifier to update")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1203,13 +920,13 @@ class CustomFieldApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CustomField:
-        """Create Custom Field
+    ) -> RestRCustomField:
+        """Get custom field by ID
 
-        Create a custom field with the given data.
+        Retrieves details about a specific custom field. 
 
-        :param e_custom_field: (required)
-        :type e_custom_field: ECustomField
+        :param identifier: Custom field identifier to update (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1232,8 +949,8 @@ class CustomFieldApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._customfield_post_serialize(
-            e_custom_field=e_custom_field,
+        _param = self._get_custom_field_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1241,11 +958,11 @@ class CustomFieldApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CustomField",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "RestRCustomField",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1259,9 +976,9 @@ class CustomFieldApi:
 
 
     @validate_call
-    def customfield_post_with_http_info(
+    def get_custom_field_with_http_info(
         self,
-        e_custom_field: ECustomField,
+        identifier: Annotated[str, Field(strict=True, description="Custom field identifier to update")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1274,13 +991,13 @@ class CustomFieldApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CustomField]:
-        """Create Custom Field
+    ) -> ApiResponse[RestRCustomField]:
+        """Get custom field by ID
 
-        Create a custom field with the given data.
+        Retrieves details about a specific custom field. 
 
-        :param e_custom_field: (required)
-        :type e_custom_field: ECustomField
+        :param identifier: Custom field identifier to update (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1303,8 +1020,8 @@ class CustomFieldApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._customfield_post_serialize(
-            e_custom_field=e_custom_field,
+        _param = self._get_custom_field_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1312,11 +1029,11 @@ class CustomFieldApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CustomField",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "RestRCustomField",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1330,9 +1047,9 @@ class CustomFieldApi:
 
 
     @validate_call
-    def customfield_post_without_preload_content(
+    def get_custom_field_without_preload_content(
         self,
-        e_custom_field: ECustomField,
+        identifier: Annotated[str, Field(strict=True, description="Custom field identifier to update")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1346,12 +1063,12 @@ class CustomFieldApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Create Custom Field
+        """Get custom field by ID
 
-        Create a custom field with the given data.
+        Retrieves details about a specific custom field. 
 
-        :param e_custom_field: (required)
-        :type e_custom_field: ECustomField
+        :param identifier: Custom field identifier to update (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1374,8 +1091,8 @@ class CustomFieldApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._customfield_post_serialize(
-            e_custom_field=e_custom_field,
+        _param = self._get_custom_field_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1383,11 +1100,11 @@ class CustomFieldApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CustomField",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "RestRCustomField",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1396,9 +1113,9 @@ class CustomFieldApi:
         return response_data.response
 
 
-    def _customfield_post_serialize(
+    def _get_custom_field_serialize(
         self,
-        e_custom_field,
+        identifier,
         _request_auth,
         _content_type,
         _headers,
@@ -1414,16 +1131,309 @@ class CustomFieldApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if identifier is not None:
+            _path_params['identifier'] = identifier
         # process the query parameters
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if e_custom_field is not None:
-            _body_params = e_custom_field
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'TeamApiKey'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/customfield/{identifier}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def update_custom_field(
+        self,
+        identifier: Annotated[str, Field(strict=True, description="Custom field identifier to update")],
+        rest_e_custom_field: RestECustomField,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RestRCustomField:
+        """Update custom field
+
+        Updates a custom field definition. 
+
+        :param identifier: Custom field identifier to update (required)
+        :type identifier: str
+        :param rest_e_custom_field: (required)
+        :type rest_e_custom_field: RestECustomField
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._update_custom_field_serialize(
+            identifier=identifier,
+            rest_e_custom_field=rest_e_custom_field,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "RestRCustomField",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def update_custom_field_with_http_info(
+        self,
+        identifier: Annotated[str, Field(strict=True, description="Custom field identifier to update")],
+        rest_e_custom_field: RestECustomField,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[RestRCustomField]:
+        """Update custom field
+
+        Updates a custom field definition. 
+
+        :param identifier: Custom field identifier to update (required)
+        :type identifier: str
+        :param rest_e_custom_field: (required)
+        :type rest_e_custom_field: RestECustomField
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._update_custom_field_serialize(
+            identifier=identifier,
+            rest_e_custom_field=rest_e_custom_field,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "RestRCustomField",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def update_custom_field_without_preload_content(
+        self,
+        identifier: Annotated[str, Field(strict=True, description="Custom field identifier to update")],
+        rest_e_custom_field: RestECustomField,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Update custom field
+
+        Updates a custom field definition. 
+
+        :param identifier: Custom field identifier to update (required)
+        :type identifier: str
+        :param rest_e_custom_field: (required)
+        :type rest_e_custom_field: RestECustomField
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._update_custom_field_serialize(
+            identifier=identifier,
+            rest_e_custom_field=rest_e_custom_field,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "RestRCustomField",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _update_custom_field_serialize(
+        self,
+        identifier,
+        rest_e_custom_field,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if identifier is not None:
+            _path_params['identifier'] = identifier
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if rest_e_custom_field is not None:
+            _body_params = rest_e_custom_field
 
 
         # set the HTTP header `Accept`
@@ -1450,12 +1460,12 @@ class CustomFieldApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/customfield',
+            method='PUT',
+            resource_path='/customfield/{identifier}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

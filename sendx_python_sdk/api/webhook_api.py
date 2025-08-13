@@ -3,10 +3,10 @@
 """
     SendX REST API
 
-    # Introduction SendX is an email marketing product. It helps you convert website visitors to customers, send them promotional emails, engage with them using drip sequences and craft custom journeys using powerful but simple automations. The SendX API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs. The SendX Rest API doesn’t support bulk updates. You can work on only one object per request. <br> 
+    # SendX REST API Documentation  ## 🚀 Introduction  The SendX API is organized around REST principles. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  **Key Features:** - 🔒 **Security**: Team-based authentication with optional member-level access - 🎯 **Resource-Oriented**: RESTful design with clear resource boundaries - 📊 **Rich Data Models**: Three-layer model system (Input/Output/Internal) - 🔗 **Relationships**: Automatic prefix handling for resource relationships - 📈 **Scalable**: Built for high-volume email marketing operations  ## 🏗️ Architecture Overview  SendX uses a three-layer model architecture:  1. **Input Models** (`RestE*`): For API requests 2. **Output Models** (`RestR*`): For API responses with prefixed IDs 3. **Internal Models**: Core business logic (not exposed in API)  ## 🔐 Security & Authentication  SendX uses API key authentication:  ### Team API Key ```http X-Team-ApiKey: YOUR_TEAM_API_KEY ``` - **Required for all requests** - Team-level access to resources - Available in SendX Settings → Team API Key  ## 🆔 Encrypted ID System  SendX uses encrypted IDs for security and better developer experience:  - **Internal IDs**: Sequential integers (not exposed) - **Encrypted IDs**: 22-character alphanumeric strings - **Prefixed IDs**: Resource-type prefixes in API responses (`contact_<22-char-id>`)  ### ID Format  **All resource IDs follow this pattern:** ``` <resource_prefix>_<22_character_alphanumeric_string> ```  **Example:** ```json {   \"id\": \"contact_BnKjkbBBS500CoBCP0oChQ\",   \"lists\": [\"list_OcuxJHdiAvujmwQVJfd3ss\", \"list_0tOFLp5RgV7s3LNiHrjGYs\"],   \"tags\": [\"tag_UhsDkjL772Qbj5lWtT62VK\", \"tag_fL7t9lsnZ9swvx2HrtQ9wM\"] } ```  ## 📚 Resource Prefixes  | Resource | Prefix | Example | |----------|--------|---------| | Contact | `contact_` | `contact_BnKjkbBBS500CoBCP0oChQ` | | Campaign | `campaign_` | `campaign_LUE9BTxmksSmqHWbh96zsn` | | List | `list_` | `list_OcuxJHdiAvujmwQVJfd3ss` | | Tag | `tag_` | `tag_UhsDkjL772Qbj5lWtT62VK` | | Sender | `sender_` | `sender_4vK3WFhMgvOwUNyaL4QxCD` | | Template | `template_` | `template_f3lJvTEhSjKGVb5Lwc5SWS` | | Custom Field | `field_` | `field_MnuqBAG2NPLm7PZMWbjQxt` | | Webhook | `webhook_` | `webhook_9l154iiXlZoPo7vngmamee` | | Post | `post_` | `post_XyZ123aBc456DeF789GhI` | | Post Category | `post_category_` | `post_category_YzS1wOU20yw87UUHKxMzwn` | | Post Tag | `post_tag_` | `post_tag_123XyZ456AbC` | | Member | `member_` | `member_JkL012MnO345PqR678` |  ## 🎯 Best Practices  ### Error Handling - **Always check status codes**: 2xx = success, 4xx = client error, 5xx = server error - **Read error messages**: Descriptive messages help debug issues - **Handle rate limits**: Respect API rate limits for optimal performance  ### Data Validation - **Email format**: Must be valid email addresses - **Required fields**: Check documentation for mandatory fields - **Field lengths**: Respect maximum length constraints  ### Performance - **Pagination**: Use offset/limit for large datasets - **Batch operations**: Process multiple items when supported - **Caching**: Cache responses when appropriate  ## 🛠️ SDKs & Integration  Official SDKs available for: - [Golang](https://github.com/sendx/sendx-go-sdk) - [Python](https://github.com/sendx/sendx-python-sdk) - [Ruby](https://github.com/sendx/sendx-ruby-sdk) - [Java](https://github.com/sendx/sendx-java-sdk) - [PHP](https://github.com/sendx/sendx-php-sdk) - [JavaScript](https://github.com/sendx/sendx-javascript-sdk)  ## 📞 Support  Need help? Contact us: - 💬 **Website Chat**: Available on sendx.io - 📧 **Email**: hello@sendx.io - 📚 **Documentation**: Full guides at help.sendx.io  ---  **API Endpoint:** `https://api.sendx.io/api/v1/rest`  [<img src=\"https://run.pstmn.io/button.svg\" alt=\"Run In Postman\" style=\"width: 128px; height: 32px;\">](https://god.gw.postman.com/run-collection/33476323-44b198b0-5219-4619-a01f-cfc24d573885?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D33476323-44b198b0-5219-4619-a01f-cfc24d573885%26entityType%3Dcollection%26workspaceId%3D6b1e4f65-96a9-4136-9512-6266c852517e) 
 
     The version of the OpenAPI document: 1.0.0
-    Contact: support@sendx.io
+    Contact: hello@sendx.io
     Generated by OpenAPI Generator (https://openapi-generator.tech)
 
     Do not edit the class manually.
@@ -17,12 +17,12 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, field_validator
 from typing import List
 from typing_extensions import Annotated
 from sendx_python_sdk.models.delete_response import DeleteResponse
-from sendx_python_sdk.models.webhook import Webhook
-from sendx_python_sdk.models.webhook_request import WebhookRequest
+from sendx_python_sdk.models.rest_e_webhook import RestEWebhook
+from sendx_python_sdk.models.rest_r_webhook import RestRWebhook
 
 from sendx_python_sdk.api_client import ApiClient, RequestSerialized
 from sendx_python_sdk.api_response import ApiResponse
@@ -43,9 +43,9 @@ class WebhookApi:
 
 
     @validate_call
-    def create_team_webhook(
+    def create_webhook(
         self,
-        webhook_request: Annotated[WebhookRequest, Field(description="The webhook details to be created.")],
+        rest_e_webhook: RestEWebhook,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -58,13 +58,13 @@ class WebhookApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Webhook:
-        """Create TeamWebhook
+    ) -> RestRWebhook:
+        """Create webhook
 
-        Create a new team webhook.
+        Creates a new webhook for event notifications. 
 
-        :param webhook_request: The webhook details to be created. (required)
-        :type webhook_request: WebhookRequest
+        :param rest_e_webhook: (required)
+        :type rest_e_webhook: RestEWebhook
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -87,8 +87,8 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._create_team_webhook_serialize(
-            webhook_request=webhook_request,
+        _param = self._create_webhook_serialize(
+            rest_e_webhook=rest_e_webhook,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -96,10 +96,11 @@ class WebhookApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Webhook",
-            '401': None,
-            '422': None,
-            '500': None,
+            '201': "RestRWebhook",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -113,9 +114,9 @@ class WebhookApi:
 
 
     @validate_call
-    def create_team_webhook_with_http_info(
+    def create_webhook_with_http_info(
         self,
-        webhook_request: Annotated[WebhookRequest, Field(description="The webhook details to be created.")],
+        rest_e_webhook: RestEWebhook,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -128,13 +129,13 @@ class WebhookApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Webhook]:
-        """Create TeamWebhook
+    ) -> ApiResponse[RestRWebhook]:
+        """Create webhook
 
-        Create a new team webhook.
+        Creates a new webhook for event notifications. 
 
-        :param webhook_request: The webhook details to be created. (required)
-        :type webhook_request: WebhookRequest
+        :param rest_e_webhook: (required)
+        :type rest_e_webhook: RestEWebhook
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -157,8 +158,8 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._create_team_webhook_serialize(
-            webhook_request=webhook_request,
+        _param = self._create_webhook_serialize(
+            rest_e_webhook=rest_e_webhook,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -166,10 +167,11 @@ class WebhookApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Webhook",
-            '401': None,
-            '422': None,
-            '500': None,
+            '201': "RestRWebhook",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -183,9 +185,9 @@ class WebhookApi:
 
 
     @validate_call
-    def create_team_webhook_without_preload_content(
+    def create_webhook_without_preload_content(
         self,
-        webhook_request: Annotated[WebhookRequest, Field(description="The webhook details to be created.")],
+        rest_e_webhook: RestEWebhook,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -199,12 +201,12 @@ class WebhookApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Create TeamWebhook
+        """Create webhook
 
-        Create a new team webhook.
+        Creates a new webhook for event notifications. 
 
-        :param webhook_request: The webhook details to be created. (required)
-        :type webhook_request: WebhookRequest
+        :param rest_e_webhook: (required)
+        :type rest_e_webhook: RestEWebhook
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -227,8 +229,8 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._create_team_webhook_serialize(
-            webhook_request=webhook_request,
+        _param = self._create_webhook_serialize(
+            rest_e_webhook=rest_e_webhook,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -236,10 +238,11 @@ class WebhookApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Webhook",
-            '401': None,
-            '422': None,
-            '500': None,
+            '201': "RestRWebhook",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -248,9 +251,9 @@ class WebhookApi:
         return response_data.response
 
 
-    def _create_team_webhook_serialize(
+    def _create_webhook_serialize(
         self,
-        webhook_request,
+        rest_e_webhook,
         _request_auth,
         _content_type,
         _headers,
@@ -266,7 +269,9 @@ class WebhookApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -274,8 +279,8 @@ class WebhookApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if webhook_request is not None:
-            _body_params = webhook_request
+        if rest_e_webhook is not None:
+            _body_params = rest_e_webhook
 
 
         # set the HTTP header `Accept`
@@ -302,7 +307,7 @@ class WebhookApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
@@ -324,9 +329,9 @@ class WebhookApi:
 
 
     @validate_call
-    def delete_team_webhook(
+    def delete_webhook(
         self,
-        webhook_id: Annotated[StrictStr, Field(description="The ID of the team webhook.")],
+        identifier: Annotated[str, Field(strict=True, description="Webhook identifier to update")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -340,12 +345,12 @@ class WebhookApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> DeleteResponse:
-        """Delete Team Webhook
+        """Delete webhook
 
-        Delete a specific team webhook by its ID.
+        Deletes a webhook configuration.  **🎯 Key Features:** - Remove webhooks - Stop event delivery - Clean up endpoints 
 
-        :param webhook_id: The ID of the team webhook. (required)
-        :type webhook_id: str
+        :param identifier: Webhook identifier to update (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -368,8 +373,8 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._delete_team_webhook_serialize(
-            webhook_id=webhook_id,
+        _param = self._delete_webhook_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -378,9 +383,10 @@ class WebhookApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DeleteResponse",
-            '401': None,
-            '422': None,
-            '500': None,
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -394,9 +400,9 @@ class WebhookApi:
 
 
     @validate_call
-    def delete_team_webhook_with_http_info(
+    def delete_webhook_with_http_info(
         self,
-        webhook_id: Annotated[StrictStr, Field(description="The ID of the team webhook.")],
+        identifier: Annotated[str, Field(strict=True, description="Webhook identifier to update")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -410,12 +416,12 @@ class WebhookApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[DeleteResponse]:
-        """Delete Team Webhook
+        """Delete webhook
 
-        Delete a specific team webhook by its ID.
+        Deletes a webhook configuration.  **🎯 Key Features:** - Remove webhooks - Stop event delivery - Clean up endpoints 
 
-        :param webhook_id: The ID of the team webhook. (required)
-        :type webhook_id: str
+        :param identifier: Webhook identifier to update (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -438,8 +444,8 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._delete_team_webhook_serialize(
-            webhook_id=webhook_id,
+        _param = self._delete_webhook_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -448,9 +454,10 @@ class WebhookApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DeleteResponse",
-            '401': None,
-            '422': None,
-            '500': None,
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -464,9 +471,9 @@ class WebhookApi:
 
 
     @validate_call
-    def delete_team_webhook_without_preload_content(
+    def delete_webhook_without_preload_content(
         self,
-        webhook_id: Annotated[StrictStr, Field(description="The ID of the team webhook.")],
+        identifier: Annotated[str, Field(strict=True, description="Webhook identifier to update")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -480,12 +487,12 @@ class WebhookApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Delete Team Webhook
+        """Delete webhook
 
-        Delete a specific team webhook by its ID.
+        Deletes a webhook configuration.  **🎯 Key Features:** - Remove webhooks - Stop event delivery - Clean up endpoints 
 
-        :param webhook_id: The ID of the team webhook. (required)
-        :type webhook_id: str
+        :param identifier: Webhook identifier to update (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -508,8 +515,8 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._delete_team_webhook_serialize(
-            webhook_id=webhook_id,
+        _param = self._delete_webhook_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -518,9 +525,10 @@ class WebhookApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DeleteResponse",
-            '401': None,
-            '422': None,
-            '500': None,
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -529,9 +537,9 @@ class WebhookApi:
         return response_data.response
 
 
-    def _delete_team_webhook_serialize(
+    def _delete_webhook_serialize(
         self,
-        webhook_id,
+        identifier,
         _request_auth,
         _content_type,
         _headers,
@@ -547,12 +555,14 @@ class WebhookApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if webhook_id is not None:
-            _path_params['webhookId'] = webhook_id
+        if identifier is not None:
+            _path_params['identifier'] = identifier
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -570,12 +580,12 @@ class WebhookApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/webhook/{webhookId}',
+            resource_path='/webhook/{identifier}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -592,7 +602,7 @@ class WebhookApi:
 
 
     @validate_call
-    def get_all_team_webhook(
+    def get_all_webhooks(
         self,
         _request_timeout: Union[
             None,
@@ -606,10 +616,10 @@ class WebhookApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> List[Webhook]:
-        """Get All team Webhook
+    ) -> List[RestRWebhook]:
+        """Get all webhooks
 
-        Retrieve all team webhooks for the requesting team.
+        Retrieves all configured webhooks. 
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -633,7 +643,7 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_all_team_webhook_serialize(
+        _param = self._get_all_webhooks_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -641,10 +651,9 @@ class WebhookApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[Webhook]",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "List[RestRWebhook]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -658,7 +667,7 @@ class WebhookApi:
 
 
     @validate_call
-    def get_all_team_webhook_with_http_info(
+    def get_all_webhooks_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -672,10 +681,10 @@ class WebhookApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[List[Webhook]]:
-        """Get All team Webhook
+    ) -> ApiResponse[List[RestRWebhook]]:
+        """Get all webhooks
 
-        Retrieve all team webhooks for the requesting team.
+        Retrieves all configured webhooks. 
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -699,7 +708,7 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_all_team_webhook_serialize(
+        _param = self._get_all_webhooks_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -707,10 +716,9 @@ class WebhookApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[Webhook]",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "List[RestRWebhook]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -724,7 +732,7 @@ class WebhookApi:
 
 
     @validate_call
-    def get_all_team_webhook_without_preload_content(
+    def get_all_webhooks_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -739,9 +747,9 @@ class WebhookApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get All team Webhook
+        """Get all webhooks
 
-        Retrieve all team webhooks for the requesting team.
+        Retrieves all configured webhooks. 
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -765,7 +773,7 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_all_team_webhook_serialize(
+        _param = self._get_all_webhooks_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -773,10 +781,9 @@ class WebhookApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[Webhook]",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "List[RestRWebhook]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -785,7 +792,7 @@ class WebhookApi:
         return response_data.response
 
 
-    def _get_all_team_webhook_serialize(
+    def _get_all_webhooks_serialize(
         self,
         _request_auth,
         _content_type,
@@ -802,7 +809,9 @@ class WebhookApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -823,7 +832,7 @@ class WebhookApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
@@ -845,9 +854,9 @@ class WebhookApi:
 
 
     @validate_call
-    def get_team_webhook(
+    def get_webhook(
         self,
-        webhook_id: Annotated[StrictStr, Field(description="The ID of the team webhook.")],
+        identifier: Annotated[str, Field(strict=True, description="Webhook identifier to retrieve")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -860,13 +869,13 @@ class WebhookApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Webhook:
-        """Get TeamWebhook
+    ) -> RestRWebhook:
+        """Get webhook by ID
 
-        Retrieve a specific team webhook by its ID.
+        Retrieves details about a specific webhook. 
 
-        :param webhook_id: The ID of the team webhook. (required)
-        :type webhook_id: str
+        :param identifier: Webhook identifier to retrieve (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -889,8 +898,8 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_team_webhook_serialize(
-            webhook_id=webhook_id,
+        _param = self._get_webhook_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -898,10 +907,11 @@ class WebhookApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Webhook",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "RestRWebhook",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -915,9 +925,9 @@ class WebhookApi:
 
 
     @validate_call
-    def get_team_webhook_with_http_info(
+    def get_webhook_with_http_info(
         self,
-        webhook_id: Annotated[StrictStr, Field(description="The ID of the team webhook.")],
+        identifier: Annotated[str, Field(strict=True, description="Webhook identifier to retrieve")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -930,13 +940,13 @@ class WebhookApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Webhook]:
-        """Get TeamWebhook
+    ) -> ApiResponse[RestRWebhook]:
+        """Get webhook by ID
 
-        Retrieve a specific team webhook by its ID.
+        Retrieves details about a specific webhook. 
 
-        :param webhook_id: The ID of the team webhook. (required)
-        :type webhook_id: str
+        :param identifier: Webhook identifier to retrieve (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -959,8 +969,8 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_team_webhook_serialize(
-            webhook_id=webhook_id,
+        _param = self._get_webhook_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -968,10 +978,11 @@ class WebhookApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Webhook",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "RestRWebhook",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -985,9 +996,9 @@ class WebhookApi:
 
 
     @validate_call
-    def get_team_webhook_without_preload_content(
+    def get_webhook_without_preload_content(
         self,
-        webhook_id: Annotated[StrictStr, Field(description="The ID of the team webhook.")],
+        identifier: Annotated[str, Field(strict=True, description="Webhook identifier to retrieve")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1001,12 +1012,12 @@ class WebhookApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get TeamWebhook
+        """Get webhook by ID
 
-        Retrieve a specific team webhook by its ID.
+        Retrieves details about a specific webhook. 
 
-        :param webhook_id: The ID of the team webhook. (required)
-        :type webhook_id: str
+        :param identifier: Webhook identifier to retrieve (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1029,8 +1040,8 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_team_webhook_serialize(
-            webhook_id=webhook_id,
+        _param = self._get_webhook_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1038,10 +1049,11 @@ class WebhookApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Webhook",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "RestRWebhook",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1050,9 +1062,9 @@ class WebhookApi:
         return response_data.response
 
 
-    def _get_team_webhook_serialize(
+    def _get_webhook_serialize(
         self,
-        webhook_id,
+        identifier,
         _request_auth,
         _content_type,
         _headers,
@@ -1068,12 +1080,14 @@ class WebhookApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if webhook_id is not None:
-            _path_params['webhookId'] = webhook_id
+        if identifier is not None:
+            _path_params['identifier'] = identifier
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -1091,12 +1105,12 @@ class WebhookApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/webhook/{webhookId}',
+            resource_path='/webhook/{identifier}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1113,10 +1127,10 @@ class WebhookApi:
 
 
     @validate_call
-    def update_team_webhook(
+    def update_webhook(
         self,
-        webhook_id: Annotated[StrictStr, Field(description="The ID of the team webhook.")],
-        webhook_request: Annotated[WebhookRequest, Field(description="The updated webhook details.")],
+        identifier: Annotated[str, Field(strict=True, description="Webhook identifier to update")],
+        rest_e_webhook: RestEWebhook,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1129,15 +1143,15 @@ class WebhookApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Webhook:
-        """Update Team Webhook
+    ) -> RestRWebhook:
+        """Update webhook
 
-        Update an existing team webhook with new content.
+        Updates webhook configuration. 
 
-        :param webhook_id: The ID of the team webhook. (required)
-        :type webhook_id: str
-        :param webhook_request: The updated webhook details. (required)
-        :type webhook_request: WebhookRequest
+        :param identifier: Webhook identifier to update (required)
+        :type identifier: str
+        :param rest_e_webhook: (required)
+        :type rest_e_webhook: RestEWebhook
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1160,9 +1174,9 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._update_team_webhook_serialize(
-            webhook_id=webhook_id,
-            webhook_request=webhook_request,
+        _param = self._update_webhook_serialize(
+            identifier=identifier,
+            rest_e_webhook=rest_e_webhook,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1170,10 +1184,12 @@ class WebhookApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Webhook",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "RestRWebhook",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1187,10 +1203,10 @@ class WebhookApi:
 
 
     @validate_call
-    def update_team_webhook_with_http_info(
+    def update_webhook_with_http_info(
         self,
-        webhook_id: Annotated[StrictStr, Field(description="The ID of the team webhook.")],
-        webhook_request: Annotated[WebhookRequest, Field(description="The updated webhook details.")],
+        identifier: Annotated[str, Field(strict=True, description="Webhook identifier to update")],
+        rest_e_webhook: RestEWebhook,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1203,15 +1219,15 @@ class WebhookApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Webhook]:
-        """Update Team Webhook
+    ) -> ApiResponse[RestRWebhook]:
+        """Update webhook
 
-        Update an existing team webhook with new content.
+        Updates webhook configuration. 
 
-        :param webhook_id: The ID of the team webhook. (required)
-        :type webhook_id: str
-        :param webhook_request: The updated webhook details. (required)
-        :type webhook_request: WebhookRequest
+        :param identifier: Webhook identifier to update (required)
+        :type identifier: str
+        :param rest_e_webhook: (required)
+        :type rest_e_webhook: RestEWebhook
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1234,9 +1250,9 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._update_team_webhook_serialize(
-            webhook_id=webhook_id,
-            webhook_request=webhook_request,
+        _param = self._update_webhook_serialize(
+            identifier=identifier,
+            rest_e_webhook=rest_e_webhook,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1244,10 +1260,12 @@ class WebhookApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Webhook",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "RestRWebhook",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1261,10 +1279,10 @@ class WebhookApi:
 
 
     @validate_call
-    def update_team_webhook_without_preload_content(
+    def update_webhook_without_preload_content(
         self,
-        webhook_id: Annotated[StrictStr, Field(description="The ID of the team webhook.")],
-        webhook_request: Annotated[WebhookRequest, Field(description="The updated webhook details.")],
+        identifier: Annotated[str, Field(strict=True, description="Webhook identifier to update")],
+        rest_e_webhook: RestEWebhook,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1278,14 +1296,14 @@ class WebhookApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Update Team Webhook
+        """Update webhook
 
-        Update an existing team webhook with new content.
+        Updates webhook configuration. 
 
-        :param webhook_id: The ID of the team webhook. (required)
-        :type webhook_id: str
-        :param webhook_request: The updated webhook details. (required)
-        :type webhook_request: WebhookRequest
+        :param identifier: Webhook identifier to update (required)
+        :type identifier: str
+        :param rest_e_webhook: (required)
+        :type rest_e_webhook: RestEWebhook
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1308,9 +1326,9 @@ class WebhookApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._update_team_webhook_serialize(
-            webhook_id=webhook_id,
-            webhook_request=webhook_request,
+        _param = self._update_webhook_serialize(
+            identifier=identifier,
+            rest_e_webhook=rest_e_webhook,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1318,10 +1336,12 @@ class WebhookApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Webhook",
-            '401': None,
-            '422': None,
-            '500': None,
+            '200': "RestRWebhook",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1330,10 +1350,10 @@ class WebhookApi:
         return response_data.response
 
 
-    def _update_team_webhook_serialize(
+    def _update_webhook_serialize(
         self,
-        webhook_id,
-        webhook_request,
+        identifier,
+        rest_e_webhook,
         _request_auth,
         _content_type,
         _headers,
@@ -1349,18 +1369,20 @@ class WebhookApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if webhook_id is not None:
-            _path_params['webhookId'] = webhook_id
+        if identifier is not None:
+            _path_params['identifier'] = identifier
         # process the query parameters
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if webhook_request is not None:
-            _body_params = webhook_request
+        if rest_e_webhook is not None:
+            _body_params = rest_e_webhook
 
 
         # set the HTTP header `Accept`
@@ -1387,12 +1409,12 @@ class WebhookApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
             method='PUT',
-            resource_path='/webhook/{webhookId}',
+            resource_path='/webhook/{identifier}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

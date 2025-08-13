@@ -3,10 +3,10 @@
 """
     SendX REST API
 
-    # Introduction SendX is an email marketing product. It helps you convert website visitors to customers, send them promotional emails, engage with them using drip sequences and craft custom journeys using powerful but simple automations. The SendX API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs. The SendX Rest API doesn’t support bulk updates. You can work on only one object per request. <br> 
+    # SendX REST API Documentation  ## 🚀 Introduction  The SendX API is organized around REST principles. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  **Key Features:** - 🔒 **Security**: Team-based authentication with optional member-level access - 🎯 **Resource-Oriented**: RESTful design with clear resource boundaries - 📊 **Rich Data Models**: Three-layer model system (Input/Output/Internal) - 🔗 **Relationships**: Automatic prefix handling for resource relationships - 📈 **Scalable**: Built for high-volume email marketing operations  ## 🏗️ Architecture Overview  SendX uses a three-layer model architecture:  1. **Input Models** (`RestE*`): For API requests 2. **Output Models** (`RestR*`): For API responses with prefixed IDs 3. **Internal Models**: Core business logic (not exposed in API)  ## 🔐 Security & Authentication  SendX uses API key authentication:  ### Team API Key ```http X-Team-ApiKey: YOUR_TEAM_API_KEY ``` - **Required for all requests** - Team-level access to resources - Available in SendX Settings → Team API Key  ## 🆔 Encrypted ID System  SendX uses encrypted IDs for security and better developer experience:  - **Internal IDs**: Sequential integers (not exposed) - **Encrypted IDs**: 22-character alphanumeric strings - **Prefixed IDs**: Resource-type prefixes in API responses (`contact_<22-char-id>`)  ### ID Format  **All resource IDs follow this pattern:** ``` <resource_prefix>_<22_character_alphanumeric_string> ```  **Example:** ```json {   \"id\": \"contact_BnKjkbBBS500CoBCP0oChQ\",   \"lists\": [\"list_OcuxJHdiAvujmwQVJfd3ss\", \"list_0tOFLp5RgV7s3LNiHrjGYs\"],   \"tags\": [\"tag_UhsDkjL772Qbj5lWtT62VK\", \"tag_fL7t9lsnZ9swvx2HrtQ9wM\"] } ```  ## 📚 Resource Prefixes  | Resource | Prefix | Example | |----------|--------|---------| | Contact | `contact_` | `contact_BnKjkbBBS500CoBCP0oChQ` | | Campaign | `campaign_` | `campaign_LUE9BTxmksSmqHWbh96zsn` | | List | `list_` | `list_OcuxJHdiAvujmwQVJfd3ss` | | Tag | `tag_` | `tag_UhsDkjL772Qbj5lWtT62VK` | | Sender | `sender_` | `sender_4vK3WFhMgvOwUNyaL4QxCD` | | Template | `template_` | `template_f3lJvTEhSjKGVb5Lwc5SWS` | | Custom Field | `field_` | `field_MnuqBAG2NPLm7PZMWbjQxt` | | Webhook | `webhook_` | `webhook_9l154iiXlZoPo7vngmamee` | | Post | `post_` | `post_XyZ123aBc456DeF789GhI` | | Post Category | `post_category_` | `post_category_YzS1wOU20yw87UUHKxMzwn` | | Post Tag | `post_tag_` | `post_tag_123XyZ456AbC` | | Member | `member_` | `member_JkL012MnO345PqR678` |  ## 🎯 Best Practices  ### Error Handling - **Always check status codes**: 2xx = success, 4xx = client error, 5xx = server error - **Read error messages**: Descriptive messages help debug issues - **Handle rate limits**: Respect API rate limits for optimal performance  ### Data Validation - **Email format**: Must be valid email addresses - **Required fields**: Check documentation for mandatory fields - **Field lengths**: Respect maximum length constraints  ### Performance - **Pagination**: Use offset/limit for large datasets - **Batch operations**: Process multiple items when supported - **Caching**: Cache responses when appropriate  ## 🛠️ SDKs & Integration  Official SDKs available for: - [Golang](https://github.com/sendx/sendx-go-sdk) - [Python](https://github.com/sendx/sendx-python-sdk) - [Ruby](https://github.com/sendx/sendx-ruby-sdk) - [Java](https://github.com/sendx/sendx-java-sdk) - [PHP](https://github.com/sendx/sendx-php-sdk) - [JavaScript](https://github.com/sendx/sendx-javascript-sdk)  ## 📞 Support  Need help? Contact us: - 💬 **Website Chat**: Available on sendx.io - 📧 **Email**: hello@sendx.io - 📚 **Documentation**: Full guides at help.sendx.io  ---  **API Endpoint:** `https://api.sendx.io/api/v1/rest`  [<img src=\"https://run.pstmn.io/button.svg\" alt=\"Run In Postman\" style=\"width: 128px; height: 32px;\">](https://god.gw.postman.com/run-collection/33476323-44b198b0-5219-4619-a01f-cfc24d573885?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D33476323-44b198b0-5219-4619-a01f-cfc24d573885%26entityType%3Dcollection%26workspaceId%3D6b1e4f65-96a9-4136-9512-6266c852517e) 
 
     The version of the OpenAPI document: 1.0.0
-    Contact: support@sendx.io
+    Contact: hello@sendx.io
     Generated by OpenAPI Generator (https://openapi-generator.tech)
 
     Do not edit the class manually.
@@ -14,20 +14,123 @@
 
 
 import copy
+import http.client as httplib
 import logging
 from logging import FileHandler
 import multiprocessing
 import sys
-from typing import Optional
+from typing import Any, ClassVar, Dict, List, Literal, Optional, TypedDict, Union
+from typing_extensions import NotRequired, Self
+
 import urllib3
 
-import http.client as httplib
 
 JSON_SCHEMA_VALIDATION_KEYWORDS = {
     'multipleOf', 'maximum', 'exclusiveMaximum',
     'minimum', 'exclusiveMinimum', 'maxLength',
     'minLength', 'pattern', 'maxItems', 'minItems'
 }
+
+ServerVariablesT = Dict[str, str]
+
+GenericAuthSetting = TypedDict(
+    "GenericAuthSetting",
+    {
+        "type": str,
+        "in": str,
+        "key": str,
+        "value": str,
+    },
+)
+
+
+OAuth2AuthSetting = TypedDict(
+    "OAuth2AuthSetting",
+    {
+        "type": Literal["oauth2"],
+        "in": Literal["header"],
+        "key": Literal["Authorization"],
+        "value": str,
+    },
+)
+
+
+APIKeyAuthSetting = TypedDict(
+    "APIKeyAuthSetting",
+    {
+        "type": Literal["api_key"],
+        "in": str,
+        "key": str,
+        "value": Optional[str],
+    },
+)
+
+
+BasicAuthSetting = TypedDict(
+    "BasicAuthSetting",
+    {
+        "type": Literal["basic"],
+        "in": Literal["header"],
+        "key": Literal["Authorization"],
+        "value": Optional[str],
+    },
+)
+
+
+BearerFormatAuthSetting = TypedDict(
+    "BearerFormatAuthSetting",
+    {
+        "type": Literal["bearer"],
+        "in": Literal["header"],
+        "format": Literal["JWT"],
+        "key": Literal["Authorization"],
+        "value": str,
+    },
+)
+
+
+BearerAuthSetting = TypedDict(
+    "BearerAuthSetting",
+    {
+        "type": Literal["bearer"],
+        "in": Literal["header"],
+        "key": Literal["Authorization"],
+        "value": str,
+    },
+)
+
+
+HTTPSignatureAuthSetting = TypedDict(
+    "HTTPSignatureAuthSetting",
+    {
+        "type": Literal["http-signature"],
+        "in": Literal["header"],
+        "key": Literal["Authorization"],
+        "value": None,
+    },
+)
+
+
+AuthSettings = TypedDict(
+    "AuthSettings",
+    {
+        "TeamApiKey": APIKeyAuthSetting,
+    },
+    total=False,
+)
+
+
+class HostSettingVariable(TypedDict):
+    description: str
+    default_value: str
+    enum_values: List[str]
+
+
+class HostSetting(TypedDict):
+    url: str
+    description: str
+    variables: NotRequired[Dict[str, HostSettingVariable]]
+
 
 class Configuration:
     """This class contains various settings of the API client.
@@ -59,6 +162,8 @@ class Configuration:
     :param ssl_ca_cert: str - the path to a file of concatenated CA certificates
       in PEM format.
     :param retries: Number of retries for API requests.
+    :param ca_cert_data: verify the peer using concatenated CA certificate data
+      in PEM (str) or DER (bytes) format.
 
     :Example:
 
@@ -82,20 +187,27 @@ conf = sendx_python_sdk.Configuration(
        Cookie: JSESSIONID abc123
     """
 
-    _default = None
+    _default: ClassVar[Optional[Self]] = None
 
-    def __init__(self, host=None,
-                 api_key=None, api_key_prefix=None,
-                 username=None, password=None,
-                 access_token=None,
-                 server_index=None, server_variables=None,
-                 server_operation_index=None, server_operation_variables=None,
-                 ignore_operation_servers=False,
-                 ssl_ca_cert=None,
-                 retries=None,
-                 *,
-                 debug: Optional[bool] = None
-                 ) -> None:
+    def __init__(
+        self,
+        host: Optional[str]=None,
+        api_key: Optional[Dict[str, str]]=None,
+        api_key_prefix: Optional[Dict[str, str]]=None,
+        username: Optional[str]=None,
+        password: Optional[str]=None,
+        access_token: Optional[str]=None,
+        server_index: Optional[int]=None,
+        server_variables: Optional[ServerVariablesT]=None,
+        server_operation_index: Optional[Dict[int, int]]=None,
+        server_operation_variables: Optional[Dict[int, ServerVariablesT]]=None,
+        ignore_operation_servers: bool=False,
+        ssl_ca_cert: Optional[str]=None,
+        retries: Optional[int] = None,
+        ca_cert_data: Optional[Union[str, bytes]] = None,
+        *,
+        debug: Optional[bool] = None,
+    ) -> None:
         """Constructor
         """
         self._base_path = "https://api.sendx.io/api/v1/rest" if host is None else host
@@ -170,6 +282,10 @@ conf = sendx_python_sdk.Configuration(
         self.ssl_ca_cert = ssl_ca_cert
         """Set this to customize the certificate file to verify the peer.
         """
+        self.ca_cert_data = ca_cert_data
+        """Set this to verify the peer using PEM (str) or DER (bytes)
+           certificate data.
+        """
         self.cert_file = None
         """client certificate file
         """
@@ -219,7 +335,7 @@ conf = sendx_python_sdk.Configuration(
         """date format
         """
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo:  Dict[int, Any]) -> Self:
         cls = self.__class__
         result = cls.__new__(cls)
         memo[id(self)] = result
@@ -233,11 +349,11 @@ conf = sendx_python_sdk.Configuration(
         result.debug = self.debug
         return result
 
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value: Any) -> None:
         object.__setattr__(self, name, value)
 
     @classmethod
-    def set_default(cls, default):
+    def set_default(cls, default: Optional[Self]) -> None:
         """Set default instance of configuration.
 
         It stores default configuration, which can be
@@ -248,7 +364,7 @@ conf = sendx_python_sdk.Configuration(
         cls._default = default
 
     @classmethod
-    def get_default_copy(cls):
+    def get_default_copy(cls) -> Self:
         """Deprecated. Please use `get_default` instead.
 
         Deprecated. Please use `get_default` instead.
@@ -258,7 +374,7 @@ conf = sendx_python_sdk.Configuration(
         return cls.get_default()
 
     @classmethod
-    def get_default(cls):
+    def get_default(cls) -> Self:
         """Return the default configuration.
 
         This method returns newly created, based on default constructor,
@@ -268,11 +384,11 @@ conf = sendx_python_sdk.Configuration(
         :return: The configuration object.
         """
         if cls._default is None:
-            cls._default = Configuration()
+            cls._default = cls()
         return cls._default
 
     @property
-    def logger_file(self):
+    def logger_file(self) -> Optional[str]:
         """The logger file.
 
         If the logger_file is None, then add stream handler and remove file
@@ -284,7 +400,7 @@ conf = sendx_python_sdk.Configuration(
         return self.__logger_file
 
     @logger_file.setter
-    def logger_file(self, value):
+    def logger_file(self, value: Optional[str]) -> None:
         """The logger file.
 
         If the logger_file is None, then add stream handler and remove file
@@ -303,7 +419,7 @@ conf = sendx_python_sdk.Configuration(
                 logger.addHandler(self.logger_file_handler)
 
     @property
-    def debug(self):
+    def debug(self) -> bool:
         """Debug status
 
         :param value: The debug status, True or False.
@@ -312,7 +428,7 @@ conf = sendx_python_sdk.Configuration(
         return self.__debug
 
     @debug.setter
-    def debug(self, value):
+    def debug(self, value: bool) -> None:
         """Debug status
 
         :param value: The debug status, True or False.
@@ -334,7 +450,7 @@ conf = sendx_python_sdk.Configuration(
             httplib.HTTPConnection.debuglevel = 0
 
     @property
-    def logger_format(self):
+    def logger_format(self) -> str:
         """The logger format.
 
         The logger_formatter will be updated when sets logger_format.
@@ -345,7 +461,7 @@ conf = sendx_python_sdk.Configuration(
         return self.__logger_format
 
     @logger_format.setter
-    def logger_format(self, value):
+    def logger_format(self, value: str) -> None:
         """The logger format.
 
         The logger_formatter will be updated when sets logger_format.
@@ -356,7 +472,7 @@ conf = sendx_python_sdk.Configuration(
         self.__logger_format = value
         self.logger_formatter = logging.Formatter(self.__logger_format)
 
-    def get_api_key_with_prefix(self, identifier, alias=None):
+    def get_api_key_with_prefix(self, identifier: str, alias: Optional[str]=None) -> Optional[str]:
         """Gets API key (with prefix if set).
 
         :param identifier: The identifier of apiKey.
@@ -373,7 +489,9 @@ conf = sendx_python_sdk.Configuration(
             else:
                 return key
 
-    def get_basic_auth_token(self):
+        return None
+
+    def get_basic_auth_token(self) -> Optional[str]:
         """Gets HTTP basic authentication header (string).
 
         :return: The token for basic HTTP authentication.
@@ -388,24 +506,24 @@ conf = sendx_python_sdk.Configuration(
             basic_auth=username + ':' + password
         ).get('authorization')
 
-    def auth_settings(self):
+    def auth_settings(self)-> AuthSettings:
         """Gets Auth Settings dict for api client.
 
         :return: The Auth Settings information dict.
         """
-        auth = {}
-        if 'apiKeyAuth' in self.api_key:
-            auth['apiKeyAuth'] = {
+        auth: AuthSettings = {}
+        if 'TeamApiKey' in self.api_key:
+            auth['TeamApiKey'] = {
                 'type': 'api_key',
                 'in': 'header',
                 'key': 'X-Team-ApiKey',
                 'value': self.get_api_key_with_prefix(
-                    'apiKeyAuth',
+                    'TeamApiKey',
                 ),
             }
         return auth
 
-    def to_debug_report(self):
+    def to_debug_report(self) -> str:
         """Gets the essential information for debugging.
 
         :return: The report for debugging.
@@ -414,10 +532,10 @@ conf = sendx_python_sdk.Configuration(
                "OS: {env}\n"\
                "Python Version: {pyversion}\n"\
                "Version of the API: 1.0.0\n"\
-               "SDK Package Version: 1.2.0".\
+               "SDK Package Version: 1.0.2".\
                format(env=sys.platform, pyversion=sys.version)
 
-    def get_host_settings(self):
+    def get_host_settings(self) -> List[HostSetting]:
         """Gets an array of host settings
 
         :return: An array of host settings
@@ -428,16 +546,17 @@ conf = sendx_python_sdk.Configuration(
                 'description': "Production server",
             },
             {
-                'url': "https://stag.sendx.io/api/v1/rest",
+                'url': "https://stag1.sendx.io/api/v1/rest",
                 'description': "Staging server",
-            },
-            {
-                'url': "http://localhost:8080/api/v1/rest",
-                'description': "Local server",
             }
         ]
 
-    def get_host_from_settings(self, index, variables=None, servers=None):
+    def get_host_from_settings(
+        self,
+        index: Optional[int],
+        variables: Optional[ServerVariablesT]=None,
+        servers: Optional[List[HostSetting]]=None,
+    ) -> str:
         """Gets host URL based on the index and variables
         :param index: array index of the host settings
         :param variables: hash of variable and the corresponding value
@@ -477,12 +596,12 @@ conf = sendx_python_sdk.Configuration(
         return url
 
     @property
-    def host(self):
+    def host(self) -> str:
         """Return generated host."""
         return self.get_host_from_settings(self.server_index, variables=self.server_variables)
 
     @host.setter
-    def host(self, value):
+    def host(self, value: str) -> None:
         """Fix base path."""
         self._base_path = value
         self.server_index = None

@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **str** |  | [optional] 
-**message** | **str** |  | [optional] 
+**status** | **str** |  | 
+**message** | **str** |  | 
 
 ## Example
 

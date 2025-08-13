@@ -3,10 +3,10 @@
 """
     SendX REST API
 
-    # Introduction SendX is an email marketing product. It helps you convert website visitors to customers, send them promotional emails, engage with them using drip sequences and craft custom journeys using powerful but simple automations. The SendX API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs. The SendX Rest API doesn’t support bulk updates. You can work on only one object per request. <br> 
+    # SendX REST API Documentation  ## 🚀 Introduction  The SendX API is organized around REST principles. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  **Key Features:** - 🔒 **Security**: Team-based authentication with optional member-level access - 🎯 **Resource-Oriented**: RESTful design with clear resource boundaries - 📊 **Rich Data Models**: Three-layer model system (Input/Output/Internal) - 🔗 **Relationships**: Automatic prefix handling for resource relationships - 📈 **Scalable**: Built for high-volume email marketing operations  ## 🏗️ Architecture Overview  SendX uses a three-layer model architecture:  1. **Input Models** (`RestE*`): For API requests 2. **Output Models** (`RestR*`): For API responses with prefixed IDs 3. **Internal Models**: Core business logic (not exposed in API)  ## 🔐 Security & Authentication  SendX uses API key authentication:  ### Team API Key ```http X-Team-ApiKey: YOUR_TEAM_API_KEY ``` - **Required for all requests** - Team-level access to resources - Available in SendX Settings → Team API Key  ## 🆔 Encrypted ID System  SendX uses encrypted IDs for security and better developer experience:  - **Internal IDs**: Sequential integers (not exposed) - **Encrypted IDs**: 22-character alphanumeric strings - **Prefixed IDs**: Resource-type prefixes in API responses (`contact_<22-char-id>`)  ### ID Format  **All resource IDs follow this pattern:** ``` <resource_prefix>_<22_character_alphanumeric_string> ```  **Example:** ```json {   \"id\": \"contact_BnKjkbBBS500CoBCP0oChQ\",   \"lists\": [\"list_OcuxJHdiAvujmwQVJfd3ss\", \"list_0tOFLp5RgV7s3LNiHrjGYs\"],   \"tags\": [\"tag_UhsDkjL772Qbj5lWtT62VK\", \"tag_fL7t9lsnZ9swvx2HrtQ9wM\"] } ```  ## 📚 Resource Prefixes  | Resource | Prefix | Example | |----------|--------|---------| | Contact | `contact_` | `contact_BnKjkbBBS500CoBCP0oChQ` | | Campaign | `campaign_` | `campaign_LUE9BTxmksSmqHWbh96zsn` | | List | `list_` | `list_OcuxJHdiAvujmwQVJfd3ss` | | Tag | `tag_` | `tag_UhsDkjL772Qbj5lWtT62VK` | | Sender | `sender_` | `sender_4vK3WFhMgvOwUNyaL4QxCD` | | Template | `template_` | `template_f3lJvTEhSjKGVb5Lwc5SWS` | | Custom Field | `field_` | `field_MnuqBAG2NPLm7PZMWbjQxt` | | Webhook | `webhook_` | `webhook_9l154iiXlZoPo7vngmamee` | | Post | `post_` | `post_XyZ123aBc456DeF789GhI` | | Post Category | `post_category_` | `post_category_YzS1wOU20yw87UUHKxMzwn` | | Post Tag | `post_tag_` | `post_tag_123XyZ456AbC` | | Member | `member_` | `member_JkL012MnO345PqR678` |  ## 🎯 Best Practices  ### Error Handling - **Always check status codes**: 2xx = success, 4xx = client error, 5xx = server error - **Read error messages**: Descriptive messages help debug issues - **Handle rate limits**: Respect API rate limits for optimal performance  ### Data Validation - **Email format**: Must be valid email addresses - **Required fields**: Check documentation for mandatory fields - **Field lengths**: Respect maximum length constraints  ### Performance - **Pagination**: Use offset/limit for large datasets - **Batch operations**: Process multiple items when supported - **Caching**: Cache responses when appropriate  ## 🛠️ SDKs & Integration  Official SDKs available for: - [Golang](https://github.com/sendx/sendx-go-sdk) - [Python](https://github.com/sendx/sendx-python-sdk) - [Ruby](https://github.com/sendx/sendx-ruby-sdk) - [Java](https://github.com/sendx/sendx-java-sdk) - [PHP](https://github.com/sendx/sendx-php-sdk) - [JavaScript](https://github.com/sendx/sendx-javascript-sdk)  ## 📞 Support  Need help? Contact us: - 💬 **Website Chat**: Available on sendx.io - 📧 **Email**: hello@sendx.io - 📚 **Documentation**: Full guides at help.sendx.io  ---  **API Endpoint:** `https://api.sendx.io/api/v1/rest`  [<img src=\"https://run.pstmn.io/button.svg\" alt=\"Run In Postman\" style=\"width: 128px; height: 32px;\">](https://god.gw.postman.com/run-collection/33476323-44b198b0-5219-4619-a01f-cfc24d573885?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D33476323-44b198b0-5219-4619-a01f-cfc24d573885%26entityType%3Dcollection%26workspaceId%3D6b1e4f65-96a9-4136-9512-6266c852517e) 
 
     The version of the OpenAPI document: 1.0.0
-    Contact: support@sendx.io
+    Contact: hello@sendx.io
     Generated by OpenAPI Generator (https://openapi-generator.tech)
 
     Do not edit the class manually.
@@ -17,13 +17,12 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictInt, StrictStr
+from pydantic import Field, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
-from sendx_python_sdk.models.campaign import Campaign
-from sendx_python_sdk.models.campaign_request import CampaignRequest
-from sendx_python_sdk.models.create_response import CreateResponse
-from sendx_python_sdk.models.delete_campaign200_response import DeleteCampaign200Response
+from sendx_python_sdk.models.delete_response import DeleteResponse
+from sendx_python_sdk.models.rest_e_campaign import RestECampaign
+from sendx_python_sdk.models.rest_r_campaign import RestRCampaign
 
 from sendx_python_sdk.api_client import ApiClient, RequestSerialized
 from sendx_python_sdk.api_response import ApiResponse
@@ -46,7 +45,7 @@ class CampaignApi:
     @validate_call
     def create_campaign(
         self,
-        campaign_request: Annotated[CampaignRequest, Field(description="The campaign content")],
+        rest_e_campaign: RestECampaign,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -59,13 +58,13 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateResponse:
-        """Create Campaign
+    ) -> RestRCampaign:
+        """Create campaign
 
-        Create a new email campaign
+        Creates a new email campaign. 
 
-        :param campaign_request: The campaign content (required)
-        :type campaign_request: CampaignRequest
+        :param rest_e_campaign: (required)
+        :type rest_e_campaign: RestECampaign
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -89,7 +88,7 @@ class CampaignApi:
         """ # noqa: E501
 
         _param = self._create_campaign_serialize(
-            campaign_request=campaign_request,
+            rest_e_campaign=rest_e_campaign,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -97,12 +96,12 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateResponse",
-            '401': None,
-            '403': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRCampaign",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -118,7 +117,7 @@ class CampaignApi:
     @validate_call
     def create_campaign_with_http_info(
         self,
-        campaign_request: Annotated[CampaignRequest, Field(description="The campaign content")],
+        rest_e_campaign: RestECampaign,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -131,13 +130,13 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateResponse]:
-        """Create Campaign
+    ) -> ApiResponse[RestRCampaign]:
+        """Create campaign
 
-        Create a new email campaign
+        Creates a new email campaign. 
 
-        :param campaign_request: The campaign content (required)
-        :type campaign_request: CampaignRequest
+        :param rest_e_campaign: (required)
+        :type rest_e_campaign: RestECampaign
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -161,7 +160,7 @@ class CampaignApi:
         """ # noqa: E501
 
         _param = self._create_campaign_serialize(
-            campaign_request=campaign_request,
+            rest_e_campaign=rest_e_campaign,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -169,12 +168,12 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateResponse",
-            '401': None,
-            '403': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRCampaign",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -190,7 +189,7 @@ class CampaignApi:
     @validate_call
     def create_campaign_without_preload_content(
         self,
-        campaign_request: Annotated[CampaignRequest, Field(description="The campaign content")],
+        rest_e_campaign: RestECampaign,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -204,12 +203,12 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Create Campaign
+        """Create campaign
 
-        Create a new email campaign
+        Creates a new email campaign. 
 
-        :param campaign_request: The campaign content (required)
-        :type campaign_request: CampaignRequest
+        :param rest_e_campaign: (required)
+        :type rest_e_campaign: RestECampaign
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -233,7 +232,7 @@ class CampaignApi:
         """ # noqa: E501
 
         _param = self._create_campaign_serialize(
-            campaign_request=campaign_request,
+            rest_e_campaign=rest_e_campaign,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -241,12 +240,12 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateResponse",
-            '401': None,
-            '403': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRCampaign",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -257,7 +256,7 @@ class CampaignApi:
 
     def _create_campaign_serialize(
         self,
-        campaign_request,
+        rest_e_campaign,
         _request_auth,
         _content_type,
         _headers,
@@ -273,7 +272,9 @@ class CampaignApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -281,8 +282,8 @@ class CampaignApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if campaign_request is not None:
-            _body_params = campaign_request
+        if rest_e_campaign is not None:
+            _body_params = rest_e_campaign
 
 
         # set the HTTP header `Accept`
@@ -309,7 +310,7 @@ class CampaignApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
@@ -333,7 +334,7 @@ class CampaignApi:
     @validate_call
     def delete_campaign(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="The ID of the campaign to delete")],
+        identifier: Annotated[str, Field(strict=True, description="Campaign identifier to delete")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -346,13 +347,13 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> DeleteCampaign200Response:
-        """Delete Campaign
+    ) -> DeleteResponse:
+        """Delete campaign
 
-        Deletes a specific campaign by its campaignId.
+        Deletes a campaign. 
 
-        :param campaign_id: The ID of the campaign to delete (required)
-        :type campaign_id: str
+        :param identifier: Campaign identifier to delete (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -376,7 +377,7 @@ class CampaignApi:
         """ # noqa: E501
 
         _param = self._delete_campaign_serialize(
-            campaign_id=campaign_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -384,11 +385,11 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "DeleteCampaign200Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "DeleteResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -404,7 +405,7 @@ class CampaignApi:
     @validate_call
     def delete_campaign_with_http_info(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="The ID of the campaign to delete")],
+        identifier: Annotated[str, Field(strict=True, description="Campaign identifier to delete")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -417,13 +418,13 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[DeleteCampaign200Response]:
-        """Delete Campaign
+    ) -> ApiResponse[DeleteResponse]:
+        """Delete campaign
 
-        Deletes a specific campaign by its campaignId.
+        Deletes a campaign. 
 
-        :param campaign_id: The ID of the campaign to delete (required)
-        :type campaign_id: str
+        :param identifier: Campaign identifier to delete (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -447,7 +448,7 @@ class CampaignApi:
         """ # noqa: E501
 
         _param = self._delete_campaign_serialize(
-            campaign_id=campaign_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -455,11 +456,11 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "DeleteCampaign200Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "DeleteResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -475,7 +476,7 @@ class CampaignApi:
     @validate_call
     def delete_campaign_without_preload_content(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="The ID of the campaign to delete")],
+        identifier: Annotated[str, Field(strict=True, description="Campaign identifier to delete")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -489,12 +490,12 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Delete Campaign
+        """Delete campaign
 
-        Deletes a specific campaign by its campaignId.
+        Deletes a campaign. 
 
-        :param campaign_id: The ID of the campaign to delete (required)
-        :type campaign_id: str
+        :param identifier: Campaign identifier to delete (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -518,7 +519,7 @@ class CampaignApi:
         """ # noqa: E501
 
         _param = self._delete_campaign_serialize(
-            campaign_id=campaign_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -526,11 +527,11 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "DeleteCampaign200Response",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "DeleteResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -541,7 +542,7 @@ class CampaignApi:
 
     def _delete_campaign_serialize(
         self,
-        campaign_id,
+        identifier,
         _request_auth,
         _content_type,
         _headers,
@@ -557,12 +558,14 @@ class CampaignApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if campaign_id is not None:
-            _path_params['campaignId'] = campaign_id
+        if identifier is not None:
+            _path_params['identifier'] = identifier
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -580,314 +583,12 @@ class CampaignApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/campaign/{campaignId}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def edit_campaign(
-        self,
-        campaign_id: Annotated[StrictStr, Field(description="The ID of the campaign to edit")],
-        campaign_request: CampaignRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Campaign:
-        """Edit Campaign
-
-        Submit edited content for a specific campaign.
-
-        :param campaign_id: The ID of the campaign to edit (required)
-        :type campaign_id: str
-        :param campaign_request: (required)
-        :type campaign_request: CampaignRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._edit_campaign_serialize(
-            campaign_id=campaign_id,
-            campaign_request=campaign_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Campaign",
-            '401': None,
-            '406': None,
-            '403': None,
-            '422': None,
-            '500': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def edit_campaign_with_http_info(
-        self,
-        campaign_id: Annotated[StrictStr, Field(description="The ID of the campaign to edit")],
-        campaign_request: CampaignRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Campaign]:
-        """Edit Campaign
-
-        Submit edited content for a specific campaign.
-
-        :param campaign_id: The ID of the campaign to edit (required)
-        :type campaign_id: str
-        :param campaign_request: (required)
-        :type campaign_request: CampaignRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._edit_campaign_serialize(
-            campaign_id=campaign_id,
-            campaign_request=campaign_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Campaign",
-            '401': None,
-            '406': None,
-            '403': None,
-            '422': None,
-            '500': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def edit_campaign_without_preload_content(
-        self,
-        campaign_id: Annotated[StrictStr, Field(description="The ID of the campaign to edit")],
-        campaign_request: CampaignRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Edit Campaign
-
-        Submit edited content for a specific campaign.
-
-        :param campaign_id: The ID of the campaign to edit (required)
-        :type campaign_id: str
-        :param campaign_request: (required)
-        :type campaign_request: CampaignRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._edit_campaign_serialize(
-            campaign_id=campaign_id,
-            campaign_request=campaign_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Campaign",
-            '401': None,
-            '406': None,
-            '403': None,
-            '422': None,
-            '500': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _edit_campaign_serialize(
-        self,
-        campaign_id,
-        campaign_request,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if campaign_id is not None:
-            _path_params['campaignId'] = campaign_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if campaign_request is not None:
-            _body_params = campaign_request
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'apiKeyAuth'
-        ]
-
-        return self.api_client.param_serialize(
-            method='PUT',
-            resource_path='/campaign/{campaignId}',
+            resource_path='/campaign/{identifier}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -906,9 +607,9 @@ class CampaignApi:
     @validate_call
     def get_all_campaigns(
         self,
-        offset: Annotated[Optional[StrictInt], Field(description="Offset for pagination")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit for pagination")] = None,
-        search: Annotated[Optional[StrictStr], Field(description="Search term to filter campaigns")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of campaigns to skip")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of campaigns to return")] = None,
+        campaign_type: Annotated[Optional[StrictStr], Field(description="Filter by campaign type")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -921,17 +622,17 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> List[Campaign]:
-        """Get All Campaigns
+    ) -> List[RestRCampaign]:
+        """Get all campaigns
 
-        Retrieve a list of all campaigns.
+        Retrieves a paginated list of all campaigns. 
 
-        :param offset: Offset for pagination
+        :param offset: Number of campaigns to skip
         :type offset: int
-        :param limit: Limit for pagination
+        :param limit: Maximum number of campaigns to return
         :type limit: int
-        :param search: Search term to filter campaigns
-        :type search: str
+        :param campaign_type: Filter by campaign type
+        :type campaign_type: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -957,7 +658,7 @@ class CampaignApi:
         _param = self._get_all_campaigns_serialize(
             offset=offset,
             limit=limit,
-            search=search,
+            campaign_type=campaign_type,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -965,9 +666,9 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[Campaign]",
-            '401': None,
-            '500': None,
+            '200': "List[RestRCampaign]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -983,9 +684,9 @@ class CampaignApi:
     @validate_call
     def get_all_campaigns_with_http_info(
         self,
-        offset: Annotated[Optional[StrictInt], Field(description="Offset for pagination")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit for pagination")] = None,
-        search: Annotated[Optional[StrictStr], Field(description="Search term to filter campaigns")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of campaigns to skip")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of campaigns to return")] = None,
+        campaign_type: Annotated[Optional[StrictStr], Field(description="Filter by campaign type")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -998,17 +699,17 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[List[Campaign]]:
-        """Get All Campaigns
+    ) -> ApiResponse[List[RestRCampaign]]:
+        """Get all campaigns
 
-        Retrieve a list of all campaigns.
+        Retrieves a paginated list of all campaigns. 
 
-        :param offset: Offset for pagination
+        :param offset: Number of campaigns to skip
         :type offset: int
-        :param limit: Limit for pagination
+        :param limit: Maximum number of campaigns to return
         :type limit: int
-        :param search: Search term to filter campaigns
-        :type search: str
+        :param campaign_type: Filter by campaign type
+        :type campaign_type: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1034,7 +735,7 @@ class CampaignApi:
         _param = self._get_all_campaigns_serialize(
             offset=offset,
             limit=limit,
-            search=search,
+            campaign_type=campaign_type,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1042,9 +743,9 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[Campaign]",
-            '401': None,
-            '500': None,
+            '200': "List[RestRCampaign]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1060,9 +761,9 @@ class CampaignApi:
     @validate_call
     def get_all_campaigns_without_preload_content(
         self,
-        offset: Annotated[Optional[StrictInt], Field(description="Offset for pagination")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit for pagination")] = None,
-        search: Annotated[Optional[StrictStr], Field(description="Search term to filter campaigns")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of campaigns to skip")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of campaigns to return")] = None,
+        campaign_type: Annotated[Optional[StrictStr], Field(description="Filter by campaign type")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1076,16 +777,16 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get All Campaigns
+        """Get all campaigns
 
-        Retrieve a list of all campaigns.
+        Retrieves a paginated list of all campaigns. 
 
-        :param offset: Offset for pagination
+        :param offset: Number of campaigns to skip
         :type offset: int
-        :param limit: Limit for pagination
+        :param limit: Maximum number of campaigns to return
         :type limit: int
-        :param search: Search term to filter campaigns
-        :type search: str
+        :param campaign_type: Filter by campaign type
+        :type campaign_type: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1111,7 +812,7 @@ class CampaignApi:
         _param = self._get_all_campaigns_serialize(
             offset=offset,
             limit=limit,
-            search=search,
+            campaign_type=campaign_type,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1119,9 +820,9 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[Campaign]",
-            '401': None,
-            '500': None,
+            '200': "List[RestRCampaign]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1134,7 +835,7 @@ class CampaignApi:
         self,
         offset,
         limit,
-        search,
+        campaign_type,
         _request_auth,
         _content_type,
         _headers,
@@ -1150,7 +851,9 @@ class CampaignApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -1163,9 +866,9 @@ class CampaignApi:
             
             _query_params.append(('limit', limit))
             
-        if search is not None:
+        if campaign_type is not None:
             
-            _query_params.append(('search', search))
+            _query_params.append(('campaignType', campaign_type))
             
         # process the header parameters
         # process the form parameters
@@ -1183,7 +886,7 @@ class CampaignApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
@@ -1205,9 +908,9 @@ class CampaignApi:
 
 
     @validate_call
-    def get_campaign_by_id(
+    def get_campaign(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="The ID of the campaign to retrieve.")],
+        identifier: Annotated[str, Field(strict=True, description="Campaign identifier - `campaign_IMBoxK2iB5sUdgiNOjqAMA` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1220,13 +923,13 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Campaign:
-        """Get Campaign By Id
+    ) -> RestRCampaign:
+        """Get campaign by ID
 
-        Retrieve a specific campaign using its ID.
+        Retrieves detailed information about a specific campaign. 
 
-        :param campaign_id: The ID of the campaign to retrieve. (required)
-        :type campaign_id: str
+        :param identifier: Campaign identifier - `campaign_IMBoxK2iB5sUdgiNOjqAMA`  (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1249,8 +952,8 @@ class CampaignApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_campaign_by_id_serialize(
-            campaign_id=campaign_id,
+        _param = self._get_campaign_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1258,12 +961,11 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Campaign",
-            '401': None,
-            '406': None,
-            '403': None,
-            '422': None,
-            '500': None,
+            '200': "RestRCampaign",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1277,9 +979,9 @@ class CampaignApi:
 
 
     @validate_call
-    def get_campaign_by_id_with_http_info(
+    def get_campaign_with_http_info(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="The ID of the campaign to retrieve.")],
+        identifier: Annotated[str, Field(strict=True, description="Campaign identifier - `campaign_IMBoxK2iB5sUdgiNOjqAMA` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1292,13 +994,13 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Campaign]:
-        """Get Campaign By Id
+    ) -> ApiResponse[RestRCampaign]:
+        """Get campaign by ID
 
-        Retrieve a specific campaign using its ID.
+        Retrieves detailed information about a specific campaign. 
 
-        :param campaign_id: The ID of the campaign to retrieve. (required)
-        :type campaign_id: str
+        :param identifier: Campaign identifier - `campaign_IMBoxK2iB5sUdgiNOjqAMA`  (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1321,8 +1023,8 @@ class CampaignApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_campaign_by_id_serialize(
-            campaign_id=campaign_id,
+        _param = self._get_campaign_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1330,12 +1032,11 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Campaign",
-            '401': None,
-            '406': None,
-            '403': None,
-            '422': None,
-            '500': None,
+            '200': "RestRCampaign",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1349,9 +1050,9 @@ class CampaignApi:
 
 
     @validate_call
-    def get_campaign_by_id_without_preload_content(
+    def get_campaign_without_preload_content(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="The ID of the campaign to retrieve.")],
+        identifier: Annotated[str, Field(strict=True, description="Campaign identifier - `campaign_IMBoxK2iB5sUdgiNOjqAMA` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1365,12 +1066,12 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get Campaign By Id
+        """Get campaign by ID
 
-        Retrieve a specific campaign using its ID.
+        Retrieves detailed information about a specific campaign. 
 
-        :param campaign_id: The ID of the campaign to retrieve. (required)
-        :type campaign_id: str
+        :param identifier: Campaign identifier - `campaign_IMBoxK2iB5sUdgiNOjqAMA`  (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1393,8 +1094,8 @@ class CampaignApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_campaign_by_id_serialize(
-            campaign_id=campaign_id,
+        _param = self._get_campaign_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1402,12 +1103,11 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Campaign",
-            '401': None,
-            '406': None,
-            '403': None,
-            '422': None,
-            '500': None,
+            '200': "RestRCampaign",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1416,9 +1116,9 @@ class CampaignApi:
         return response_data.response
 
 
-    def _get_campaign_by_id_serialize(
+    def _get_campaign_serialize(
         self,
-        campaign_id,
+        identifier,
         _request_auth,
         _content_type,
         _headers,
@@ -1434,12 +1134,14 @@ class CampaignApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if campaign_id is not None:
-            _path_params['campaignId'] = campaign_id
+        if identifier is not None:
+            _path_params['identifier'] = identifier
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -1457,12 +1159,12 @@ class CampaignApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/campaign/{campaignId}',
+            resource_path='/campaign/{identifier}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

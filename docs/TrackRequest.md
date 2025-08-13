@@ -5,9 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**email** | [**Email**](Email.md) | Email address of the contact to track. | [optional] 
-**add_tags** | **List[str]** |  | [optional] 
-**remove_tags** | **List[str]** |  | [optional] 
+**add_tags** | **List[str]** | Tags to add to contact | [optional] 
+**remove_tags** | **List[str]** | Tags to remove from contact | [optional] 
+**email** | **str** | Email address of the contact | [optional] 
 
 ## Example
 

@@ -7,7 +7,6 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **status** | **str** |  | [optional] 
 **message** | **str** |  | [optional] 
-**data** | [**Contact**](Contact.md) |  | [optional] 
 
 ## Example
 

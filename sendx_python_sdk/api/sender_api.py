@@ -3,10 +3,10 @@
 """
     SendX REST API
 
-    # Introduction SendX is an email marketing product. It helps you convert website visitors to customers, send them promotional emails, engage with them using drip sequences and craft custom journeys using powerful but simple automations. The SendX API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs. The SendX Rest API doesn’t support bulk updates. You can work on only one object per request. <br> 
+    # SendX REST API Documentation  ## 🚀 Introduction  The SendX API is organized around REST principles. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  **Key Features:** - 🔒 **Security**: Team-based authentication with optional member-level access - 🎯 **Resource-Oriented**: RESTful design with clear resource boundaries - 📊 **Rich Data Models**: Three-layer model system (Input/Output/Internal) - 🔗 **Relationships**: Automatic prefix handling for resource relationships - 📈 **Scalable**: Built for high-volume email marketing operations  ## 🏗️ Architecture Overview  SendX uses a three-layer model architecture:  1. **Input Models** (`RestE*`): For API requests 2. **Output Models** (`RestR*`): For API responses with prefixed IDs 3. **Internal Models**: Core business logic (not exposed in API)  ## 🔐 Security & Authentication  SendX uses API key authentication:  ### Team API Key ```http X-Team-ApiKey: YOUR_TEAM_API_KEY ``` - **Required for all requests** - Team-level access to resources - Available in SendX Settings → Team API Key  ## 🆔 Encrypted ID System  SendX uses encrypted IDs for security and better developer experience:  - **Internal IDs**: Sequential integers (not exposed) - **Encrypted IDs**: 22-character alphanumeric strings - **Prefixed IDs**: Resource-type prefixes in API responses (`contact_<22-char-id>`)  ### ID Format  **All resource IDs follow this pattern:** ``` <resource_prefix>_<22_character_alphanumeric_string> ```  **Example:** ```json {   \"id\": \"contact_BnKjkbBBS500CoBCP0oChQ\",   \"lists\": [\"list_OcuxJHdiAvujmwQVJfd3ss\", \"list_0tOFLp5RgV7s3LNiHrjGYs\"],   \"tags\": [\"tag_UhsDkjL772Qbj5lWtT62VK\", \"tag_fL7t9lsnZ9swvx2HrtQ9wM\"] } ```  ## 📚 Resource Prefixes  | Resource | Prefix | Example | |----------|--------|---------| | Contact | `contact_` | `contact_BnKjkbBBS500CoBCP0oChQ` | | Campaign | `campaign_` | `campaign_LUE9BTxmksSmqHWbh96zsn` | | List | `list_` | `list_OcuxJHdiAvujmwQVJfd3ss` | | Tag | `tag_` | `tag_UhsDkjL772Qbj5lWtT62VK` | | Sender | `sender_` | `sender_4vK3WFhMgvOwUNyaL4QxCD` | | Template | `template_` | `template_f3lJvTEhSjKGVb5Lwc5SWS` | | Custom Field | `field_` | `field_MnuqBAG2NPLm7PZMWbjQxt` | | Webhook | `webhook_` | `webhook_9l154iiXlZoPo7vngmamee` | | Post | `post_` | `post_XyZ123aBc456DeF789GhI` | | Post Category | `post_category_` | `post_category_YzS1wOU20yw87UUHKxMzwn` | | Post Tag | `post_tag_` | `post_tag_123XyZ456AbC` | | Member | `member_` | `member_JkL012MnO345PqR678` |  ## 🎯 Best Practices  ### Error Handling - **Always check status codes**: 2xx = success, 4xx = client error, 5xx = server error - **Read error messages**: Descriptive messages help debug issues - **Handle rate limits**: Respect API rate limits for optimal performance  ### Data Validation - **Email format**: Must be valid email addresses - **Required fields**: Check documentation for mandatory fields - **Field lengths**: Respect maximum length constraints  ### Performance - **Pagination**: Use offset/limit for large datasets - **Batch operations**: Process multiple items when supported - **Caching**: Cache responses when appropriate  ## 🛠️ SDKs & Integration  Official SDKs available for: - [Golang](https://github.com/sendx/sendx-go-sdk) - [Python](https://github.com/sendx/sendx-python-sdk) - [Ruby](https://github.com/sendx/sendx-ruby-sdk) - [Java](https://github.com/sendx/sendx-java-sdk) - [PHP](https://github.com/sendx/sendx-php-sdk) - [JavaScript](https://github.com/sendx/sendx-javascript-sdk)  ## 📞 Support  Need help? Contact us: - 💬 **Website Chat**: Available on sendx.io - 📧 **Email**: hello@sendx.io - 📚 **Documentation**: Full guides at help.sendx.io  ---  **API Endpoint:** `https://api.sendx.io/api/v1/rest`  [<img src=\"https://run.pstmn.io/button.svg\" alt=\"Run In Postman\" style=\"width: 128px; height: 32px;\">](https://god.gw.postman.com/run-collection/33476323-44b198b0-5219-4619-a01f-cfc24d573885?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D33476323-44b198b0-5219-4619-a01f-cfc24d573885%26entityType%3Dcollection%26workspaceId%3D6b1e4f65-96a9-4136-9512-6266c852517e) 
 
     The version of the OpenAPI document: 1.0.0
-    Contact: support@sendx.io
+    Contact: hello@sendx.io
     Generated by OpenAPI Generator (https://openapi-generator.tech)
 
     Do not edit the class manually.
@@ -17,12 +17,9 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictInt, StrictStr
-from typing import List, Optional
-from typing_extensions import Annotated
-from sendx_python_sdk.models.sender import Sender
-from sendx_python_sdk.models.sender_request import SenderRequest
-from sendx_python_sdk.models.sender_response import SenderResponse
+from typing import List
+from sendx_python_sdk.models.rest_e_sender import RestESender
+from sendx_python_sdk.models.rest_r_sender import RestRSender
 
 from sendx_python_sdk.api_client import ApiClient, RequestSerialized
 from sendx_python_sdk.api_response import ApiResponse
@@ -45,7 +42,7 @@ class SenderApi:
     @validate_call
     def create_sender(
         self,
-        sender_request: SenderRequest,
+        rest_e_sender: RestESender,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -58,13 +55,13 @@ class SenderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Sender:
-        """Create Sender
+    ) -> RestRSender:
+        """Create sender
 
-        Creates a new sender in the system.
+        Adds a new sender email address. 
 
-        :param sender_request: (required)
-        :type sender_request: SenderRequest
+        :param rest_e_sender: (required)
+        :type rest_e_sender: RestESender
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -88,7 +85,7 @@ class SenderApi:
         """ # noqa: E501
 
         _param = self._create_sender_serialize(
-            sender_request=sender_request,
+            rest_e_sender=rest_e_sender,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -96,12 +93,11 @@ class SenderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Sender",
-            '401': None,
-            '403': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRSender",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -117,7 +113,7 @@ class SenderApi:
     @validate_call
     def create_sender_with_http_info(
         self,
-        sender_request: SenderRequest,
+        rest_e_sender: RestESender,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -130,13 +126,13 @@ class SenderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Sender]:
-        """Create Sender
+    ) -> ApiResponse[RestRSender]:
+        """Create sender
 
-        Creates a new sender in the system.
+        Adds a new sender email address. 
 
-        :param sender_request: (required)
-        :type sender_request: SenderRequest
+        :param rest_e_sender: (required)
+        :type rest_e_sender: RestESender
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -160,7 +156,7 @@ class SenderApi:
         """ # noqa: E501
 
         _param = self._create_sender_serialize(
-            sender_request=sender_request,
+            rest_e_sender=rest_e_sender,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -168,12 +164,11 @@ class SenderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Sender",
-            '401': None,
-            '403': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRSender",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -189,7 +184,7 @@ class SenderApi:
     @validate_call
     def create_sender_without_preload_content(
         self,
-        sender_request: SenderRequest,
+        rest_e_sender: RestESender,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -203,12 +198,12 @@ class SenderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Create Sender
+        """Create sender
 
-        Creates a new sender in the system.
+        Adds a new sender email address. 
 
-        :param sender_request: (required)
-        :type sender_request: SenderRequest
+        :param rest_e_sender: (required)
+        :type rest_e_sender: RestESender
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -232,7 +227,7 @@ class SenderApi:
         """ # noqa: E501
 
         _param = self._create_sender_serialize(
-            sender_request=sender_request,
+            rest_e_sender=rest_e_sender,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -240,12 +235,11 @@ class SenderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Sender",
-            '401': None,
-            '403': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRSender",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -256,7 +250,7 @@ class SenderApi:
 
     def _create_sender_serialize(
         self,
-        sender_request,
+        rest_e_sender,
         _request_auth,
         _content_type,
         _headers,
@@ -272,7 +266,9 @@ class SenderApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -280,8 +276,8 @@ class SenderApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if sender_request is not None:
-            _body_params = sender_request
+        if rest_e_sender is not None:
+            _body_params = rest_e_sender
 
 
         # set the HTTP header `Accept`
@@ -308,7 +304,7 @@ class SenderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
@@ -332,9 +328,6 @@ class SenderApi:
     @validate_call
     def get_all_senders(
         self,
-        offset: Annotated[Optional[StrictInt], Field(description="Number of records to skip")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of records to return")] = None,
-        search: Annotated[Optional[StrictStr], Field(description="Search keyword to filter senders by name or email")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -347,17 +340,11 @@ class SenderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> List[SenderResponse]:
-        """Get All Senders
+    ) -> List[RestRSender]:
+        """Get all senders
 
-        Retrieve all senders for the team, with optional filters like offset, limit, and search.
+        Retrieves all verified sender addresses. 
 
-        :param offset: Number of records to skip
-        :type offset: int
-        :param limit: Maximum number of records to return
-        :type limit: int
-        :param search: Search keyword to filter senders by name or email
-        :type search: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -381,9 +368,6 @@ class SenderApi:
         """ # noqa: E501
 
         _param = self._get_all_senders_serialize(
-            offset=offset,
-            limit=limit,
-            search=search,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -391,9 +375,9 @@ class SenderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[SenderResponse]",
-            '401': None,
-            '500': None,
+            '200': "List[RestRSender]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -409,9 +393,6 @@ class SenderApi:
     @validate_call
     def get_all_senders_with_http_info(
         self,
-        offset: Annotated[Optional[StrictInt], Field(description="Number of records to skip")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of records to return")] = None,
-        search: Annotated[Optional[StrictStr], Field(description="Search keyword to filter senders by name or email")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -424,17 +405,11 @@ class SenderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[List[SenderResponse]]:
-        """Get All Senders
+    ) -> ApiResponse[List[RestRSender]]:
+        """Get all senders
 
-        Retrieve all senders for the team, with optional filters like offset, limit, and search.
+        Retrieves all verified sender addresses. 
 
-        :param offset: Number of records to skip
-        :type offset: int
-        :param limit: Maximum number of records to return
-        :type limit: int
-        :param search: Search keyword to filter senders by name or email
-        :type search: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -458,9 +433,6 @@ class SenderApi:
         """ # noqa: E501
 
         _param = self._get_all_senders_serialize(
-            offset=offset,
-            limit=limit,
-            search=search,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -468,9 +440,9 @@ class SenderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[SenderResponse]",
-            '401': None,
-            '500': None,
+            '200': "List[RestRSender]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -486,9 +458,6 @@ class SenderApi:
     @validate_call
     def get_all_senders_without_preload_content(
         self,
-        offset: Annotated[Optional[StrictInt], Field(description="Number of records to skip")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of records to return")] = None,
-        search: Annotated[Optional[StrictStr], Field(description="Search keyword to filter senders by name or email")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -502,16 +471,10 @@ class SenderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get All Senders
+        """Get all senders
 
-        Retrieve all senders for the team, with optional filters like offset, limit, and search.
+        Retrieves all verified sender addresses. 
 
-        :param offset: Number of records to skip
-        :type offset: int
-        :param limit: Maximum number of records to return
-        :type limit: int
-        :param search: Search keyword to filter senders by name or email
-        :type search: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -535,9 +498,6 @@ class SenderApi:
         """ # noqa: E501
 
         _param = self._get_all_senders_serialize(
-            offset=offset,
-            limit=limit,
-            search=search,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -545,9 +505,9 @@ class SenderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[SenderResponse]",
-            '401': None,
-            '500': None,
+            '200': "List[RestRSender]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -558,9 +518,6 @@ class SenderApi:
 
     def _get_all_senders_serialize(
         self,
-        offset,
-        limit,
-        search,
         _request_auth,
         _content_type,
         _headers,
@@ -576,23 +533,13 @@ class SenderApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         # process the query parameters
-        if offset is not None:
-            
-            _query_params.append(('offset', offset))
-            
-        if limit is not None:
-            
-            _query_params.append(('limit', limit))
-            
-        if search is not None:
-            
-            _query_params.append(('search', search))
-            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -609,7 +556,7 @@ class SenderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(

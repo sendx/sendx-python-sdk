@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** | Name of the custom event (e.g., &#39;abandoned_cart&#39;). | 
-**identifier** | **str** | Unique identifier for the contact (e.g., contact&#39;s email). | 
-**data** | **Dict[str, str]** | Map of property-value pairs associated with the event, where both key and value are strings. | 
-**time** | **int** | Unix timestamp of when the event occurred. | 
+**identifier** | **str** | This is the contact identifier. Contact id and email can be used interchangeably.  | [optional] 
+**name** | **str** | Event name | 
+**data** | **Dict[str, object]** | Event data | [optional] 
+**time** | **int** | Unix timestamp (in seconds since January 1, 1970) representing when the event occurred. | [optional] 
 
 ## Example
 

@@ -4,28 +4,29 @@ All URIs are relative to *https://api.sendx.io/api/v1/rest*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create_team_webhook**](WebhookApi.md#create_team_webhook) | **POST** /webhook | Create TeamWebhook
-[**delete_team_webhook**](WebhookApi.md#delete_team_webhook) | **DELETE** /webhook/{webhookId} | Delete Team Webhook
-[**get_all_team_webhook**](WebhookApi.md#get_all_team_webhook) | **GET** /webhook | Get All team Webhook
-[**get_team_webhook**](WebhookApi.md#get_team_webhook) | **GET** /webhook/{webhookId} | Get TeamWebhook
-[**update_team_webhook**](WebhookApi.md#update_team_webhook) | **PUT** /webhook/{webhookId} | Update Team Webhook
+[**create_webhook**](WebhookApi.md#create_webhook) | **POST** /webhook | Create webhook
+[**delete_webhook**](WebhookApi.md#delete_webhook) | **DELETE** /webhook/{identifier} | Delete webhook
+[**get_all_webhooks**](WebhookApi.md#get_all_webhooks) | **GET** /webhook | Get all webhooks
+[**get_webhook**](WebhookApi.md#get_webhook) | **GET** /webhook/{identifier} | Get webhook by ID
+[**update_webhook**](WebhookApi.md#update_webhook) | **PUT** /webhook/{identifier} | Update webhook
 
 
-# **create_team_webhook**
-> Webhook create_team_webhook(webhook_request)
+# **create_webhook**
+> RestRWebhook create_webhook(rest_e_webhook)
 
-Create TeamWebhook
+Create webhook
 
-Create a new team webhook.
+Creates a new webhook for event notifications.
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.webhook import Webhook
-from sendx_python_sdk.models.webhook_request import WebhookRequest
+from sendx_python_sdk.models.rest_e_webhook import RestEWebhook
+from sendx_python_sdk.models.rest_r_webhook import RestRWebhook
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -40,25 +41,25 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.WebhookApi(api_client)
-    webhook_request = sendx_python_sdk.WebhookRequest() # WebhookRequest | The webhook details to be created.
+    rest_e_webhook = {"enabled":true,"url":"https://api.example.com/webhooks/sendx","unsubscribed":true,"dropped":true,"bounced":true,"markedSpam":true,"clicked":true,"opened":true,"contactCreated":true} # RestEWebhook | 
 
     try:
-        # Create TeamWebhook
-        api_response = api_instance.create_team_webhook(webhook_request)
-        print("The response of WebhookApi->create_team_webhook:\n")
+        # Create webhook
+        api_response = api_instance.create_webhook(rest_e_webhook)
+        print("The response of WebhookApi->create_webhook:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling WebhookApi->create_team_webhook: %s\n" % e)
+        print("Exception when calling WebhookApi->create_webhook: %s\n" % e)
 ```
 
 
@@ -68,15 +69,15 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **webhook_request** | [**WebhookRequest**](WebhookRequest.md)| The webhook details to be created. | 
+ **rest_e_webhook** | [**RestEWebhook**](RestEWebhook.md)|  | 
 
 ### Return type
 
-[**Webhook**](Webhook.md)
+[**RestRWebhook**](RestRWebhook.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -87,23 +88,30 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | The newly created team webhook. |  -  |
-**401** | Not Authorized |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**201** | ✅ Webhook created successfully |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**403** | ❌ Forbidden - Resource name already exists |  -  |
+**422** | ❌ Unprocessable Entity - Invalid request format |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **delete_team_webhook**
-> DeleteResponse delete_team_webhook(webhook_id)
+# **delete_webhook**
+> DeleteResponse delete_webhook(identifier)
 
-Delete Team Webhook
+Delete webhook
 
-Delete a specific team webhook by its ID.
+Deletes a webhook configuration.
+
+**🎯 Key Features:**
+- Remove webhooks
+- Stop event delivery
+- Clean up endpoints
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
@@ -122,25 +130,25 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.WebhookApi(api_client)
-    webhook_id = 'webhook_id_example' # str | The ID of the team webhook.
+    identifier = 'identifier_example' # str | Webhook identifier to update
 
     try:
-        # Delete Team Webhook
-        api_response = api_instance.delete_team_webhook(webhook_id)
-        print("The response of WebhookApi->delete_team_webhook:\n")
+        # Delete webhook
+        api_response = api_instance.delete_webhook(identifier)
+        print("The response of WebhookApi->delete_webhook:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling WebhookApi->delete_team_webhook: %s\n" % e)
+        print("Exception when calling WebhookApi->delete_webhook: %s\n" % e)
 ```
 
 
@@ -150,7 +158,7 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **webhook_id** | **str**| The ID of the team webhook. | 
+ **identifier** | **str**| Webhook identifier to update | 
 
 ### Return type
 
@@ -158,7 +166,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -169,27 +177,29 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Confirmation of the deletion. |  -  |
-**401** | Not Authorized |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**200** | ✅ Webhook deleted successfully |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**404** | ❌ Not Found - Resource does not exist |  -  |
+**422** | ❌ Unprocessable Entity - Invalid request format |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_all_team_webhook**
-> List[Webhook] get_all_team_webhook()
+# **get_all_webhooks**
+> List[RestRWebhook] get_all_webhooks()
 
-Get All team Webhook
+Get all webhooks
 
-Retrieve all team webhooks for the requesting team.
+Retrieves all configured webhooks.
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.webhook import Webhook
+from sendx_python_sdk.models.rest_r_webhook import RestRWebhook
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -204,11 +214,11 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
@@ -216,12 +226,12 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
     api_instance = sendx_python_sdk.WebhookApi(api_client)
 
     try:
-        # Get All team Webhook
-        api_response = api_instance.get_all_team_webhook()
-        print("The response of WebhookApi->get_all_team_webhook:\n")
+        # Get all webhooks
+        api_response = api_instance.get_all_webhooks()
+        print("The response of WebhookApi->get_all_webhooks:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling WebhookApi->get_all_team_webhook: %s\n" % e)
+        print("Exception when calling WebhookApi->get_all_webhooks: %s\n" % e)
 ```
 
 
@@ -232,11 +242,11 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**List[Webhook]**](Webhook.md)
+[**List[RestRWebhook]**](RestRWebhook.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -247,27 +257,27 @@ This endpoint does not need any parameter.
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | A list of team webhooks. |  -  |
-**401** | Not Authorized |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**200** | ✅ Webhooks retrieved successfully |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_team_webhook**
-> Webhook get_team_webhook(webhook_id)
+# **get_webhook**
+> RestRWebhook get_webhook(identifier)
 
-Get TeamWebhook
+Get webhook by ID
 
-Retrieve a specific team webhook by its ID.
+Retrieves details about a specific webhook.
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.webhook import Webhook
+from sendx_python_sdk.models.rest_r_webhook import RestRWebhook
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -282,25 +292,25 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.WebhookApi(api_client)
-    webhook_id = 'webhook_id_example' # str | The ID of the team webhook.
+    identifier = 'identifier_example' # str | Webhook identifier to retrieve
 
     try:
-        # Get TeamWebhook
-        api_response = api_instance.get_team_webhook(webhook_id)
-        print("The response of WebhookApi->get_team_webhook:\n")
+        # Get webhook by ID
+        api_response = api_instance.get_webhook(identifier)
+        print("The response of WebhookApi->get_webhook:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling WebhookApi->get_team_webhook: %s\n" % e)
+        print("Exception when calling WebhookApi->get_webhook: %s\n" % e)
 ```
 
 
@@ -310,15 +320,15 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **webhook_id** | **str**| The ID of the team webhook. | 
+ **identifier** | **str**| Webhook identifier to retrieve | 
 
 ### Return type
 
-[**Webhook**](Webhook.md)
+[**RestRWebhook**](RestRWebhook.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -329,28 +339,30 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | The requested team webhook. |  -  |
-**401** | Not Authorized |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**200** | ✅ Webhook retrieved successfully |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**404** | ❌ Not Found - Resource does not exist |  -  |
+**422** | ❌ Unprocessable Entity - Invalid request format |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **update_team_webhook**
-> Webhook update_team_webhook(webhook_id, webhook_request)
+# **update_webhook**
+> RestRWebhook update_webhook(identifier, rest_e_webhook)
 
-Update Team Webhook
+Update webhook
 
-Update an existing team webhook with new content.
+Updates webhook configuration.
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.webhook import Webhook
-from sendx_python_sdk.models.webhook_request import WebhookRequest
+from sendx_python_sdk.models.rest_e_webhook import RestEWebhook
+from sendx_python_sdk.models.rest_r_webhook import RestRWebhook
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -365,26 +377,26 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.WebhookApi(api_client)
-    webhook_id = 'webhook_id_example' # str | The ID of the team webhook.
-    webhook_request = sendx_python_sdk.WebhookRequest() # WebhookRequest | The updated webhook details.
+    identifier = 'identifier_example' # str | Webhook identifier to update
+    rest_e_webhook = sendx_python_sdk.RestEWebhook() # RestEWebhook | 
 
     try:
-        # Update Team Webhook
-        api_response = api_instance.update_team_webhook(webhook_id, webhook_request)
-        print("The response of WebhookApi->update_team_webhook:\n")
+        # Update webhook
+        api_response = api_instance.update_webhook(identifier, rest_e_webhook)
+        print("The response of WebhookApi->update_webhook:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling WebhookApi->update_team_webhook: %s\n" % e)
+        print("Exception when calling WebhookApi->update_webhook: %s\n" % e)
 ```
 
 
@@ -394,16 +406,16 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **webhook_id** | **str**| The ID of the team webhook. | 
- **webhook_request** | [**WebhookRequest**](WebhookRequest.md)| The updated webhook details. | 
+ **identifier** | **str**| Webhook identifier to update | 
+ **rest_e_webhook** | [**RestEWebhook**](RestEWebhook.md)|  | 
 
 ### Return type
 
-[**Webhook**](Webhook.md)
+[**RestRWebhook**](RestRWebhook.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -414,10 +426,12 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | The updated team webhook. |  -  |
-**401** | Not Authorized |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**200** | ✅ Webhook updated successfully |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**403** | ❌ Forbidden - Resource name already exists |  -  |
+**404** | ❌ Not Found - Resource does not exist |  -  |
+**422** | ❌ Unprocessable Entity - Invalid request format |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

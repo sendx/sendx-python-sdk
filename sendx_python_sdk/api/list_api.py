@@ -3,10 +3,10 @@
 """
     SendX REST API
 
-    # Introduction SendX is an email marketing product. It helps you convert website visitors to customers, send them promotional emails, engage with them using drip sequences and craft custom journeys using powerful but simple automations. The SendX API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs. The SendX Rest API doesn’t support bulk updates. You can work on only one object per request. <br> 
+    # SendX REST API Documentation  ## 🚀 Introduction  The SendX API is organized around REST principles. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  **Key Features:** - 🔒 **Security**: Team-based authentication with optional member-level access - 🎯 **Resource-Oriented**: RESTful design with clear resource boundaries - 📊 **Rich Data Models**: Three-layer model system (Input/Output/Internal) - 🔗 **Relationships**: Automatic prefix handling for resource relationships - 📈 **Scalable**: Built for high-volume email marketing operations  ## 🏗️ Architecture Overview  SendX uses a three-layer model architecture:  1. **Input Models** (`RestE*`): For API requests 2. **Output Models** (`RestR*`): For API responses with prefixed IDs 3. **Internal Models**: Core business logic (not exposed in API)  ## 🔐 Security & Authentication  SendX uses API key authentication:  ### Team API Key ```http X-Team-ApiKey: YOUR_TEAM_API_KEY ``` - **Required for all requests** - Team-level access to resources - Available in SendX Settings → Team API Key  ## 🆔 Encrypted ID System  SendX uses encrypted IDs for security and better developer experience:  - **Internal IDs**: Sequential integers (not exposed) - **Encrypted IDs**: 22-character alphanumeric strings - **Prefixed IDs**: Resource-type prefixes in API responses (`contact_<22-char-id>`)  ### ID Format  **All resource IDs follow this pattern:** ``` <resource_prefix>_<22_character_alphanumeric_string> ```  **Example:** ```json {   \"id\": \"contact_BnKjkbBBS500CoBCP0oChQ\",   \"lists\": [\"list_OcuxJHdiAvujmwQVJfd3ss\", \"list_0tOFLp5RgV7s3LNiHrjGYs\"],   \"tags\": [\"tag_UhsDkjL772Qbj5lWtT62VK\", \"tag_fL7t9lsnZ9swvx2HrtQ9wM\"] } ```  ## 📚 Resource Prefixes  | Resource | Prefix | Example | |----------|--------|---------| | Contact | `contact_` | `contact_BnKjkbBBS500CoBCP0oChQ` | | Campaign | `campaign_` | `campaign_LUE9BTxmksSmqHWbh96zsn` | | List | `list_` | `list_OcuxJHdiAvujmwQVJfd3ss` | | Tag | `tag_` | `tag_UhsDkjL772Qbj5lWtT62VK` | | Sender | `sender_` | `sender_4vK3WFhMgvOwUNyaL4QxCD` | | Template | `template_` | `template_f3lJvTEhSjKGVb5Lwc5SWS` | | Custom Field | `field_` | `field_MnuqBAG2NPLm7PZMWbjQxt` | | Webhook | `webhook_` | `webhook_9l154iiXlZoPo7vngmamee` | | Post | `post_` | `post_XyZ123aBc456DeF789GhI` | | Post Category | `post_category_` | `post_category_YzS1wOU20yw87UUHKxMzwn` | | Post Tag | `post_tag_` | `post_tag_123XyZ456AbC` | | Member | `member_` | `member_JkL012MnO345PqR678` |  ## 🎯 Best Practices  ### Error Handling - **Always check status codes**: 2xx = success, 4xx = client error, 5xx = server error - **Read error messages**: Descriptive messages help debug issues - **Handle rate limits**: Respect API rate limits for optimal performance  ### Data Validation - **Email format**: Must be valid email addresses - **Required fields**: Check documentation for mandatory fields - **Field lengths**: Respect maximum length constraints  ### Performance - **Pagination**: Use offset/limit for large datasets - **Batch operations**: Process multiple items when supported - **Caching**: Cache responses when appropriate  ## 🛠️ SDKs & Integration  Official SDKs available for: - [Golang](https://github.com/sendx/sendx-go-sdk) - [Python](https://github.com/sendx/sendx-python-sdk) - [Ruby](https://github.com/sendx/sendx-ruby-sdk) - [Java](https://github.com/sendx/sendx-java-sdk) - [PHP](https://github.com/sendx/sendx-php-sdk) - [JavaScript](https://github.com/sendx/sendx-javascript-sdk)  ## 📞 Support  Need help? Contact us: - 💬 **Website Chat**: Available on sendx.io - 📧 **Email**: hello@sendx.io - 📚 **Documentation**: Full guides at help.sendx.io  ---  **API Endpoint:** `https://api.sendx.io/api/v1/rest`  [<img src=\"https://run.pstmn.io/button.svg\" alt=\"Run In Postman\" style=\"width: 128px; height: 32px;\">](https://god.gw.postman.com/run-collection/33476323-44b198b0-5219-4619-a01f-cfc24d573885?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D33476323-44b198b0-5219-4619-a01f-cfc24d573885%26entityType%3Dcollection%26workspaceId%3D6b1e4f65-96a9-4136-9512-6266c852517e) 
 
     The version of the OpenAPI document: 1.0.0
-    Contact: support@sendx.io
+    Contact: hello@sendx.io
     Generated by OpenAPI Generator (https://openapi-generator.tech)
 
     Do not edit the class manually.
@@ -17,14 +17,12 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictInt, StrictStr
+from pydantic import Field, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
-from sendx_python_sdk.models.create_response import CreateResponse
 from sendx_python_sdk.models.delete_response import DeleteResponse
-from sendx_python_sdk.models.list_model import ListModel
-from sendx_python_sdk.models.list_request import ListRequest
-from sendx_python_sdk.models.response import Response
+from sendx_python_sdk.models.rest_e_list import RestEList
+from sendx_python_sdk.models.rest_r_list import RestRList
 
 from sendx_python_sdk.api_client import ApiClient, RequestSerialized
 from sendx_python_sdk.api_response import ApiResponse
@@ -47,7 +45,7 @@ class ListApi:
     @validate_call
     def create_list(
         self,
-        list_request: ListRequest,
+        rest_e_list: RestEList,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -60,13 +58,13 @@ class ListApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateResponse:
-        """Create List
+    ) -> RestRList:
+        """Create list
 
-        Create a new list.
+        Creates a new contact list. 
 
-        :param list_request: (required)
-        :type list_request: ListRequest
+        :param rest_e_list: (required)
+        :type rest_e_list: RestEList
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -90,7 +88,7 @@ class ListApi:
         """ # noqa: E501
 
         _param = self._create_list_serialize(
-            list_request=list_request,
+            rest_e_list=rest_e_list,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -98,12 +96,12 @@ class ListApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateResponse",
-            '401': None,
-            '403': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRList",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -119,7 +117,7 @@ class ListApi:
     @validate_call
     def create_list_with_http_info(
         self,
-        list_request: ListRequest,
+        rest_e_list: RestEList,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -132,13 +130,13 @@ class ListApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateResponse]:
-        """Create List
+    ) -> ApiResponse[RestRList]:
+        """Create list
 
-        Create a new list.
+        Creates a new contact list. 
 
-        :param list_request: (required)
-        :type list_request: ListRequest
+        :param rest_e_list: (required)
+        :type rest_e_list: RestEList
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -162,7 +160,7 @@ class ListApi:
         """ # noqa: E501
 
         _param = self._create_list_serialize(
-            list_request=list_request,
+            rest_e_list=rest_e_list,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -170,12 +168,12 @@ class ListApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateResponse",
-            '401': None,
-            '403': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRList",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -191,7 +189,7 @@ class ListApi:
     @validate_call
     def create_list_without_preload_content(
         self,
-        list_request: ListRequest,
+        rest_e_list: RestEList,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -205,12 +203,12 @@ class ListApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Create List
+        """Create list
 
-        Create a new list.
+        Creates a new contact list. 
 
-        :param list_request: (required)
-        :type list_request: ListRequest
+        :param rest_e_list: (required)
+        :type rest_e_list: RestEList
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -234,7 +232,7 @@ class ListApi:
         """ # noqa: E501
 
         _param = self._create_list_serialize(
-            list_request=list_request,
+            rest_e_list=rest_e_list,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -242,12 +240,12 @@ class ListApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateResponse",
-            '401': None,
-            '403': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '201': "RestRList",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -258,7 +256,7 @@ class ListApi:
 
     def _create_list_serialize(
         self,
-        list_request,
+        rest_e_list,
         _request_auth,
         _content_type,
         _headers,
@@ -274,7 +272,9 @@ class ListApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -282,8 +282,8 @@ class ListApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if list_request is not None:
-            _body_params = list_request
+        if rest_e_list is not None:
+            _body_params = rest_e_list
 
 
         # set the HTTP header `Accept`
@@ -310,7 +310,7 @@ class ListApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
@@ -334,7 +334,7 @@ class ListApi:
     @validate_call
     def delete_list(
         self,
-        list_id: Annotated[StrictStr, Field(description="The ID of the list you want to delete")],
+        identifier: Annotated[str, Field(strict=True, description="List identifier to delete")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -348,12 +348,12 @@ class ListApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> DeleteResponse:
-        """Delete List
+        """Delete list
 
-        Deletes a specific list by its ID.
+        Deletes a list. 
 
-        :param list_id: The ID of the list you want to delete (required)
-        :type list_id: str
+        :param identifier: List identifier to delete (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -377,7 +377,7 @@ class ListApi:
         """ # noqa: E501
 
         _param = self._delete_list_serialize(
-            list_id=list_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -386,10 +386,10 @@ class ListApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DeleteResponse",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -405,7 +405,7 @@ class ListApi:
     @validate_call
     def delete_list_with_http_info(
         self,
-        list_id: Annotated[StrictStr, Field(description="The ID of the list you want to delete")],
+        identifier: Annotated[str, Field(strict=True, description="List identifier to delete")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -419,12 +419,12 @@ class ListApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[DeleteResponse]:
-        """Delete List
+        """Delete list
 
-        Deletes a specific list by its ID.
+        Deletes a list. 
 
-        :param list_id: The ID of the list you want to delete (required)
-        :type list_id: str
+        :param identifier: List identifier to delete (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -448,7 +448,7 @@ class ListApi:
         """ # noqa: E501
 
         _param = self._delete_list_serialize(
-            list_id=list_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -457,10 +457,10 @@ class ListApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DeleteResponse",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -476,7 +476,7 @@ class ListApi:
     @validate_call
     def delete_list_without_preload_content(
         self,
-        list_id: Annotated[StrictStr, Field(description="The ID of the list you want to delete")],
+        identifier: Annotated[str, Field(strict=True, description="List identifier to delete")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -490,12 +490,12 @@ class ListApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Delete List
+        """Delete list
 
-        Deletes a specific list by its ID.
+        Deletes a list. 
 
-        :param list_id: The ID of the list you want to delete (required)
-        :type list_id: str
+        :param identifier: List identifier to delete (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -519,7 +519,7 @@ class ListApi:
         """ # noqa: E501
 
         _param = self._delete_list_serialize(
-            list_id=list_id,
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -528,10 +528,10 @@ class ListApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DeleteResponse",
-            '401': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -542,7 +542,7 @@ class ListApi:
 
     def _delete_list_serialize(
         self,
-        list_id,
+        identifier,
         _request_auth,
         _content_type,
         _headers,
@@ -558,12 +558,14 @@ class ListApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if list_id is not None:
-            _path_params['listId'] = list_id
+        if identifier is not None:
+            _path_params['identifier'] = identifier
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -581,12 +583,12 @@ class ListApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/list/{listId}',
+            resource_path='/list/{identifier}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -605,9 +607,9 @@ class ListApi:
     @validate_call
     def get_all_lists(
         self,
-        offset: Annotated[Optional[StrictInt], Field(description="Offset for pagination.")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit the number of results returned.")] = None,
-        search: Annotated[Optional[StrictStr], Field(description="Search term to filter lists.")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of records to skip for pagination")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of lists to return (max: 500)")] = None,
+        search: Annotated[Optional[Annotated[str, Field(min_length=2, strict=True, max_length=100)]], Field(description="Search lists by name")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -620,16 +622,16 @@ class ListApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> List[ListModel]:
-        """Get All Lists
+    ) -> List[RestRList]:
+        """Get all lists
 
-        Retrieve all lists for the account.
+        Retrieves all contact lists in your team. 
 
-        :param offset: Offset for pagination.
+        :param offset: Number of records to skip for pagination
         :type offset: int
-        :param limit: Limit the number of results returned.
+        :param limit: Maximum number of lists to return (max: 500)
         :type limit: int
-        :param search: Search term to filter lists.
+        :param search: Search lists by name
         :type search: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -664,9 +666,9 @@ class ListApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[ListModel]",
-            '401': None,
-            '500': None,
+            '200': "List[RestRList]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -682,9 +684,9 @@ class ListApi:
     @validate_call
     def get_all_lists_with_http_info(
         self,
-        offset: Annotated[Optional[StrictInt], Field(description="Offset for pagination.")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit the number of results returned.")] = None,
-        search: Annotated[Optional[StrictStr], Field(description="Search term to filter lists.")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of records to skip for pagination")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of lists to return (max: 500)")] = None,
+        search: Annotated[Optional[Annotated[str, Field(min_length=2, strict=True, max_length=100)]], Field(description="Search lists by name")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -697,16 +699,16 @@ class ListApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[List[ListModel]]:
-        """Get All Lists
+    ) -> ApiResponse[List[RestRList]]:
+        """Get all lists
 
-        Retrieve all lists for the account.
+        Retrieves all contact lists in your team. 
 
-        :param offset: Offset for pagination.
+        :param offset: Number of records to skip for pagination
         :type offset: int
-        :param limit: Limit the number of results returned.
+        :param limit: Maximum number of lists to return (max: 500)
         :type limit: int
-        :param search: Search term to filter lists.
+        :param search: Search lists by name
         :type search: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -741,9 +743,9 @@ class ListApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[ListModel]",
-            '401': None,
-            '500': None,
+            '200': "List[RestRList]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -759,9 +761,9 @@ class ListApi:
     @validate_call
     def get_all_lists_without_preload_content(
         self,
-        offset: Annotated[Optional[StrictInt], Field(description="Offset for pagination.")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit the number of results returned.")] = None,
-        search: Annotated[Optional[StrictStr], Field(description="Search term to filter lists.")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of records to skip for pagination")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of lists to return (max: 500)")] = None,
+        search: Annotated[Optional[Annotated[str, Field(min_length=2, strict=True, max_length=100)]], Field(description="Search lists by name")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -775,15 +777,15 @@ class ListApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get All Lists
+        """Get all lists
 
-        Retrieve all lists for the account.
+        Retrieves all contact lists in your team. 
 
-        :param offset: Offset for pagination.
+        :param offset: Number of records to skip for pagination
         :type offset: int
-        :param limit: Limit the number of results returned.
+        :param limit: Maximum number of lists to return (max: 500)
         :type limit: int
-        :param search: Search term to filter lists.
+        :param search: Search lists by name
         :type search: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -818,9 +820,9 @@ class ListApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[ListModel]",
-            '401': None,
-            '500': None,
+            '200': "List[RestRList]",
+            '401': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -849,7 +851,9 @@ class ListApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -882,7 +886,7 @@ class ListApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
@@ -904,9 +908,9 @@ class ListApi:
 
 
     @validate_call
-    def get_list_by_id(
+    def get_list(
         self,
-        list_id: Annotated[StrictStr, Field(description="The ID of the list you want to retrieve")],
+        identifier: Annotated[str, Field(strict=True, description="List identifier - `list_OcuxJHdiAvujmwQVJfd3ss` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -919,13 +923,13 @@ class ListApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ListModel:
-        """Get List
+    ) -> RestRList:
+        """Get list by ID
 
-        Retrieve a specific list by its ID.
+        Retrieves detailed information about a specific list. 
 
-        :param list_id: The ID of the list you want to retrieve (required)
-        :type list_id: str
+        :param identifier: List identifier - `list_OcuxJHdiAvujmwQVJfd3ss`  (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -948,8 +952,8 @@ class ListApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_list_by_id_serialize(
-            list_id=list_id,
+        _param = self._get_list_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -957,12 +961,11 @@ class ListApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ListModel",
-            '401': None,
-            '406': None,
-            '403': None,
-            '422': None,
-            '500': None,
+            '200': "RestRList",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -976,9 +979,9 @@ class ListApi:
 
 
     @validate_call
-    def get_list_by_id_with_http_info(
+    def get_list_with_http_info(
         self,
-        list_id: Annotated[StrictStr, Field(description="The ID of the list you want to retrieve")],
+        identifier: Annotated[str, Field(strict=True, description="List identifier - `list_OcuxJHdiAvujmwQVJfd3ss` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -991,13 +994,13 @@ class ListApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ListModel]:
-        """Get List
+    ) -> ApiResponse[RestRList]:
+        """Get list by ID
 
-        Retrieve a specific list by its ID.
+        Retrieves detailed information about a specific list. 
 
-        :param list_id: The ID of the list you want to retrieve (required)
-        :type list_id: str
+        :param identifier: List identifier - `list_OcuxJHdiAvujmwQVJfd3ss`  (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1020,8 +1023,8 @@ class ListApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_list_by_id_serialize(
-            list_id=list_id,
+        _param = self._get_list_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1029,12 +1032,11 @@ class ListApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ListModel",
-            '401': None,
-            '406': None,
-            '403': None,
-            '422': None,
-            '500': None,
+            '200': "RestRList",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1048,9 +1050,9 @@ class ListApi:
 
 
     @validate_call
-    def get_list_by_id_without_preload_content(
+    def get_list_without_preload_content(
         self,
-        list_id: Annotated[StrictStr, Field(description="The ID of the list you want to retrieve")],
+        identifier: Annotated[str, Field(strict=True, description="List identifier - `list_OcuxJHdiAvujmwQVJfd3ss` ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1064,12 +1066,12 @@ class ListApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get List
+        """Get list by ID
 
-        Retrieve a specific list by its ID.
+        Retrieves detailed information about a specific list. 
 
-        :param list_id: The ID of the list you want to retrieve (required)
-        :type list_id: str
+        :param identifier: List identifier - `list_OcuxJHdiAvujmwQVJfd3ss`  (required)
+        :type identifier: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1092,8 +1094,8 @@ class ListApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_list_by_id_serialize(
-            list_id=list_id,
+        _param = self._get_list_serialize(
+            identifier=identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1101,12 +1103,11 @@ class ListApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ListModel",
-            '401': None,
-            '406': None,
-            '403': None,
-            '422': None,
-            '500': None,
+            '200': "RestRList",
+            '401': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1115,9 +1116,9 @@ class ListApi:
         return response_data.response
 
 
-    def _get_list_by_id_serialize(
+    def _get_list_serialize(
         self,
-        list_id,
+        identifier,
         _request_auth,
         _content_type,
         _headers,
@@ -1133,12 +1134,14 @@ class ListApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if list_id is not None:
-            _path_params['listId'] = list_id
+        if identifier is not None:
+            _path_params['identifier'] = identifier
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -1156,12 +1159,12 @@ class ListApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/list/{listId}',
+            resource_path='/list/{identifier}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1180,8 +1183,8 @@ class ListApi:
     @validate_call
     def update_list(
         self,
-        list_id: Annotated[StrictStr, Field(description="The ID of the list to be updated.")],
-        list_request: ListRequest,
+        identifier: Annotated[str, Field(strict=True, description="List identifier to update")],
+        rest_e_list: RestEList,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1194,15 +1197,15 @@ class ListApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Response:
-        """Update List
+    ) -> RestRList:
+        """Update list
 
-        Update an existing list by its ID.
+        Updates an existing list's settings. 
 
-        :param list_id: The ID of the list to be updated. (required)
-        :type list_id: str
-        :param list_request: (required)
-        :type list_request: ListRequest
+        :param identifier: List identifier to update (required)
+        :type identifier: str
+        :param rest_e_list: (required)
+        :type rest_e_list: RestEList
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1226,8 +1229,8 @@ class ListApi:
         """ # noqa: E501
 
         _param = self._update_list_serialize(
-            list_id=list_id,
-            list_request=list_request,
+            identifier=identifier,
+            rest_e_list=rest_e_list,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1235,12 +1238,12 @@ class ListApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Response",
-            '401': None,
-            '403': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "RestRList",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1256,8 +1259,8 @@ class ListApi:
     @validate_call
     def update_list_with_http_info(
         self,
-        list_id: Annotated[StrictStr, Field(description="The ID of the list to be updated.")],
-        list_request: ListRequest,
+        identifier: Annotated[str, Field(strict=True, description="List identifier to update")],
+        rest_e_list: RestEList,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1270,15 +1273,15 @@ class ListApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Response]:
-        """Update List
+    ) -> ApiResponse[RestRList]:
+        """Update list
 
-        Update an existing list by its ID.
+        Updates an existing list's settings. 
 
-        :param list_id: The ID of the list to be updated. (required)
-        :type list_id: str
-        :param list_request: (required)
-        :type list_request: ListRequest
+        :param identifier: List identifier to update (required)
+        :type identifier: str
+        :param rest_e_list: (required)
+        :type rest_e_list: RestEList
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1302,8 +1305,8 @@ class ListApi:
         """ # noqa: E501
 
         _param = self._update_list_serialize(
-            list_id=list_id,
-            list_request=list_request,
+            identifier=identifier,
+            rest_e_list=rest_e_list,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1311,12 +1314,12 @@ class ListApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Response",
-            '401': None,
-            '403': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "RestRList",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1332,8 +1335,8 @@ class ListApi:
     @validate_call
     def update_list_without_preload_content(
         self,
-        list_id: Annotated[StrictStr, Field(description="The ID of the list to be updated.")],
-        list_request: ListRequest,
+        identifier: Annotated[str, Field(strict=True, description="List identifier to update")],
+        rest_e_list: RestEList,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1347,14 +1350,14 @@ class ListApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Update List
+        """Update list
 
-        Update an existing list by its ID.
+        Updates an existing list's settings. 
 
-        :param list_id: The ID of the list to be updated. (required)
-        :type list_id: str
-        :param list_request: (required)
-        :type list_request: ListRequest
+        :param identifier: List identifier to update (required)
+        :type identifier: str
+        :param rest_e_list: (required)
+        :type rest_e_list: RestEList
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1378,8 +1381,8 @@ class ListApi:
         """ # noqa: E501
 
         _param = self._update_list_serialize(
-            list_id=list_id,
-            list_request=list_request,
+            identifier=identifier,
+            rest_e_list=rest_e_list,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1387,12 +1390,12 @@ class ListApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Response",
-            '401': None,
-            '403': None,
-            '406': None,
-            '422': None,
-            '500': None,
+            '200': "RestRList",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '422': "ErrorResponse",
+            '500': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1403,8 +1406,8 @@ class ListApi:
 
     def _update_list_serialize(
         self,
-        list_id,
-        list_request,
+        identifier,
+        rest_e_list,
         _request_auth,
         _content_type,
         _headers,
@@ -1420,18 +1423,20 @@ class ListApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if list_id is not None:
-            _path_params['listId'] = list_id
+        if identifier is not None:
+            _path_params['identifier'] = identifier
         # process the query parameters
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if list_request is not None:
-            _body_params = list_request
+        if rest_e_list is not None:
+            _body_params = rest_e_list
 
 
         # set the HTTP header `Accept`
@@ -1458,12 +1463,12 @@ class ListApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'apiKeyAuth'
+            'TeamApiKey'
         ]
 
         return self.api_client.param_serialize(
             method='PUT',
-            resource_path='/list/{listId}',
+            resource_path='/list/{identifier}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

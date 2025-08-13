@@ -4,28 +4,29 @@ All URIs are relative to *https://api.sendx.io/api/v1/rest*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create_list**](ListApi.md#create_list) | **POST** /list | Create List
-[**delete_list**](ListApi.md#delete_list) | **DELETE** /list/{listId} | Delete List
-[**get_all_lists**](ListApi.md#get_all_lists) | **GET** /list | Get All Lists
-[**get_list_by_id**](ListApi.md#get_list_by_id) | **GET** /list/{listId} | Get List
-[**update_list**](ListApi.md#update_list) | **PUT** /list/{listId} | Update List
+[**create_list**](ListApi.md#create_list) | **POST** /list | Create list
+[**delete_list**](ListApi.md#delete_list) | **DELETE** /list/{identifier} | Delete list
+[**get_all_lists**](ListApi.md#get_all_lists) | **GET** /list | Get all lists
+[**get_list**](ListApi.md#get_list) | **GET** /list/{identifier} | Get list by ID
+[**update_list**](ListApi.md#update_list) | **PUT** /list/{identifier} | Update list
 
 
 # **create_list**
-> CreateResponse create_list(list_request)
+> RestRList create_list(rest_e_list)
 
-Create List
+Create list
 
-Create a new list.
+Creates a new contact list.
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.create_response import CreateResponse
-from sendx_python_sdk.models.list_request import ListRequest
+from sendx_python_sdk.models.rest_e_list import RestEList
+from sendx_python_sdk.models.rest_r_list import RestRList
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -40,21 +41,21 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ListApi(api_client)
-    list_request = sendx_python_sdk.ListRequest() # ListRequest | 
+    rest_e_list = {"name":"Premium Members"} # RestEList | 
 
     try:
-        # Create List
-        api_response = api_instance.create_list(list_request)
+        # Create list
+        api_response = api_instance.create_list(rest_e_list)
         print("The response of ListApi->create_list:\n")
         pprint(api_response)
     except Exception as e:
@@ -68,15 +69,15 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **list_request** | [**ListRequest**](ListRequest.md)|  | 
+ **rest_e_list** | [**RestEList**](RestEList.md)|  | 
 
 ### Return type
 
-[**CreateResponse**](CreateResponse.md)
+[**RestRList**](RestRList.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -87,25 +88,26 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | List Created Successfully |  -  |
-**401** | Not Authorized |  -  |
-**403** | Forbidden - Tag with name already exists |  -  |
-**406** | Not Acceptable |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**201** | ✅ List created successfully |  -  |
+**400** | ❌ Bad Request - Invalid input data |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**403** | ❌ Forbidden - Resource name already exists |  -  |
+**422** | ❌ Unprocessable Entity - Invalid request format |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_list**
-> DeleteResponse delete_list(list_id)
+> DeleteResponse delete_list(identifier)
 
-Delete List
+Delete list
 
-Deletes a specific list by its ID.
+Deletes a list.
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
@@ -124,21 +126,21 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ListApi(api_client)
-    list_id = 'sendx123' # str | The ID of the list you want to delete
+    identifier = 'identifier_example' # str | List identifier to delete
 
     try:
-        # Delete List
-        api_response = api_instance.delete_list(list_id)
+        # Delete list
+        api_response = api_instance.delete_list(identifier)
         print("The response of ListApi->delete_list:\n")
         pprint(api_response)
     except Exception as e:
@@ -152,7 +154,7 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **list_id** | **str**| The ID of the list you want to delete | 
+ **identifier** | **str**| List identifier to delete | 
 
 ### Return type
 
@@ -160,7 +162,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -171,28 +173,29 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | List deleted successfully |  -  |
-**401** | Not Authorized |  -  |
-**406** | listId is empty |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**200** | ✅ List deleted successfully |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**404** | ❌ Not Found - Resource does not exist |  -  |
+**422** | ❌ Unprocessable Entity - Invalid request format |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_all_lists**
-> List[ListModel] get_all_lists(offset=offset, limit=limit, search=search)
+> List[RestRList] get_all_lists(offset=offset, limit=limit, search=search)
 
-Get All Lists
+Get all lists
 
-Retrieve all lists for the account.
+Retrieves all contact lists in your team.
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.list_model import ListModel
+from sendx_python_sdk.models.rest_r_list import RestRList
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -207,22 +210,22 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ListApi(api_client)
-    offset = 0 # int | Offset for pagination. (optional)
-    limit = 10 # int | Limit the number of results returned. (optional)
-    search = 'Marketing' # str | Search term to filter lists. (optional)
+    offset = 0 # int | Number of records to skip for pagination (optional) (default to 0)
+    limit = 10 # int | Maximum number of lists to return (max: 500) (optional) (default to 10)
+    search = 'search_example' # str | Search lists by name (optional)
 
     try:
-        # Get All Lists
+        # Get all lists
         api_response = api_instance.get_all_lists(offset=offset, limit=limit, search=search)
         print("The response of ListApi->get_all_lists:\n")
         pprint(api_response)
@@ -237,17 +240,17 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **offset** | **int**| Offset for pagination. | [optional] 
- **limit** | **int**| Limit the number of results returned. | [optional] 
- **search** | **str**| Search term to filter lists. | [optional] 
+ **offset** | **int**| Number of records to skip for pagination | [optional] [default to 0]
+ **limit** | **int**| Maximum number of lists to return (max: 500) | [optional] [default to 10]
+ **search** | **str**| Search lists by name | [optional] 
 
 ### Return type
 
-[**List[ListModel]**](ListModel.md)
+[**List[RestRList]**](RestRList.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -258,26 +261,27 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Retrieved all Lists for account successfully |  -  |
-**401** | Not Authorized |  -  |
-**500** | Internal Server Error |  -  |
+**200** | ✅ Lists retrieved successfully |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_list_by_id**
-> ListModel get_list_by_id(list_id)
+# **get_list**
+> RestRList get_list(identifier)
 
-Get List
+Get list by ID
 
-Retrieve a specific list by its ID.
+Retrieves detailed information about a specific list.
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.list_model import ListModel
+from sendx_python_sdk.models.rest_r_list import RestRList
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -292,25 +296,25 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ListApi(api_client)
-    list_id = 'sendx123' # str | The ID of the list you want to retrieve
+    identifier = 'identifier_example' # str | List identifier - `list_OcuxJHdiAvujmwQVJfd3ss` 
 
     try:
-        # Get List
-        api_response = api_instance.get_list_by_id(list_id)
-        print("The response of ListApi->get_list_by_id:\n")
+        # Get list by ID
+        api_response = api_instance.get_list(identifier)
+        print("The response of ListApi->get_list:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling ListApi->get_list_by_id: %s\n" % e)
+        print("Exception when calling ListApi->get_list: %s\n" % e)
 ```
 
 
@@ -320,15 +324,15 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **list_id** | **str**| The ID of the list you want to retrieve | 
+ **identifier** | **str**| List identifier - &#x60;list_OcuxJHdiAvujmwQVJfd3ss&#x60;  | 
 
 ### Return type
 
-[**ListModel**](ListModel.md)
+[**RestRList**](RestRList.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -339,30 +343,30 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Successfully retrieved the list |  -  |
-**401** | Not Authorized |  -  |
-**406** | Not Acceptable |  -  |
-**403** | Forbidden Tag with name already exists |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**200** | ✅ List retrieved successfully |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**404** | ❌ Not Found - Resource does not exist |  -  |
+**422** | ❌ Unprocessable Entity - Invalid request format |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_list**
-> Response update_list(list_id, list_request)
+> RestRList update_list(identifier, rest_e_list)
 
-Update List
+Update list
 
-Update an existing list by its ID.
+Updates an existing list's settings.
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.list_request import ListRequest
-from sendx_python_sdk.models.response import Response
+from sendx_python_sdk.models.rest_e_list import RestEList
+from sendx_python_sdk.models.rest_r_list import RestRList
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -377,22 +381,22 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ListApi(api_client)
-    list_id = 'list_id_example' # str | The ID of the list to be updated.
-    list_request = sendx_python_sdk.ListRequest() # ListRequest | 
+    identifier = 'identifier_example' # str | List identifier to update
+    rest_e_list = {"name":"2024 Newsletter Subscribers"} # RestEList | 
 
     try:
-        # Update List
-        api_response = api_instance.update_list(list_id, list_request)
+        # Update list
+        api_response = api_instance.update_list(identifier, rest_e_list)
         print("The response of ListApi->update_list:\n")
         pprint(api_response)
     except Exception as e:
@@ -406,16 +410,16 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **list_id** | **str**| The ID of the list to be updated. | 
- **list_request** | [**ListRequest**](ListRequest.md)|  | 
+ **identifier** | **str**| List identifier to update | 
+ **rest_e_list** | [**RestEList**](RestEList.md)|  | 
 
 ### Return type
 
-[**Response**](Response.md)
+[**RestRList**](RestRList.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -426,12 +430,12 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | List Updated Successfully |  -  |
-**401** | Not Authorized |  -  |
-**403** | Forbidden - Tag with name already exists |  -  |
-**406** | Not Acceptable |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**200** | ✅ List updated successfully |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**403** | ❌ Forbidden - Resource name already exists |  -  |
+**404** | ❌ Not Found - Resource does not exist |  -  |
+**422** | ❌ Unprocessable Entity - Invalid request format |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

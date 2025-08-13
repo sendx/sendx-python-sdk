@@ -4,29 +4,39 @@ All URIs are relative to *https://api.sendx.io/api/v1/rest*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create_contact**](ContactApi.md#create_contact) | **POST** /contact | Create a contact
-[**delete_contact**](ContactApi.md#delete_contact) | **DELETE** /contact/{identifier} | Delete Contact
-[**get_all_contacts**](ContactApi.md#get_all_contacts) | **GET** /contact | Get All Contacts
-[**get_contact_by_id**](ContactApi.md#get_contact_by_id) | **GET** /contact/{identifier} | Get Contact by Identifier
-[**unsubscribe_contact**](ContactApi.md#unsubscribe_contact) | **POST** /contact/unsubscribe/{identifier} | Unsubscribe Contact
-[**update_contact**](ContactApi.md#update_contact) | **PUT** /contact/{identifier} | Update Contact
+[**create_contact**](ContactApi.md#create_contact) | **POST** /contact | Create a new contact
+[**delete_contact**](ContactApi.md#delete_contact) | **DELETE** /contact/{identifier} | Delete contact
+[**get_all_contacts**](ContactApi.md#get_all_contacts) | **GET** /contact | Get all contacts
+[**get_contact**](ContactApi.md#get_contact) | **GET** /contact/{identifier} | Get contact by ID
+[**unsubscribe_contact**](ContactApi.md#unsubscribe_contact) | **POST** /contact/unsubscribe/{identifier} | Unsubscribe contact
+[**update_contact**](ContactApi.md#update_contact) | **PUT** /contact/{identifier} | Update contact
 
 
 # **create_contact**
-> Response create_contact(contact_request)
+> RestRContact create_contact(rest_e_contact)
 
-Create a contact
+Create a new contact
 
-Create Contact with given data
+Creates a new contact in your SendX team with the provided information.
+
+**🎯 Key Features:**
+- Email validation and duplicate detection
+- Automatic relationship building with lists and tags
+- Smart custom field handling
+
+**📋 Business Rules:**
+- Email is mandatory and must be unique within the team
+- Last tracked IP is stored for analytics
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.contact_request import ContactRequest
-from sendx_python_sdk.models.response import Response
+from sendx_python_sdk.models.rest_e_contact import RestEContact
+from sendx_python_sdk.models.rest_r_contact import RestRContact
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -41,21 +51,21 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ContactApi(api_client)
-    contact_request = sendx_python_sdk.ContactRequest() # ContactRequest | 
+    rest_e_contact = {"email":"john.doe@example.com"} # RestEContact | 
 
     try:
-        # Create a contact
-        api_response = api_instance.create_contact(contact_request)
+        # Create a new contact
+        api_response = api_instance.create_contact(rest_e_contact)
         print("The response of ContactApi->create_contact:\n")
         pprint(api_response)
     except Exception as e:
@@ -69,15 +79,15 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **contact_request** | [**ContactRequest**](ContactRequest.md)|  | 
+ **rest_e_contact** | [**RestEContact**](RestEContact.md)|  | 
 
 ### Return type
 
-[**Response**](Response.md)
+[**RestRContact**](RestRContact.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -88,28 +98,36 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Contact Created Successfully |  -  |
-**401** | Not Authorized |  -  |
-**406** | Not Acceptable |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**201** | ✅ Contact created successfully |  -  |
+**400** | ❌ Bad Request - Invalid input data |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**409** | ❌ Conflict - Resource already exists |  -  |
+**422** | ❌ Unprocessable Entity - Invalid request format |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_contact**
-> Response delete_contact(identifier)
+> DeleteResponse delete_contact(identifier)
 
-Delete Contact
+Delete contact
 
-Deletes Contact
+Soft deletes a contact from your team.
+
+**🎯 Key Features:**
+- Soft delete preserves data
+- Removes from all lists
+- Cancels pending campaigns
+- Maintains historical data
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.response import Response
+from sendx_python_sdk.models.delete_response import DeleteResponse
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -124,20 +142,20 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ContactApi(api_client)
-    identifier = 'identifier_example' # str | The Contact ID/ Email to delete
+    identifier = 'contact_BnKjkbBBS500CoBCP0oChQ' # str | Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` 
 
     try:
-        # Delete Contact
+        # Delete contact
         api_response = api_instance.delete_contact(identifier)
         print("The response of ContactApi->delete_contact:\n")
         pprint(api_response)
@@ -152,15 +170,15 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **identifier** | **str**| The Contact ID/ Email to delete | 
+ **identifier** | **str**| Resource identifier with prefix (e.g., &#x60;contact_BnKjkbBBS500CoBCP0oChQ&#x60;)  **Format:** &#x60;&lt;prefix&gt;_&lt;22-character-id&gt;&#x60;  | 
 
 ### Return type
 
-[**Response**](Response.md)
+[**DeleteResponse**](DeleteResponse.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -171,28 +189,45 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Contact deleted successfully |  -  |
-**401** | Not Authorized |  -  |
-**406** | Contact ID is empty |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**200** | ✅ Contact deleted successfully |  -  |
+**400** | ❌ Bad Request - Invalid input data |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**404** | ❌ Not Found - Resource does not exist |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_all_contacts**
-> List[Contact] get_all_contacts(offset=offset, limit=limit, contact_type=contact_type, search=search)
+> List[RestRContact] get_all_contacts(offset=offset, limit=limit, search=search)
 
-Get All Contacts
+Get all contacts
 
-Find all contacts with optional filters
+Retrieves a paginated list of all contacts in your team with optional filtering capabilities.
+
+**🎯 Key Features:**
+- Pagination support with offset/limit
+- Search contacts by name or email
+- All relationships included (lists, tags, custom fields)
+- Prefixed IDs for easy integration
+
+**📊 Pagination:**
+- Default limit: 10 contacts per page
+- Maximum limit: 100 contacts per page
+- Use offset for page navigation
+
+**🔍 Search:**
+- Searches across firstName, lastName, and email fields
+- Case-insensitive partial matching
+- Combine with pagination for large datasets
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.contact import Contact
+from sendx_python_sdk.models.rest_r_contact import RestRContact
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -207,24 +242,23 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ContactApi(api_client)
-    offset = 0 # int | Offset for pagination (optional) (default to 0)
-    limit = 10 # int | Limit for pagination (optional) (default to 10)
-    contact_type = 'contact_type_example' # str | Filter contacts by type (optional)
-    search = 'search_example' # str | Search term to filter contacts (optional)
+    offset = 0 # int | Number of records to skip for pagination.  **Examples:** - `0` - First page (default) - `50` - Second page (with limit=50) - `100` - Third page (with limit=50)  (optional) (default to 0)
+    limit = 50 # int | Maximum number of records to return.  **Constraints:** - Minimum: 1 - Maximum: 100 - Default: 10  (optional) (default to 50)
+    search = 'john' # str | Search term to filter contacts by name or email.  **Search Behavior:** - Searches firstName, lastName, and email fields - Case-insensitive partial matching - Minimum 2 characters for search  **Examples:** - `john` - Finds \"John Doe\", \"johnson@example.com\" - `@company.com` - Finds all emails from company.com - `smith` - Finds \"John Smith\", \"smith@email.com\"  (optional)
 
     try:
-        # Get All Contacts
-        api_response = api_instance.get_all_contacts(offset=offset, limit=limit, contact_type=contact_type, search=search)
+        # Get all contacts
+        api_response = api_instance.get_all_contacts(offset=offset, limit=limit, search=search)
         print("The response of ContactApi->get_all_contacts:\n")
         pprint(api_response)
     except Exception as e:
@@ -238,18 +272,17 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **offset** | **int**| Offset for pagination | [optional] [default to 0]
- **limit** | **int**| Limit for pagination | [optional] [default to 10]
- **contact_type** | **str**| Filter contacts by type | [optional] 
- **search** | **str**| Search term to filter contacts | [optional] 
+ **offset** | **int**| Number of records to skip for pagination.  **Examples:** - &#x60;0&#x60; - First page (default) - &#x60;50&#x60; - Second page (with limit&#x3D;50) - &#x60;100&#x60; - Third page (with limit&#x3D;50)  | [optional] [default to 0]
+ **limit** | **int**| Maximum number of records to return.  **Constraints:** - Minimum: 1 - Maximum: 100 - Default: 10  | [optional] [default to 50]
+ **search** | **str**| Search term to filter contacts by name or email.  **Search Behavior:** - Searches firstName, lastName, and email fields - Case-insensitive partial matching - Minimum 2 characters for search  **Examples:** - &#x60;john&#x60; - Finds \&quot;John Doe\&quot;, \&quot;johnson@example.com\&quot; - &#x60;@company.com&#x60; - Finds all emails from company.com - &#x60;smith&#x60; - Finds \&quot;John Smith\&quot;, \&quot;smith@email.com\&quot;  | [optional] 
 
 ### Return type
 
-[**List[Contact]**](Contact.md)
+[**List[RestRContact]**](RestRContact.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -260,27 +293,34 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | List of Contacts |  -  |
-**401** | Not Authorized |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**200** | ✅ Contacts retrieved successfully |  -  |
+**400** | ❌ Bad Request - Invalid input data |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_contact_by_id**
-> Contact get_contact_by_id(identifier)
+# **get_contact**
+> RestRContact get_contact(identifier)
 
-Get Contact by Identifier
+Get contact by ID
 
-Retrieve a specific contact by its identifier.
+Retrieves detailed information about a specific contact.
+
+**🎯 Key Features:**
+- Returns complete contact profile
+- Includes all lists and tags
+- Shows custom field values
+- Provides engagement metrics
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.contact import Contact
+from sendx_python_sdk.models.rest_r_contact import RestRContact
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -295,25 +335,25 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ContactApi(api_client)
-    identifier = 'john@doe.com' # str | The ID or Email of the contact to retrieve.
+    identifier = 'contact_BnKjkbBBS500CoBCP0oChQ' # str | Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` 
 
     try:
-        # Get Contact by Identifier
-        api_response = api_instance.get_contact_by_id(identifier)
-        print("The response of ContactApi->get_contact_by_id:\n")
+        # Get contact by ID
+        api_response = api_instance.get_contact(identifier)
+        print("The response of ContactApi->get_contact:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling ContactApi->get_contact_by_id: %s\n" % e)
+        print("Exception when calling ContactApi->get_contact: %s\n" % e)
 ```
 
 
@@ -323,15 +363,15 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **identifier** | **str**| The ID or Email of the contact to retrieve. | 
+ **identifier** | **str**| Resource identifier with prefix (e.g., &#x60;contact_BnKjkbBBS500CoBCP0oChQ&#x60;)  **Format:** &#x60;&lt;prefix&gt;_&lt;22-character-id&gt;&#x60;  | 
 
 ### Return type
 
-[**Contact**](Contact.md)
+[**RestRContact**](RestRContact.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -342,28 +382,35 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Retrieved contact successfully. |  -  |
-**401** | Not Authorized - Invalid or missing API key. |  -  |
-**406** | Contact ID is empty or invalid. |  -  |
-**422** | Request body is not in proper format. |  -  |
-**500** | Internal Server Error - Something went wrong on the server. |  -  |
+**200** | ✅ Contact retrieved successfully |  -  |
+**400** | ❌ Bad Request - Invalid input data |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**404** | ❌ Not Found - Resource does not exist |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **unsubscribe_contact**
-> Response unsubscribe_contact(identifier)
+> MessageResponse unsubscribe_contact(identifier)
 
-Unsubscribe Contact
+Unsubscribe contact
 
-Unsubscribe a globally existing contact
+Unsubscribes a contact from all marketing communications.
+
+**🎯 Key Features:**
+- Marks contact as unsubscribed
+- Removes from all active campaigns
+- Maintains unsubscribe history
+- Complies with anti-spam regulations
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.response import Response
+from sendx_python_sdk.models.message_response import MessageResponse
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -378,20 +425,20 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ContactApi(api_client)
-    identifier = 'sendx123' # str | The Contact ID or email to unsubscribe
+    identifier = 'contact_BnKjkbBBS500CoBCP0oChQ' # str | Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` 
 
     try:
-        # Unsubscribe Contact
+        # Unsubscribe contact
         api_response = api_instance.unsubscribe_contact(identifier)
         print("The response of ContactApi->unsubscribe_contact:\n")
         pprint(api_response)
@@ -406,15 +453,15 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **identifier** | **str**| The Contact ID or email to unsubscribe | 
+ **identifier** | **str**| Resource identifier with prefix (e.g., &#x60;contact_BnKjkbBBS500CoBCP0oChQ&#x60;)  **Format:** &#x60;&lt;prefix&gt;_&lt;22-character-id&gt;&#x60;  | 
 
 ### Return type
 
-[**Response**](Response.md)
+[**MessageResponse**](MessageResponse.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -425,29 +472,36 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Contact successfully unsubscribed |  -  |
-**401** | Not Authorized |  -  |
-**406** | Contact ID is empty or invalid |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**200** | ✅ Contact unsubscribed successfully |  -  |
+**400** | ❌ Bad Request - Invalid input data |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**404** | ❌ Not Found - Resource does not exist |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_contact**
-> Contact update_contact(identifier, contact_request)
+> RestRContact update_contact(identifier, rest_e_contact)
 
-Update Contact
+Update contact
 
-Update Contact with given data
+Updates an existing contact's information.
+
+**🎯 Key Features:**
+- Partial updates supported
+- Add/remove lists and tags
+- Update custom fields
+- Change email address
+
 
 ### Example
 
-* Api Key Authentication (apiKeyAuth):
+* Api Key Authentication (TeamApiKey):
 
 ```python
 import sendx_python_sdk
-from sendx_python_sdk.models.contact import Contact
-from sendx_python_sdk.models.contact_request import ContactRequest
+from sendx_python_sdk.models.rest_e_contact import RestEContact
+from sendx_python_sdk.models.rest_r_contact import RestRContact
 from sendx_python_sdk.rest import ApiException
 from pprint import pprint
 
@@ -462,22 +516,22 @@ configuration = sendx_python_sdk.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: apiKeyAuth
-configuration.api_key['apiKeyAuth'] = os.environ["API_KEY"]
+# Configure API key authorization: TeamApiKey
+configuration.api_key['TeamApiKey'] = os.environ["API_KEY"]
 
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['apiKeyAuth'] = 'Bearer'
+# configuration.api_key_prefix['TeamApiKey'] = 'Bearer'
 
 # Enter a context with an instance of the API client
 with sendx_python_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = sendx_python_sdk.ContactApi(api_client)
-    identifier = 'sendxid123' # str | The ID or email of the Contact to update
-    contact_request = sendx_python_sdk.ContactRequest() # ContactRequest | 
+    identifier = 'contact_BnKjkbBBS500CoBCP0oChQ' # str | Resource identifier with prefix (e.g., `contact_BnKjkbBBS500CoBCP0oChQ`)  **Format:** `<prefix>_<22-character-id>` 
+    rest_e_contact = {"firstName":"Alexander","lastName":"Johnson-Smith","company":"New Enterprise Corp"} # RestEContact | 
 
     try:
-        # Update Contact
-        api_response = api_instance.update_contact(identifier, contact_request)
+        # Update contact
+        api_response = api_instance.update_contact(identifier, rest_e_contact)
         print("The response of ContactApi->update_contact:\n")
         pprint(api_response)
     except Exception as e:
@@ -491,16 +545,16 @@ with sendx_python_sdk.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **identifier** | **str**| The ID or email of the Contact to update | 
- **contact_request** | [**ContactRequest**](ContactRequest.md)|  | 
+ **identifier** | **str**| Resource identifier with prefix (e.g., &#x60;contact_BnKjkbBBS500CoBCP0oChQ&#x60;)  **Format:** &#x60;&lt;prefix&gt;_&lt;22-character-id&gt;&#x60;  | 
+ **rest_e_contact** | [**RestEContact**](RestEContact.md)|  | 
 
 ### Return type
 
-[**Contact**](Contact.md)
+[**RestRContact**](RestRContact.md)
 
 ### Authorization
 
-[apiKeyAuth](../README.md#apiKeyAuth)
+[TeamApiKey](../README.md#TeamApiKey)
 
 ### HTTP request headers
 
@@ -511,11 +565,13 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Contact Updated Successfully |  -  |
-**401** | Not Authorized |  -  |
-**406** | Not Acceptable |  -  |
-**422** | Request body is not in proper format |  -  |
-**500** | Internal Server Error |  -  |
+**200** | ✅ Contact updated successfully |  -  |
+**400** | ❌ Bad Request - Invalid input data |  -  |
+**401** | ❌ Unauthorized - Invalid or missing API key |  -  |
+**404** | ❌ Not Found - Resource does not exist |  -  |
+**409** | ❌ Conflict - Resource already exists |  -  |
+**422** | ❌ Unprocessable Entity - Invalid request format |  -  |
+**500** | ❌ Internal Server Error - System error occurred |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

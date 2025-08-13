@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**identifier** | **str** | Unique email identifier for the contact. | 
-**amount** | **float** | Recognized revenue amount associated with the event. | 
-**source** | **str** | Source of the revenue (e.g., &#39;website&#39;, &#39;mobile app&#39;, &#39;partner referral&#39;). | 
-**time** | **int** | Unix timestamp indicating when the revenue event occurred. | 
+**identifier** | **str** | Contact email address | 
+**amount** | **float** | Revenue amount | 
+**source** | **str** | Source of the revenue event | [optional] 
+**time** | **int** | Unix timestamp (in seconds since January 1, 1970) representing when the event occurred. | [optional] 
 
 ## Example
 
